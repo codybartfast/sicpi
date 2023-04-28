@@ -1,2 +1,3 @@
-# sicp-scheme
-Maybe eventually ...  a rudimentary implementation of Scheme in C
+# sicpi
+
+Maybe eventually ...  a SICP Scheme interpreter.
