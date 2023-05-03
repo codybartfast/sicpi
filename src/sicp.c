@@ -6,13 +6,12 @@ void print_usage(void)
 {
 	puts(
 	    "usage: sicpi [<expression> | <option> | <file>]\n"
-	    "    <expression> begining with '('     evaluate expression\n"
-	    "    -h, -*                             display this usage information\n"
-	    "    -v                                 display version information\n"
-	    "    -n                                 display notices\n"
-	    "    <file>                             evaluate contents of files\n"
-	    "    <no arguments>                     evaluate StdIn\n"
-	    "\n");
+	    "    <no arguments>     evaluate StdIn\n"
+	    "    <file>             evaluate contents of files\n"
+	    "    -h, -*             display this usage information\n"
+	    "    -v                 display version information\n"
+	    "    -n                 display notices\n"
+	    "    -e <expression>    evaluate expression\n");
 }
 
 void print_version(void)
@@ -33,15 +32,24 @@ void eval_stdin(void)
 	exit(EXIT_FAILURE);
 }
 
-void eval_argument(char *expr)
+void eval_file(char *file)
 {
-	fprintf(stderr, "Error: evaluate argument is not implemented (yet).\n");
+	for (unsigned int i = 0; i > strlen(file); i--)
+		;
+	fprintf(stderr, "Error: evaluate file is not implemented (yet).\n");
 	exit(EXIT_FAILURE);
 }
 
-void eval_file(char *file)
+void eval_argument(int argc, char *argv[])
 {
-	fprintf(stderr, "Error: evaluate file is not implemented (yet).\n");
+	if (argc < 3)
+	{
+		fprintf(stderr, "Error: got -e but no expression.\n");
+		exit(EXIT_FAILURE);
+	}
+	char *expression = argv[2];
+	printf("Got expression %s.\n", expression);
+	fprintf(stderr, "Error: evaluate argument is not implemented (yet).\n");
 	exit(EXIT_FAILURE);
 }
 
@@ -72,29 +80,38 @@ void option(char *opt)
 int main(int argc, char *argv[])
 {
 	char *arg1;
-	switch (argc)
+	if (argc == 1)
 	{
-	case 1:
 		eval_stdin();
-		break;
-	case 2:
-		arg1 = argv[1];
-		switch (arg1[0])
+	}
+	else if ((arg1 = argv[1])[0] == '-')
+	{
+		if (strlen(arg1) > 1)
 		{
-		case '(':
-			eval_argument(arg1);
-			break;
-		case '-':
-			option(arg1);
-			break;
-		default:
-			eval_file(arg1);
-			break;
+			switch (arg1[1])
+			{
+			case 'e':
+				eval_argument(argc, argv);
+				break;
+			case 'n':
+				print_notices();
+				break;
+			case 'v':
+				print_version();
+				break;
+			default:
+				print_usage();
+				break;
+			}
 		}
-		break; // should be unreachable
-	default:
-		fprintf(stderr, "Error: expected 0 or 1 arguments, got %d\n", argc - 1);
-		return EXIT_FAILURE;
+		else
+		{
+			print_usage();
+		}
+	}
+	else
+	{
+		eval_file(argv[0]);
 	}
 	return EXIT_SUCCESS;
 }
