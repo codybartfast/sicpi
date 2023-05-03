@@ -53,30 +53,6 @@ void eval_argument(int argc, char *argv[])
 	exit(EXIT_FAILURE);
 }
 
-void option(char *opt)
-{
-	if (strlen(opt) > 1)
-	{
-		switch (opt[1])
-		{
-		case 'V':
-		case 'v':
-			print_version();
-			break;
-		case 'N':
-		case 'n':
-			print_notices();
-			break;
-		default:
-			print_usage();
-		}
-	}
-	else
-	{
-		print_usage();
-	}
-}
-
 int main(int argc, char *argv[])
 {
 	char *arg1;
