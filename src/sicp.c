@@ -4,14 +4,13 @@
 
 void print_usage(void)
 {
-	puts(
-	    "usage: sicpi [<expression> | <option> | <file>]\n"
-	    "    <no arguments>     evaluate StdIn\n"
-	    "    <file>             evaluate contents of files\n"
-	    "    -h, -*             display this usage information\n"
-	    "    -v                 display version information\n"
-	    "    -n                 display notices\n"
-	    "    -e <expression>    evaluate expression\n");
+	puts("usage: sicpi [<expression> | <option> | <file>]\n"
+	     "    <no arguments>     evaluate StdIn\n"
+	     "    <file>             evaluate contents of files\n"
+	     "    -h, -*             display this usage information\n"
+	     "    -v                 display version information\n"
+	     "    -n                 display notices\n"
+	     "    -e <expression>    evaluate expression\n");
 }
 
 void print_version(void)
@@ -42,8 +41,7 @@ void eval_file(char *file)
 
 void eval_argument(int argc, char *argv[])
 {
-	if (argc < 3)
-	{
+	if (argc < 3) {
 		fprintf(stderr, "Error: got -e but no expression.\n");
 		exit(EXIT_FAILURE);
 	}
@@ -56,16 +54,11 @@ void eval_argument(int argc, char *argv[])
 int main(int argc, char *argv[])
 {
 	char *arg1;
-	if (argc == 1)
-	{
+	if (argc == 1) {
 		eval_stdin();
-	}
-	else if ((arg1 = argv[1])[0] == '-')
-	{
-		if (strlen(arg1) > 1)
-		{
-			switch (arg1[1])
-			{
+	} else if ((arg1 = argv[1])[0] == '-') {
+		if (strlen(arg1) > 1) {
+			switch (arg1[1]) {
 			case 'e':
 				eval_argument(argc, argv);
 				break;
@@ -79,14 +72,10 @@ int main(int argc, char *argv[])
 				print_usage();
 				break;
 			}
-		}
-		else
-		{
+		} else {
 			print_usage();
 		}
-	}
-	else
-	{
+	} else {
 		eval_file(argv[0]);
 	}
 	return EXIT_SUCCESS;
