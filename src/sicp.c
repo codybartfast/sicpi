@@ -7,7 +7,7 @@
 
 void print_usage(void)
 {
-	puts("usage: sicp [<expression> | <option> | <file>]\n"
+	puts("usage: sicp [<file> | <option> [<expression>]]\n"
 	     "    <no arguments>     evaluate StdIn\n"
 	     "    <file>             evaluate contents of files\n"
 	     "    -h, -*             display this usage information\n"
