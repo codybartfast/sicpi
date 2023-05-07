@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "notices.h"
+#include "version.h"
+
 void print_usage(void)
 {
 	puts("usage: sicpi [<expression> | <option> | <file>]\n"
@@ -15,14 +18,12 @@ void print_usage(void)
 
 void print_version(void)
 {
-	fprintf(stderr, "Error: display version is not implemented (yet).\n");
-	exit(EXIT_FAILURE);
+	puts(version_string);
 }
 
 void print_notices(void)
 {
-	fprintf(stderr, "Error: display notices is not implemented (yet).\n");
-	exit(EXIT_FAILURE);
+	puts(notices_string);
 }
 
 void eval_stdin(void)
