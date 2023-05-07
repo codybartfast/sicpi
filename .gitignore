@@ -1,6 +1,8 @@
 bin/
+build/
 
 ## Standard github .gitignore ##
+
 # Prerequisites
 *.d
 
