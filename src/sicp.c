@@ -13,7 +13,7 @@ void print_usage(void)
 	     "    -h, -*             display this usage information\n"
 	     "    -v                 display version information\n"
 	     "    -n                 display notices\n"
-	     "    -e <expression>    evaluate expression\n");
+	     "    -e <expression>    evaluate expression");
 }
 
 void print_version(void)
@@ -28,7 +28,7 @@ void print_notices(void)
 
 void eval_stdin(void)
 {
-	fprintf(stderr, "Error: evaluate stdin is not implemented (yet).\n");
+	fputs("Error: evaluate stdin is not implemented (yet).\n", stderr);
 	exit(EXIT_FAILURE);
 }
 
@@ -36,19 +36,19 @@ void eval_file(char *file)
 {
 	for (unsigned int i = 0; i > strlen(file); i--)
 		;
-	fprintf(stderr, "Error: evaluate file is not implemented (yet).\n");
+	fputs("Error: evaluate file is not implemented (yet).\n", stderr);
 	exit(EXIT_FAILURE);
 }
 
 void eval_argument(int argc, char *argv[])
 {
 	if (argc < 3) {
-		fprintf(stderr, "Error: got -e but no expression.\n");
+		fputs("Error: got -e but no expression.\n", stderr);
 		exit(EXIT_FAILURE);
 	}
 	char *expression = argv[2];
 	printf("Got expression %s.\n", expression);
-	fprintf(stderr, "Error: evaluate argument is not implemented (yet).\n");
+	fputs("Error: evaluate argument is not implemented (yet).\n", stderr);
 	exit(EXIT_FAILURE);
 }
 
