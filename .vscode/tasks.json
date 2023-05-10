@@ -7,6 +7,7 @@
             "command": "gcc",
             "args": [
                 "src/sicp.c",
+                "src/string-builder.c",
                 "-o",
                 "${workspaceFolder}/bin/sicp",
                 "-lm",
@@ -54,9 +55,9 @@
             "type": "shell",
             "command": "gcc",
             "args": [
-                "src/version.h",
-                "tests/test-sicp-version.c",
                 "unity/src/unity.c",
+                "tests/test-string-builder.c",
+                "src/string-builder.c",
                 "-o",
                 "${workspaceFolder}/bin/test",
             ],
