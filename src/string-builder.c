@@ -85,8 +85,7 @@ char *sb_current(string_builder sb)
 char *sb_copy(string_builder sb)
 {
 	terminate_string(sb);
-	size_t len = sb->next - sb->buff + 1;
-	char *copy = malloc(sizeof(char) * len);
+	char *copy = strdup(sb->buff);
 	if (copy == NULL) {
 		alloc_error();
 	}
