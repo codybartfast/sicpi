@@ -1,12 +1,12 @@
 ﻿
 cmake_minimum_required (VERSION 3.8)
 
-project (sicp-scheme)
+project (sicp)
 
-# set(C_FLAGS "-lm -O3 -std=c17 -pedantic -pedantic-errors -Wall -Wextra -Wdouble-promotion -Wmissing-prototypes -Wstrict-prototypes -Wold-style-definition")
-set(C_FLAGS "-lm -O3 -std=c17 -pedantic -pedantic-errors -Wall -Wextra -Wdouble-promotion -Wmissing-prototypes -Wstrict-prototypes -Wold-style-definition")
+set(C_FLAGS "-lm -O3 -std=c2x -pedantic -pedantic-errors -Wall -Wextra -Wdouble-promotion -Wold-style-definition")
 
 set (SRC_CORE
+	src/string-builder.c
 	)
 
 set(BIN_DIR ${CMAKE_SOURCE_DIR}/bin)
