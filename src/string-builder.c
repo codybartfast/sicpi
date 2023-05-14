@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#define DEFAULT_INITIAL_CAPACITY 32
 #define ALLOC_FAIL_MSG                                                         \
 	"ERROR: Failed to allocate memory for string builder (out of memory?)"
 
@@ -16,8 +15,9 @@ void alloc_error(void)
 
 string_builder new_string_builder(size_t initial_capacity)
 {
-	initial_capacity = initial_capacity < 1 ? DEFAULT_INITIAL_CAPACITY :
-						  initial_capacity;
+	initial_capacity = initial_capacity < 1 ?
+				   STRING_BUILDER_DEFAULT_INITIAL_CAPACITY :
+				   initial_capacity;
 	string_builder sb = malloc(sizeof(struct string_builder));
 	char *buff = malloc(sizeof(char) * initial_capacity);
 
@@ -35,13 +35,16 @@ string_builder new_string_builder(size_t initial_capacity)
 void grow(string_builder sb)
 {
 	static size_t sizeLimit = __SIZE_MAX__;
-	static size_t halfSizeLimit = __SIZE_MAX__ / 2;
+	static size_t fullGrowLimit =
+		__SIZE_MAX__ / STRING_BUILDER_GROWTH_FACTOR;
 	size_t old_capacity = sb->buff_end - sb->buff;
 	if (old_capacity == sizeLimit) {
 		alloc_error();
 	}
 	size_t new_capacity =
-		old_capacity > halfSizeLimit ? sizeLimit : old_capacity * 2;
+		old_capacity > fullGrowLimit ?
+			sizeLimit :
+			old_capacity * STRING_BUILDER_GROWTH_FACTOR;
 
 	char *new_buff = realloc(sb->buff, new_capacity);
 	if (new_buff == NULL) {
