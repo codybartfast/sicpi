@@ -1,14 +1,6 @@
 #include "../unity/src/unity.h"
 #include "../src/string-builder.h"
 
-void setUp(void)
-{
-}
-
-void tearDown(void)
-{
-}
-
 size_t capacity(string_builder sb)
 {
 	return sb->buff_end - sb->buff;
@@ -154,10 +146,8 @@ void sb_free_frees(void)
 	}
 }
 
-int main(void)
+int test_string_builder(void)
 {
-	UNITY_BEGIN();
-
 	RUN_TEST(sb_new);
 	RUN_TEST(sb_new_accept_zero);
 	RUN_TEST(sb_addc_no_grow);
@@ -167,6 +157,4 @@ int main(void)
 	RUN_TEST(sb_copy_string_with_growth);
 	RUN_TEST(sb_clear_resets_and_retains_capacity);
 	RUN_TEST(sb_free_frees);
-
-	return UNITY_END();
 }

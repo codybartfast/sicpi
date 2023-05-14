@@ -56,8 +56,11 @@
             "command": "gcc",
             "args": [
                 "unity/src/unity.c",
-                "tests/test-string-builder.c",
+                "tests/test.c",
+
                 "src/string-builder.c",
+                "tests/test-string-builder.c",
+                
                 "-o",
                 "${workspaceFolder}/bin/test",
             ],

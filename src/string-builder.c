@@ -6,7 +6,7 @@
 
 #define DEFAULT_INITIAL_CAPACITY 32
 #define ALLOC_FAIL_MSG                                                         \
-	"ERROR: Failed to allocate memory for string builder (out of memory)"
+	"ERROR: Failed to allocate memory for string builder (out of memory?)"
 
 void alloc_error(void)
 {
