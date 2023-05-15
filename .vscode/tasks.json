@@ -6,10 +6,6 @@
             "type": "shell",
             "command": "gcc",
             "args": [
-                "src/sicp.c",
-                "src/string-builder.c",
-                "-o",
-                "${workspaceFolder}/bin/sicp",
                 "-lm",
                 "-std=c2x",
                 "-pedantic",
@@ -19,6 +15,11 @@
                 "-Wdouble-promotion",
                 "-Wold-style-definition",
                 "-Wno-psabi"
+                "-o",
+                "${workspaceFolder}/bin/sicp",
+                "src/sicp.c",
+                "src/string-builder.c",
+                "src/input_port.c",
             ],
             "options": {
                 "cwd": "${workspaceFolder}"
