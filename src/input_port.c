@@ -1,21 +1,21 @@
 #include <stdlib.h>
 
-#include "input_port.h"
+#include "source.h"
 
-enum type { KIND_FILE = 1, KIND_STRING };
+enum type { TYPE_FILE = 1, TYPE_STRING };
 
-char ip_getc(input_port ip)
+char srcget(source src)
 {
 	char c;
-	switch (ip->port.type) {
-	case KIND_FILE:
-		return fgetc(ip->stream.stream);
-	case KIND_STRING:
-		c = *ip->string.string;
+	switch (src->type.type) {
+	case TYPE_FILE:
+		return fgetc(src->stream.stream);
+	case TYPE_STRING:
+		c = *src->string.string;
 		if (c == '\0') {
 			return EOF;
 		} else {
-			ip->string.string++;
+			src->string.string++;
 			return c;
 		}
 	default:

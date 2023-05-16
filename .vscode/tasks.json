@@ -14,12 +14,13 @@
                 "-Wextra",
                 "-Wdouble-promotion",
                 "-Wold-style-definition",
-                "-Wno-psabi"
+                "-Wno-psabi",
                 "-o",
                 "${workspaceFolder}/bin/sicp",
+
                 "src/sicp.c",
+                "src/source.c",
                 "src/string-builder.c",
-                "src/input_port.c",
             ],
             "options": {
                 "cwd": "${workspaceFolder}"

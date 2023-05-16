@@ -1,12 +1,12 @@
-#ifndef INPUT_PORT_H
-#define INPUT_PORT_H
+#ifndef SOURCE_H
+#define SOURCE_H
 
 #include <stdio.h>
 
-typedef union input_port {
+typedef union source {
 	struct {
 		int type;
-	} port;
+	} type;
 	struct {
 		int type;
 		FILE *stream;
@@ -15,11 +15,11 @@ typedef union input_port {
 		int type;
 		char *string;
 	} string;
-} *input_port;
+} *source;
 
-char input_port_stream(FILE *stream);
-char input_port_file(char *file_path);
-char input_port_string(char *string);
-char ip_getc(input_port ip);
+char source_stream(FILE *stream);
+char source_file(char *file_path);
+char source_string(char *string);
+char srcget(source src);
 
 #endif
