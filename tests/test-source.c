@@ -9,7 +9,7 @@ void src_file_happy(void)
 	char c;
 	source src = source_file("tests/stuff/hello-world.txt");
 	string_builder sb = new_string_builder(0);
-	while ((c = srcgetc(src)) != EOF) {
+	while ((c = srcgetc(src))) {
 		sb_addc(sb, c);
 	}
 	char expected[] = "Hello, world!";
@@ -29,7 +29,7 @@ void src_string_happy(void)
 	char c;
 	source src = source_string(text);
 	string_builder sb = new_string_builder(0);
-	while ((c = srcgetc(src)) != EOF) {
+	while ((c = srcgetc(src))) {
 		sb_addc(sb, c);
 	}
 	char expected[] = "Lorem\nIpsum";

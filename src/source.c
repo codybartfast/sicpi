@@ -7,18 +7,26 @@
 
 enum type { TYPE_STREAM = 1, TYPE_STRING };
 
-source source_file(char *filepath)
+source source_stream(FILE *stream)
 {
-	FILE *file = fopen(filepath, "r");
-	if (!file) {
-		eprintf("Failed to open file '%s'", filepath);
-		perror("Error");
+	if (!stream) {
 		return NULL;
 	}
 	source src = malloc(sizeof(union source));
 	src->stream.type = TYPE_STREAM;
-	src->stream.stream = file;
+	src->stream.stream = stream;
 	return src;
+}
+
+source source_file(char *filepath)
+{
+	FILE *stream = fopen(filepath, "r");
+	if (!stream) {
+		eprintf("Failed to open file '%s'", filepath);
+		perror("Error");
+		return NULL;
+	}
+	return source_stream(stream);
 }
 
 source source_string(char *text)
@@ -37,15 +45,14 @@ char srcgetc(source src)
 	char c;
 	switch (src->type.type) {
 	case TYPE_STREAM:
-		return getc(src->stream.stream);
+		c = getc(src->stream.stream);
+		return c == EOF ? '\0' : c;
 	case TYPE_STRING:
 		c = *src->string.string;
-		if (c == '\0') {
-			return EOF;
-		} else {
+		if (c) {
 			src->string.string++;
-			return c;
 		}
+		return c;
 	default:
 		inyim("srcgetc got an unexpected type: '%d'.", src->type.type);
 		exit(1);
