@@ -1,8 +1,5 @@
 {
     "editor.tabSize": 8,
     "editor.insertSpaces": false,
-    "files.associations": {
-        "input_port.h": "c"
-    },
-    "C_Cpp.intelliSenseEngineFallback": "disabled",
+    "C_Cpp.intelliSenseEngineFallback": "enabled",
 }

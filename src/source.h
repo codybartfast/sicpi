@@ -17,9 +17,10 @@ typedef union source {
 	} string;
 } *source;
 
-char source_stream(FILE *stream);
-char source_file(char *file_path);
-char source_string(char *string);
-char srcget(source src);
+source source_stream(FILE *stream);
+source source_file(char *filepath);
+source source_string(char *string);
+char srcgetc(source src);
+void source_close(source src);
 
 #endif

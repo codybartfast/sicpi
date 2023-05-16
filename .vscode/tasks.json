@@ -19,6 +19,7 @@
                 "${workspaceFolder}/bin/sicp",
 
                 "src/sicp.c",
+                "src/sicpstd.c",
                 "src/source.c",
                 "src/string-builder.c",
             ],
@@ -59,7 +60,10 @@
             "args": [
                 "unity/src/unity.c",
                 "tests/test.c",
+                "src/sicpstd.c",
 
+                "src/source.c",
+                "tests/test-source.c",
                 "src/string-builder.c",
                 "tests/test-string-builder.c",
                 
@@ -69,9 +73,6 @@
             "options": {
                 "cwd": "${workspaceFolder}"
             },
-            "problemMatcher": [
-                "$gcc"
-            ],
         },
     ]
 }
