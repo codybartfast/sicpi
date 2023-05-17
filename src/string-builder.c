@@ -103,9 +103,11 @@ void sb_clear(string_builder sb)
 
 void sb_free(string_builder sb)
 {
-	free(sb->buff);
-	sb->buff = NULL;
-	sb->buff_end = NULL;
-	sb->next = NULL;
-	free(sb);
+	if (sb) {
+		free(sb->buff);
+		sb->buff = NULL;
+		sb->buff_end = NULL;
+		sb->next = NULL;
+		free(sb);
+	}
 }
