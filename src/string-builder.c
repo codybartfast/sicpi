@@ -4,14 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define ALLOC_FAIL_MSG                                                         \
-	"ERROR: Failed to allocate memory for string builder (out of memory?)"
-
-void alloc_error(void)
-{
-	fputs(ALLOC_FAIL_MSG, stderr);
-	exit(1);
-}
+#include "sicpstd.h"
 
 string_builder new_string_builder(size_t initial_capacity)
 {
@@ -22,7 +15,7 @@ string_builder new_string_builder(size_t initial_capacity)
 	char *buff = malloc(sizeof(char) * initial_capacity);
 
 	if (sb == NULL || buff == NULL) {
-		alloc_error();
+		alloc_error("new_string_builder");
 	}
 
 	sb->buff = buff;
@@ -34,21 +27,20 @@ string_builder new_string_builder(size_t initial_capacity)
 
 void grow(string_builder sb)
 {
+	char *new_buff;
 	static size_t sizeLimit = __SIZE_MAX__;
 	static size_t fullGrowLimit =
 		__SIZE_MAX__ / STRING_BUILDER_GROWTH_FACTOR;
 	size_t old_capacity = sb->buff_end - sb->buff;
 	if (old_capacity == sizeLimit) {
-		alloc_error();
+		alloc_error("string_builder grow (limit)");
 	}
 	size_t new_capacity =
 		old_capacity > fullGrowLimit ?
 			sizeLimit :
 			old_capacity * STRING_BUILDER_GROWTH_FACTOR;
-
-	char *new_buff = realloc(sb->buff, new_capacity);
-	if (new_buff == NULL) {
-		alloc_error();
+	if (!(new_buff = realloc(sb->buff, new_capacity))) {
+		alloc_error("string_builder grow");
 	}
 	char *new_next_write = new_buff + (sb->next - sb->buff);
 
@@ -87,10 +79,10 @@ char *sb_current(string_builder sb)
 
 char *sb_copy(string_builder sb)
 {
+	char *copy;
 	terminate_string(sb);
-	char *copy = strdup(sb->buff);
-	if (copy == NULL) {
-		alloc_error();
+	if (!(copy = strdup(sb->buff))) {
+		alloc_error("sb_copy");
 	}
 	strcpy(copy, sb_current(sb));
 	return copy;

@@ -2,6 +2,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+void alloc_error(char *caller)
+{
+	fprintf(stderr,
+		"ERROR: '%s' failed to allocate memory (out of memory?).",
+		caller);
+	exit(1);
+}
+
 void eprintf(const char *msg, ...)
 {
 	va_list args;
@@ -22,4 +30,5 @@ void inyim(char *msg, ...)
 	vfprintf(stderr, msg, args);
 	fprintf(stderr, "\n");
 	va_end(args);
+	exit(1);
 }

@@ -9,11 +9,14 @@ enum type { TYPE_STREAM = 1, TYPE_STRING };
 
 source source_stream(FILE *stream)
 {
+	source src;
 	if (!stream) {
 		eprintf("Source given null stream.");
 		return NULL;
 	}
-	source src = malloc(sizeof(union source));
+	if (!(src = malloc(sizeof(union source)))) {
+		alloc_error("source_stream");
+	}
 	src->stream.type = TYPE_STREAM;
 	src->stream.stream = stream;
 	return src;
@@ -32,11 +35,14 @@ source source_file(char *filepath)
 
 source source_string(char *text)
 {
+	source src;
 	if (!text) {
 		eprintf("Source given null string");
 		return NULL;
 	}
-	source src = malloc(sizeof(union source));
+	if (!(src = malloc(sizeof(union source)))) {
+		alloc_error("source_string");
+	}
 	src->string.type = TYPE_STRING;
 	src->string.string = text;
 	return src;
@@ -56,8 +62,8 @@ char srcgetc(source src)
 		}
 		return c;
 	default:
-		inyim("srcgetc got an unexpected type: '%d'.", src->type.type);
-		exit(1);
+		inyim("'srcgetc' got an unexpected type: '%d'.", src->type.type);
+		exit(1); // keep compiler quiet
 	}
 }
 
@@ -73,7 +79,7 @@ void source_close(source src)
 		default:
 			inyim("source_close got an unexpected type: '%d'.",
 			      src->type.type);
-			exit(1);
+			exit(1); // keep compiler quiet
 		}
 		free(src);
 	}
