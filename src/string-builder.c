@@ -6,6 +6,12 @@
 
 #include "sicpstd.h"
 
+/*
+ * Code here has been copied in:
+ * 	token_table
+ * so any fixes/mods here might be wanted there too.
+ */
+
 string_builder new_string_builder(size_t initial_capacity)
 {
 	initial_capacity = initial_capacity < 1 ?
@@ -27,26 +33,25 @@ string_builder new_string_builder(size_t initial_capacity)
 
 void grow(string_builder sb)
 {
-	char *new_buff;
 	static size_t sizeLimit = __SIZE_MAX__;
 	static size_t fullGrowLimit =
 		__SIZE_MAX__ / STRING_BUILDER_GROWTH_FACTOR;
-	size_t old_capacity = sb->buff_end - sb->buff;
-	if (old_capacity == sizeLimit) {
+	size_t old_alloc = sizeof(char) * (sb->buff_end - sb->buff);
+	if (old_alloc == sizeLimit) {
 		alloc_error("string_builder grow (limit)");
 	}
-	size_t new_capacity =
-		old_capacity > fullGrowLimit ?
-			sizeLimit :
-			old_capacity * STRING_BUILDER_GROWTH_FACTOR;
-	if (!(new_buff = realloc(sb->buff, new_capacity))) {
+	size_t new_alloc = old_alloc > fullGrowLimit ?
+				      sizeLimit :
+				      old_alloc * STRING_BUILDER_GROWTH_FACTOR;
+	char *new_buff = realloc(sb->buff, new_alloc);
+	if (!new_buff) {
 		alloc_error("string_builder grow");
 	}
 	char *new_next_write = new_buff + (sb->next - sb->buff);
 
 	sb->buff = new_buff;
 	sb->next = new_next_write;
-	sb->buff_end = new_buff + new_capacity;
+	sb->buff_end = new_buff + (new_alloc / sizeof(char));
 }
 
 void sb_addc(string_builder sb, char c)
