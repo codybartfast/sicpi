@@ -19,13 +19,15 @@ void sb_new(void)
 	TEST_ASSERT_EQUAL_PTR(sb->buff, sb->next);
 	TEST_ASSERT_EQUAL_size_t(initial_capacity, capacity(sb));
 
-	// sb_free(sb);
+	sb_free(sb);
 }
 
 void sb_new_accept_zero(void)
 {
 	string_builder sb = new_string_builder(0);
 	TEST_ASSERT_GREATER_THAN_size_t(0, capacity(sb));
+
+	sb_free(sb);
 }
 
 void sb_addc_no_grow(void)
@@ -36,6 +38,8 @@ void sb_addc_no_grow(void)
 	sb_addc(sb, 'a');
 	sb_addc(sb, 't');
 	TEST_ASSERT_EQUAL_STRING("cat", sb_current(sb));
+
+	sb_free(sb);
 }
 
 void sb_addc_grow(void)
@@ -48,6 +52,8 @@ void sb_addc_grow(void)
 	TEST_ASSERT_EQUAL_STRING("cats", sb_current(sb));
 	TEST_ASSERT_GREATER_OR_EQUAL(0, available(sb));
 	TEST_ASSERT_EQUAL_STRING("cats", sb_current(sb));
+
+	sb_free(sb);
 }
 
 void sb_add_string(void)
@@ -57,6 +63,8 @@ void sb_add_string(void)
 	sb_adds(sb, " and ");
 	sb_adds(sb, "dogs");
 	TEST_ASSERT_EQUAL_STRING("cats and dogs", sb_current(sb));
+
+	sb_free(sb);
 }
 
 void sb_copy_string(void)
@@ -70,6 +78,8 @@ void sb_copy_string(void)
 	if (copy == current) {
 		TEST_FAIL();
 	}
+
+	sb_free(sb);
 }
 
 void sb_copy_string_with_growth(void)
@@ -111,6 +121,8 @@ void sb_copy_string_with_growth(void)
 	sb_addc(sb, '8');
 	TEST_ASSERT_EQUAL_STRING("12345678", sb_copy(sb));
 	TEST_ASSERT_EQUAL_size_t(16, capacity(sb));
+
+	sb_free(sb);
 }
 
 void sb_clear_resets_and_retains_capacity(void)
@@ -131,6 +143,8 @@ void sb_clear_resets_and_retains_capacity(void)
 	sb_adds(sb, "p");
 	TEST_ASSERT_EQUAL_STRING("p", sb_copy(sb));
 	TEST_ASSERT_EQUAL_size_t(larger_cap, capacity(sb));
+
+	sb_free(sb);
 }
 
 void sb_free_frees(void)
