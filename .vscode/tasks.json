@@ -65,9 +65,13 @@
 
                 "src/source.c",
                 "tests/test-source.c",
+
                 "src/string-builder.c",
                 "tests/test-string-builder.c",
-                
+
+                "src/token-table.c",
+                "tests/test-token-table.c",
+
                 "-o",
                 "${workspaceFolder}/bin/test",
             ],

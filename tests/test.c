@@ -2,6 +2,7 @@
 
 #include "test-source.h"
 #include "test-string-builder.h"
+#include "test-token-table.h"
 
 void setUp(void)
 {
@@ -17,6 +18,7 @@ int main(void)
 
 	test_source();
 	test_string_builder();
+	test_token_table();
 
 	return UNITY_END();
 }

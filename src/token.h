@@ -5,6 +5,7 @@
 
 typedef struct token {
 	lexer lexer;
+
 } *token;
 
 #endif
