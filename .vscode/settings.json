@@ -5,4 +5,5 @@
     "search.exclude": {
         "unity/": true
     },
+    "files.insertFinalNewline": true,
 }
