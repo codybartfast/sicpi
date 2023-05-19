@@ -20,7 +20,9 @@ void src_file_happy(void)
 
 void src_file_not_found(void)
 {
-	TEST_ASSERT_NULL(source_file("not valid file path"));
+	source src = source_file("not valid file path");
+	TEST_ASSERT_NULL(src);
+	source_close(src);
 }
 
 void src_string_happy(void)
@@ -40,7 +42,9 @@ void src_string_happy(void)
 
 void src_string_null(void)
 {
-	TEST_ASSERT_NULL(source_string(NULL));
+	source src = source_string(NULL);
+	TEST_ASSERT_NULL(src);
+	source_close(src);
 }
 
 int test_source(void)
