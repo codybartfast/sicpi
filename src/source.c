@@ -1,4 +1,5 @@
 #include <errno.h>
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -13,7 +14,10 @@ source source_part_init(void)
 	if (!(src = malloc(sizeof(struct source)))) {
 		alloc_error("source init");
 	}
+	src->new_line = true;
 	src->offset = -1;
+	src->x = -1;
+	src->y = -1;
 	return src;
 }
 
@@ -74,13 +78,37 @@ char srcgetc(source src)
 		inyim("'srcgetc' got an unexpected type: '%d'.", src->type);
 		exit(1); // keep compiler quiet
 	}
-	++src->offset;
+	if (c) {
+		if (src->offset == INT64_MAX) {
+			eprintfx("source: exceeded max size.");
+		}
+		src->offset++;
+		if (src->new_line) {
+			src->new_line = false;
+			src->x = -1;
+			src->y++;
+		}
+		src->x++;
+		if (c == '\n') {
+			src->new_line = true;
+		}
+	}
 	return c;
 }
 
 int64_t source_offset(source src)
 {
 	return src->offset;
+}
+
+int64_t x(source src)
+{
+	return src->x;
+}
+
+int64_t y(source src)
+{
+	return src->y;
 }
 
 void source_close(source src)

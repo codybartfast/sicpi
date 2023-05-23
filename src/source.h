@@ -1,6 +1,7 @@
 #ifndef SOURCE_H
 #define SOURCE_H
 
+#include <stdbool.h>
 #include <inttypes.h>
 #include <stdio.h>
 
@@ -10,7 +11,10 @@
 */
 typedef struct source {
 	int type;
+	bool new_line;
 	int64_t offset;
+	int64_t x;
+	int64_t y;
 	union {
 		struct {
 			FILE *stream;
@@ -47,6 +51,8 @@ source source_string(char *string);
 char srcgetc(source src);
 
 int64_t source_offset(source src);
+int64_t x(source src);
+int64_t y(source src);
 
 /*
  * Releases memory allocated to the source.
