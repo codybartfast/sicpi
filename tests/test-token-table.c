@@ -33,28 +33,28 @@ void tt_new_accept_zero(void)
 
 void tt_grow(void)
 {
-	TOKEN_TABLE_IDX_T idx = -1;
+	TOKEN_TABLE_KEY_T key = -1;
 	token_table tt = token_table_new(1);
 	TEST_ASSERT_EQUAL_UINT(1, tt_capacity(tt));
 
-	idx = token_table_add(tt, NULL);
-	TEST_ASSERT_EQUAL_UINT64(0, idx);
+	key = token_table_add(tt, NULL);
+	TEST_ASSERT_EQUAL_UINT64(0, key);
 	TEST_ASSERT_EQUAL_UINT(1, tt_capacity(tt));
 
-	idx = token_table_add(tt, NULL);
-	TEST_ASSERT_EQUAL_UINT64(1, idx);
+	key = token_table_add(tt, NULL);
+	TEST_ASSERT_EQUAL_UINT64(1, key);
 	TEST_ASSERT_EQUAL_UINT(2, tt_capacity(tt));
 
-	idx = token_table_add(tt, NULL);
-	TEST_ASSERT_EQUAL_UINT64(2, idx);
+	key = token_table_add(tt, NULL);
+	TEST_ASSERT_EQUAL_UINT64(2, key);
 	TEST_ASSERT_EQUAL_UINT(4, tt_capacity(tt));
 
-	idx = token_table_add(tt, NULL);
-	TEST_ASSERT_EQUAL_UINT64(3, idx);
+	key = token_table_add(tt, NULL);
+	TEST_ASSERT_EQUAL_UINT64(3, key);
 	TEST_ASSERT_EQUAL_UINT(4, tt_capacity(tt));
 
-	idx = token_table_add(tt, NULL);
-	TEST_ASSERT_EQUAL_UINT64(4, idx);
+	key = token_table_add(tt, NULL);
+	TEST_ASSERT_EQUAL_UINT64(4, key);
 	TEST_ASSERT_EQUAL_UINT(8, tt_capacity(tt));
 
 	token_table_free(tt);

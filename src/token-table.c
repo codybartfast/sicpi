@@ -45,25 +45,32 @@ void grow_table(token_table tt)
 	tt->table_end = new_table + (new_alloc / sizeof(token));
 }
 
-TOKEN_TABLE_IDX_T token_table_add(token_table tt, token t)
+TOKEN_TABLE_KEY_T token_table_add(token_table tt, token t)
 {
 	if (tt->next >= tt->table_end) {
 		grow_table(tt);
 	}
-	TOKEN_TABLE_IDX_T idx = tt->next - tt->table;
+	size_t usedCount = tt->next - tt->table;
+	if (usedCount == TOKEN_TABLE_KEY_MAX) {
+		eprintfx("Token Table is full");
+	}
+	TOKEN_TABLE_KEY_T key = usedCount;
 	*tt->next = t;
 	++tt->next;
-	return idx;
+	return key;
 }
 
-token token_table_get(token_table tt, TOKEN_TABLE_IDX_T idx)
+token token_table_get(token_table tt, TOKEN_TABLE_KEY_T key)
 {
-	return *(tt->table + idx);
+	return *(tt->table + key);
 }
 
 void token_table_free(token_table tt)
 {
 	if (tt) {
+		for (token *t = tt->table; t < tt->next; ++t) {
+			free(*t);
+		}
 		free(tt->table);
 		tt->table = NULL;
 		tt->next = NULL;

@@ -20,6 +20,17 @@ void eprintf(const char *msg, ...)
 	va_end(args);
 }
 
+void eprintfx(const char *msg, ...)
+{
+	va_list args;
+	va_start(args, msg);
+	fprintf(stderr, "Error: ");
+	vfprintf(stderr, msg, args);
+	fprintf(stderr, "\n");
+	va_end(args);
+	exit(1);
+}
+
 void inyim(char *msg, ...)
 {
 	va_list args;
