@@ -7,18 +7,16 @@
  * Provides a source of characters that can orignate from a file, a stream such
  * StdIn or a string.
 */
-typedef union source {
-	struct {
-		int type;
-	} type;
-	struct {
-		int type;
-		FILE *stream;
-	} stream;
-	struct {
-		int type;
-		char *string;
-	} string;
+typedef struct source {
+	int type;
+	union {
+		struct {
+			FILE *stream;
+		} stream;
+		struct {
+			char *string;
+		} string;
+	} underlying;
 } *source;
 
 /*

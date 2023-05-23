@@ -16,11 +16,11 @@ source source_file(char *filepath)
 		perror("Error");
 		return NULL;
 	}
-	if (!(src = malloc(sizeof(union source)))) {
+	if (!(src = malloc(sizeof(struct source)))) {
 		alloc_error("source_file");
 	}
-	src->stream.type = TYPE_FILE;
-	src->stream.stream = stream;
+	src->type = TYPE_FILE;
+	src->underlying.stream.stream = stream;
 	return src;
 }
 
@@ -31,11 +31,11 @@ source source_stream(FILE *stream)
 		eprintf("Source given null stream.");
 		return NULL;
 	}
-	if (!(src = malloc(sizeof(union source)))) {
+	if (!(src = malloc(sizeof(struct source)))) {
 		alloc_error("source_stream");
 	}
-	src->stream.type = TYPE_STREAM;
-	src->stream.stream = stream;
+	src->type = TYPE_STREAM;
+	src->underlying.stream.stream = stream;
 	return src;
 }
 
@@ -46,31 +46,31 @@ source source_string(char *text)
 		eprintf("Source given null string");
 		return NULL;
 	}
-	if (!(src = malloc(sizeof(union source)))) {
+	if (!(src = malloc(sizeof(struct source)))) {
 		alloc_error("source_string");
 	}
-	src->string.type = TYPE_STRING;
-	src->string.string = text;
+	src->type = TYPE_STRING;
+	src->underlying.string.string = text;
 	return src;
 }
 
 char srcgetc(source src)
 {
 	char c;
-	switch (src->type.type) {
+	switch (src->type) {
 	case TYPE_FILE:
 	case TYPE_STREAM:
-		c = getc(src->stream.stream);
+		c = getc(src->underlying.stream.stream);
 		return c == EOF ? '\0' : c;
 	case TYPE_STRING:
-		c = *src->string.string;
+		c = *src->underlying.string.string;
 		if (c) {
-			src->string.string++;
+			src->underlying.string.string++;
 		}
 		return c;
 	default:
 		inyim("'srcgetc' got an unexpected type: '%d'.",
-		      src->type.type);
+		      src->type);
 		exit(1); // keep compiler quiet
 	}
 }
@@ -78,16 +78,16 @@ char srcgetc(source src)
 void source_close(source src)
 {
 	if (src) {
-		switch (src->type.type) {
+		switch (src->type) {
 		case TYPE_FILE:
-			fclose(src->stream.stream);
+			fclose(src->underlying.stream.stream);
 		case TYPE_STREAM:
 			break;
 		case TYPE_STRING:
 			break;
 		default:
 			inyim("source_close got an unexpected type: '%d'.",
-			      src->type.type);
+			      src->type);
 			exit(1); // keep compiler quiet
 		}
 		free(src);
