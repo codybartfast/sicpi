@@ -7,18 +7,25 @@
 
 enum type { TYPE_FILE = 1, TYPE_STREAM, TYPE_STRING };
 
-source source_file(char *filepath)
+source source_part_init(void)
 {
 	source src;
+	if (!(src = malloc(sizeof(struct source)))) {
+		alloc_error("source init");
+	}
+	src->offset = -1;
+	return src;
+}
+
+source source_file(char *filepath)
+{
 	FILE *stream = fopen(filepath, "r");
 	if (!stream) {
 		eprintf("Failed to open file '%s'", filepath);
 		perror("Error");
 		return NULL;
 	}
-	if (!(src = malloc(sizeof(struct source)))) {
-		alloc_error("source_file");
-	}
+	source src = source_part_init();
 	src->type = TYPE_FILE;
 	src->underlying.stream.stream = stream;
 	return src;
@@ -26,14 +33,11 @@ source source_file(char *filepath)
 
 source source_stream(FILE *stream)
 {
-	source src;
 	if (!stream) {
 		eprintf("Source given null stream.");
 		return NULL;
 	}
-	if (!(src = malloc(sizeof(struct source)))) {
-		alloc_error("source_stream");
-	}
+	source src = source_part_init();
 	src->type = TYPE_STREAM;
 	src->underlying.stream.stream = stream;
 	return src;
@@ -41,14 +45,11 @@ source source_stream(FILE *stream)
 
 source source_string(char *text)
 {
-	source src;
 	if (!text) {
 		eprintf("Source given null string");
 		return NULL;
 	}
-	if (!(src = malloc(sizeof(struct source)))) {
-		alloc_error("source_string");
-	}
+	source src = source_part_init();
 	src->type = TYPE_STRING;
 	src->underlying.string.string = text;
 	return src;
@@ -61,18 +62,25 @@ char srcgetc(source src)
 	case TYPE_FILE:
 	case TYPE_STREAM:
 		c = getc(src->underlying.stream.stream);
-		return c == EOF ? '\0' : c;
+		c = c == EOF ? '\0' : c;
+		break;
 	case TYPE_STRING:
 		c = *src->underlying.string.string;
 		if (c) {
 			src->underlying.string.string++;
 		}
-		return c;
+		break;
 	default:
-		inyim("'srcgetc' got an unexpected type: '%d'.",
-		      src->type);
+		inyim("'srcgetc' got an unexpected type: '%d'.", src->type);
 		exit(1); // keep compiler quiet
 	}
+	++src->offset;
+	return c;
+}
+
+int64_t source_offset(source src)
+{
+	return src->offset;
 }
 
 void source_close(source src)

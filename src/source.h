@@ -1,6 +1,7 @@
 #ifndef SOURCE_H
 #define SOURCE_H
 
+#include <inttypes.h>
 #include <stdio.h>
 
 /*
@@ -9,6 +10,7 @@
 */
 typedef struct source {
 	int type;
+	int64_t offset;
 	union {
 		struct {
 			FILE *stream;
@@ -43,6 +45,8 @@ source source_string(char *string);
  * is reached
  */
 char srcgetc(source src);
+
+int64_t source_offset(source src);
 
 /*
  * Releases memory allocated to the source.
