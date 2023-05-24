@@ -6,6 +6,8 @@
 #include "sicpstd.h"
 #include "source.h"
 
+#define NO_PEEKED -1
+
 enum type { TYPE_FILE = 1, TYPE_STREAM, TYPE_STRING };
 
 source source_part_init(void)
@@ -18,6 +20,7 @@ source source_part_init(void)
 	src->offset = -1;
 	src->x = -1;
 	src->y = -1;
+	src->peeked = NO_PEEKED;
 	return src;
 }
 
@@ -59,7 +62,7 @@ source source_string(char *text)
 	return src;
 }
 
-char srcgetc(source src)
+char readc(source src)
 {
 	char c;
 	switch (src->type) {
@@ -75,9 +78,23 @@ char srcgetc(source src)
 		}
 		break;
 	default:
-		inyim("'srcgetc' got an unexpected type: '%d'.", src->type);
+		inyim("'source_c' got an unexpected type: '%d'.", src->type);
 		exit(1); // keep compiler quiet
 	}
+	return c;
+}
+
+char source_c(source src)
+{
+	char c;
+
+	if (src->peeked == NO_PEEKED) {
+		c = readc(src);
+	} else {
+		c = (char)src->peeked;
+		src->peeked = NO_PEEKED;
+	}
+
 	if (c) {
 		if (src->offset == INT64_MAX) {
 			eprintfx("source: exceeded max size.");
@@ -101,14 +118,22 @@ int64_t source_offset(source src)
 	return src->offset;
 }
 
-int64_t x(source src)
+int64_t source_x(source src)
 {
 	return src->x;
 }
 
-int64_t y(source src)
+int64_t source_y(source src)
 {
 	return src->y;
+}
+
+char source_peek(source src)
+{
+	if (src->peeked == NO_PEEKED) {
+		src->peeked = readc(src);
+	}
+	return src->peeked;
 }
 
 void source_close(source src)

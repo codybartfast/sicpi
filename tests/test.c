@@ -16,9 +16,9 @@ int main(void)
 {
 	UNITY_BEGIN();
 
-	test_source();
 	test_string_builder();
 	test_token_table();
+	test_source();
 
 	return UNITY_END();
 }

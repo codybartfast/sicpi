@@ -15,6 +15,7 @@ typedef struct source {
 	int64_t offset;
 	int64_t x;
 	int64_t y;
+	int peeked;
 	union {
 		struct {
 			FILE *stream;
@@ -48,11 +49,27 @@ source source_string(char *string);
  * Returns the next character from the source or '\0' if end of string or stream
  * is reached
  */
-char srcgetc(source src);
+char source_c(source src);
 
+/*
+ * Zero based index of the last character returned by source_c
+ */
 int64_t source_offset(source src);
-int64_t x(source src);
-int64_t y(source src);
+
+/*
+ * Zero based column of the last character returned by source_c
+ */
+int64_t source_x(source src);
+
+/*
+ * Zero based line of the last character returned by source_c
+ */
+int64_t source_y(source src);
+
+/*
+ * The next char that will be returned by source_c
+ */
+char source_peek(source src);
 
 /*
  * Releases memory allocated to the source.
