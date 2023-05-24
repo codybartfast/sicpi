@@ -5,18 +5,18 @@
 #include "../src/source.h"
 #include "../src/string-builder.h"
 
-char numbers_path[] = "tests/stuff/numbers.txt";
-char numbers_expected[] = "one\ntwo\n\nthree\n";
+static char file_path[] = "tests/stuff/test-source.txt";
+static char file_expected[] = "one\ntwo\n\nthree\n";
 
 void src_file_happy(void)
 {
 	char c;
-	source src = source_file(numbers_path);
+	source src = source_file(file_path);
 	string_builder sb = new_string_builder(0);
 	while ((c = source_c(src))) {
 		sb_addc(sb, c);
 	}
-	TEST_ASSERT_EQUAL_STRING(numbers_expected, sb_current(sb));
+	TEST_ASSERT_EQUAL_STRING(file_expected, sb_current(sb));
 	sb_free(sb);
 	source_close(src);
 }
@@ -53,7 +53,7 @@ void src_string_null(void)
 void src_position(void)
 {
 	int i = -1;
-	source src = source_file(numbers_path);
+	source src = source_file(file_path);
 
 	TEST_ASSERT_EQUAL_INT(-1, source_offset(src));
 	TEST_ASSERT_EQUAL_INT(-1, source_x(src));
@@ -143,7 +143,7 @@ void src_position(void)
 
 void src_peek(void)
 {
-	source src = source_file(numbers_path);
+	source src = source_file(file_path);
 
 	// o
 	TEST_ASSERT_EQUAL_INT(-1, source_offset(src));

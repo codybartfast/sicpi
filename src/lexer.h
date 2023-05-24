@@ -10,6 +10,7 @@ typedef struct lexer {
 	string_builder sb;
 } *lexer;
 
+lexer lexer_new(source src);
 token lexer_read(lexer lxr);
 void lexer_free(void);
 

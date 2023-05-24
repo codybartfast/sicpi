@@ -64,6 +64,9 @@
                 "tests/test.c",
                 "src/sicpstd.c",
 
+                "src/lexer.c",
+                "tests/test-lexer.c",
+
                 "src/source.c",
                 "tests/test-source.c",
 
