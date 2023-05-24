@@ -22,6 +22,7 @@
                 "src/sicpstd.c",
                 "src/source.c",
                 "src/string-builder.c",
+                // "src/token.c",
                 "src/token-table.c",
             ],
             "options": {

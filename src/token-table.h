@@ -4,21 +4,22 @@
 #include <limits.h>
 #include <stdint.h>
 
-#include "sicpstd.h"
 #include "lexer.h"
+#include "sicpstd.h"
+#include "token.h"
 
 /*
  * This is intended to store references to tokens created by the lexer so they
- * can be referred to by scheme objects via their index in the table.
+ * can be referred to by scheme objects using a key.
  * 
- * If nothing else, this allows control over the amount of spaced used to refer
+ * If nothing else, this allows control over the amount of space used to refer
  * to the token in the scheme object.
  */
 
 #define TOKEN_TABLE_DEFAULT_INITIAL_CAPACITY 1024
 
 /*
- * The integer type used for table indexes.
+ * The integer type used for table key/index.
  */
 #define TOKEN_TABLE_KEY_T uint32_t
 #define TOKEN_TABLE_KEY_MAX UINT32_MAX
