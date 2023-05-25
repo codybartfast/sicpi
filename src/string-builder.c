@@ -54,13 +54,14 @@ void grow(string_builder sb)
 	sb->buff_end = new_buff + (new_alloc / sizeof(char));
 }
 
-void sb_addc(string_builder sb, char c)
+char sb_addc(string_builder sb, char c)
 {
 	if (sb->next >= sb->buff_end) {
 		grow(sb);
 	}
 	*sb->next = c;
 	++sb->next;
+	return c;
 }
 
 void sb_adds(string_builder sb, char *s)

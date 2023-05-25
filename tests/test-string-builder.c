@@ -46,10 +46,10 @@ void sb_addc_no_grow(void)
 void sb_addc_grow(void)
 {
 	string_builder sb = sb_new(1);
-	sb_addc(sb, 'c');
-	sb_addc(sb, 'a');
-	sb_addc(sb, 't');
-	sb_addc(sb, 's');
+	TEST_ASSERT_EQUAL_CHAR('c', sb_addc(sb, 'c'));
+	TEST_ASSERT_EQUAL_CHAR('a', sb_addc(sb, 'a'));
+	TEST_ASSERT_EQUAL_CHAR('t', sb_addc(sb, 't'));
+	TEST_ASSERT_EQUAL_CHAR('s', sb_addc(sb, 's'));
 	TEST_ASSERT_EQUAL_STRING("cats", sb_current(sb));
 	TEST_ASSERT_GREATER_OR_EQUAL(0, sb_available(sb));
 	TEST_ASSERT_EQUAL_STRING("cats", sb_current(sb));

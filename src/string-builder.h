@@ -26,9 +26,9 @@ typedef struct string_builder {
 string_builder sb_new(size_t initial_capacity);
 
 /*
- * Adds the character to the string_builder
+ * Adds the character to the string_builder, and returns the same character.
 */
-void sb_addc(string_builder sb, char c);
+char sb_addc(string_builder sb, char c);
 
 /*
  * Copies the string into the string_builder
@@ -39,8 +39,8 @@ void sb_adds(string_builder sb, char *s);
  * Returns a reference to the string_builder's internal buffer with the current
  * string zero terminated.
  *
- * 		Note:  	the string will not be valid, and may not be terminated after
- *       		subsequent adds, clears or frees.
+ * 		Note:  	the string will not be valid, and may not be terminated 
+ * 			after subsequent adds, clears or frees.
  *
  * 		Note:   the returned string should not be freed directly.
  */
