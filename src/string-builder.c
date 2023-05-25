@@ -64,11 +64,13 @@ char sb_addc(string_builder sb, char c)
 	return c;
 }
 
-void sb_adds(string_builder sb, char *s)
+char *sb_adds(string_builder sb, char *str)
 {
+	char *s = str;
 	while (*s) {
 		sb_addc(sb, *(s++));
 	}
+	return str;
 }
 
 void terminate_string(string_builder sb)

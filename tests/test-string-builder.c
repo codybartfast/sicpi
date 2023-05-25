@@ -60,9 +60,9 @@ void sb_addc_grow(void)
 void sb_add_string(void)
 {
 	string_builder sb = sb_new(1);
-	sb_adds(sb, "cats");
-	sb_adds(sb, " and ");
-	sb_adds(sb, "dogs");
+	TEST_ASSERT_EQUAL_STRING("cats", sb_adds(sb, "cats"));
+	TEST_ASSERT_EQUAL_STRING(" and ", sb_adds(sb, " and "));
+	TEST_ASSERT_EQUAL_STRING("dogs", sb_adds(sb, "dogs"));
 	TEST_ASSERT_EQUAL_STRING("cats and dogs", sb_current(sb));
 
 	sb_free(sb);

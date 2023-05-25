@@ -33,7 +33,7 @@ char sb_addc(string_builder sb, char c);
 /*
  * Copies the string into the string_builder
 */
-void sb_adds(string_builder sb, char *s);
+char *sb_adds(string_builder sb, char *str);
 
 /*
  * Returns a reference to the string_builder's internal buffer with the current
