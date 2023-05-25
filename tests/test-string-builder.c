@@ -11,10 +11,10 @@ size_t sb_available(string_builder sb)
 	return sb->buff_end - sb->next;
 }
 
-void sb_new(void)
+void sb_new_(void)
 {
 	size_t initial_capacity = 43;
-	string_builder sb = new_string_builder(initial_capacity);
+	string_builder sb = sb_new(initial_capacity);
 	TEST_ASSERT_NOT_NULL(sb);
 	TEST_ASSERT_NOT_NULL(sb->buff);
 	TEST_ASSERT_EQUAL_PTR(sb->buff, sb->next);
@@ -25,7 +25,7 @@ void sb_new(void)
 
 void sb_new_accept_zero(void)
 {
-	string_builder sb = new_string_builder(0);
+	string_builder sb = sb_new(0);
 	TEST_ASSERT_GREATER_THAN_size_t(0, sb_capacity(sb));
 
 	sb_free(sb);
@@ -33,7 +33,7 @@ void sb_new_accept_zero(void)
 
 void sb_addc_no_grow(void)
 {
-	string_builder sb = new_string_builder(4);
+	string_builder sb = sb_new(4);
 	*sb->buff = 'x';
 	sb_addc(sb, 'c');
 	sb_addc(sb, 'a');
@@ -45,7 +45,7 @@ void sb_addc_no_grow(void)
 
 void sb_addc_grow(void)
 {
-	string_builder sb = new_string_builder(1);
+	string_builder sb = sb_new(1);
 	sb_addc(sb, 'c');
 	sb_addc(sb, 'a');
 	sb_addc(sb, 't');
@@ -59,7 +59,7 @@ void sb_addc_grow(void)
 
 void sb_add_string(void)
 {
-	string_builder sb = new_string_builder(1);
+	string_builder sb = sb_new(1);
 	sb_adds(sb, "cats");
 	sb_adds(sb, " and ");
 	sb_adds(sb, "dogs");
@@ -70,7 +70,7 @@ void sb_add_string(void)
 
 void sb_copy_string(void)
 {
-	string_builder sb = new_string_builder(0);
+	string_builder sb = sb_new(0);
 	sb_adds(sb, "pepper");
 	char *current = sb_current(sb);
 	char *copy = sb_copy(sb);
@@ -86,7 +86,7 @@ void sb_copy_string(void)
 void sb_copy_string_with_growth(void)
 {
 	// size tests depend on implemation using growth factor of 2
-	string_builder sb = new_string_builder(1);
+	string_builder sb = sb_new(1);
 
 	TEST_ASSERT_EQUAL_STRING("", sb_copy(sb));
 	TEST_ASSERT_EQUAL_size_t(1, sb_capacity(sb));
@@ -128,7 +128,7 @@ void sb_copy_string_with_growth(void)
 
 void sb_clear_resets_and_retains_capacity(void)
 {
-	string_builder sb = new_string_builder(1);
+	string_builder sb = sb_new(1);
 
 	sb_adds(sb, "R");
 	TEST_ASSERT_EQUAL_STRING("R", sb_copy(sb));
@@ -150,7 +150,7 @@ void sb_clear_resets_and_retains_capacity(void)
 
 void sb_free_frees(void)
 {
-	string_builder sb = new_string_builder(1);
+	string_builder sb = sb_new(1);
 	char *next = sb->next;
 	TEST_ASSERT_NOT_NULL(sb->next);
 
@@ -163,7 +163,7 @@ void sb_free_frees(void)
 
 int test_string_builder(void)
 {
-	RUN_TEST(sb_new);
+	RUN_TEST(sb_new_);
 	RUN_TEST(sb_new_accept_zero);
 	RUN_TEST(sb_addc_no_grow);
 	RUN_TEST(sb_addc_grow);

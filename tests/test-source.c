@@ -12,7 +12,7 @@ void src_file_happy(void)
 {
 	char c;
 	source src = source_file(file_path);
-	string_builder sb = new_string_builder(0);
+	string_builder sb = sb_new(0);
 	while ((c = source_c(src))) {
 		sb_addc(sb, c);
 	}
@@ -33,7 +33,7 @@ void src_string_happy(void)
 	char *text = "Lorem\nIpsum";
 	char c;
 	source src = source_string(text);
-	string_builder sb = new_string_builder(0);
+	string_builder sb = sb_new(0);
 	while ((c = source_c(src))) {
 		sb_addc(sb, c);
 	}

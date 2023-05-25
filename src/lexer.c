@@ -16,7 +16,7 @@ lexer lexer_new(source src)
 		alloc_error("lexor_new");
 	}
 	lxr->source = src;
-	lxr->sb = new_string_builder(0);
+	lxr->sb = sb_new(0);
 	return lxr;
 }
 

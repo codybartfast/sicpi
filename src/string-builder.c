@@ -12,7 +12,7 @@
  * so any fixes/mods here might be wanted there too.
  */
 
-string_builder new_string_builder(size_t initial_capacity)
+string_builder sb_new(size_t initial_capacity)
 {
 	initial_capacity = initial_capacity < 1 ?
 				   STRING_BUILDER_DEFAULT_INITIAL_CAPACITY :
@@ -21,7 +21,7 @@ string_builder new_string_builder(size_t initial_capacity)
 	char *buff = malloc(sizeof(char) * initial_capacity);
 
 	if (sb == NULL || buff == NULL) {
-		alloc_error("new_string_builder");
+		alloc_error("sb_new");
 	}
 
 	sb->buff = buff;
@@ -41,8 +41,8 @@ void grow(string_builder sb)
 		alloc_error("string_builder grow (limit)");
 	}
 	size_t new_alloc = old_alloc > fullGrowLimit ?
-				      sizeLimit :
-				      old_alloc * STRING_BUILDER_GROWTH_FACTOR;
+				   sizeLimit :
+				   old_alloc * STRING_BUILDER_GROWTH_FACTOR;
 	char *new_buff = realloc(sb->buff, new_alloc);
 	if (!new_buff) {
 		alloc_error("string_builder grow");

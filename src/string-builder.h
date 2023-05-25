@@ -23,7 +23,7 @@ typedef struct string_builder {
  * Returns a pointer to a new string_builder.
  * If initial_capacity is zero then the default initial capacity is used.
 */
-string_builder new_string_builder(size_t initial_capacity);
+string_builder sb_new(size_t initial_capacity);
 
 /*
  * Adds the character to the string_builder
