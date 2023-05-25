@@ -9,6 +9,7 @@
 lexer lexer_new(source src)
 {
 	if (!src) {
+		eprintf("lexer_new given null source");
 		return NULL;
 	}
 	lexer lxr = malloc(sizeof(struct lexer));
