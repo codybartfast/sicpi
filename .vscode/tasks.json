@@ -22,7 +22,7 @@
                 "src/sicpstd.c",
                 "src/source.c",
                 "src/string-builder.c",
-                // "src/token.c",
+                "src/token.c",
                 "src/token-table.c",
             ],
             "options": {
@@ -65,6 +65,7 @@
                 "src/sicpstd.c",
 
                 "src/lexer.c",
+                "src/token.c",
                 "tests/test-lexer.c",
 
                 "src/source.c",

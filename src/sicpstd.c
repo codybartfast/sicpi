@@ -1,3 +1,5 @@
+#include "sicpstd.h"
+
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -31,7 +33,7 @@ void eprintfx(const char *msg, ...)
 	exit(1);
 }
 
-void inyim(char *msg, ...)
+void inyim(const char *msg, ...)
 {
 	va_list args;
 	va_start(args, msg);

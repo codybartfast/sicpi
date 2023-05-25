@@ -18,7 +18,8 @@ void lxr_new(void)
 	source src = source_string("");
 	lexer lxr = lexer_new(src);
 	TEST_ASSERT_NOT_NULL(lxr);
-	TEST_ASSERT_EQUAL_size_t(0, strlen(sb_current(lxr->sb)));
+	TEST_ASSERT_EQUAL_size_t(0, strlen(sb_current(lxr->text)));
+	TEST_ASSERT_EQUAL_size_t(0, strlen(sb_current(lxr->temp)));
 	TEST_ASSERT_EQUAL_PTR(src, lxr->source);
 }
 
@@ -31,12 +32,35 @@ void lxr_free(void)
 {
 	source src = source_string("");
 	lexer lxr = lexer_new(src);
-	TEST_ASSERT_NOT_NULL(lxr->sb);
-	string_builder strbld = lxr->sb;
-	char *buffer = strbld->buff;
+	TEST_ASSERT_NOT_NULL(lxr->text);
+	TEST_ASSERT_NOT_NULL(lxr->temp);
+	string_builder text = lxr->text;
+	string_builder temp = lxr->temp;
+	char *text_buffer = text->buff;
+	char *temp_buffer = temp->buff;
 	lexer_free(lxr);
-	TEST_ASSERT_FALSE(strbld == lxr->sb);
-	TEST_ASSERT_FALSE(buffer == strbld->buff);
+	TEST_ASSERT_FALSE(text == lxr->text);
+	TEST_ASSERT_FALSE(temp == lxr->temp);
+	TEST_ASSERT_FALSE(text_buffer == text->buff);
+	TEST_ASSERT_FALSE(temp_buffer == temp->buff);
+}
+
+void expected_token(token tkn, token_type type, char *text)
+{
+	TEST_ASSERT_NOT_NULL(tkn);
+	TEST_ASSERT_EQUAL_INT(type, tkn_type(tkn));
+	TEST_ASSERT_EQUAL_STRING(text, tkn_text(tkn));
+}
+
+void lxr_read(void)
+{
+	source src = source_file(file_path);
+	TEST_ASSERT_NOT_NULL(src);
+	lexer lxr = lexer_new(src);
+	TEST_ASSERT_NOT_NULL(lxr);
+	token tkn;
+	tkn = lexer_read(lxr);
+	expected_token(tkn, TKN_LIST_OPEN, "(");
 }
 
 int test_lexer(void)
@@ -45,4 +69,5 @@ int test_lexer(void)
 	RUN_TEST(lxr_new);
 	RUN_TEST(lxr_free_null);
 	RUN_TEST(lxr_free);
+	RUN_TEST(lxr_read);
 }
