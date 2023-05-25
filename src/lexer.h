@@ -12,6 +12,6 @@ typedef struct lexer {
 
 lexer lexer_new(source src);
 token lexer_read(lexer lxr);
-void lexer_free(void);
+void lexer_free(lexer lxr);
 
 #endif
