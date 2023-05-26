@@ -3,6 +3,8 @@
 
 #include "string-builder.h"
 
+typedef struct lexer *lexer;
+
 typedef enum token_type {
 	TKN_ERROR = -3,
 	TKN_EOF_UNEXPECTED = -2,
@@ -20,10 +22,10 @@ typedef enum token_type {
 } token_type;
 
 typedef struct token {
-	string_builder sb;
+	lexer lxr;
 	enum token_type type;
 	char *text;
-	char *mesage;
+	char *message;
 	long offset;
 	long x; // zero-based column
 	long y; // zero-based line
