@@ -2,6 +2,7 @@
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "sicpstd.h"
 #include "source.h"
@@ -10,17 +11,37 @@
 
 enum type { TYPE_FILE = 1, TYPE_STREAM, TYPE_STRING };
 
-source source_part_init(void)
+source source_part_init(char *name)
 {
-	source src;
-	if (!(src = malloc(sizeof(struct source)))) {
+	if (!name) {
+		eprintfx("source given a NULL name.");
+	}
+	source src = malloc(sizeof(struct source));
+	if (!src) {
 		alloc_error("source init");
 	}
+	char *dup_name = strdup(name);
+	if (!dup_name) {
+		alloc_error("source init - duplicate name");
+	}
+	src->name = dup_name;
 	src->new_line = true;
 	src->offset = -1;
 	src->x = -1;
 	src->y = -1;
 	src->peeked = NO_PEEKED;
+	return src;
+}
+
+source source_stream(FILE *stream, char *name)
+{
+	if (!stream) {
+		eprintf("Source given null stream.");
+		return NULL;
+	}
+	source src = source_part_init(name);
+	src->type = TYPE_STREAM;
+	src->underlying.stream.stream = stream;
 	return src;
 }
 
@@ -32,34 +53,27 @@ source source_file(char *filepath)
 		perror("Error");
 		return NULL;
 	}
-	source src = source_part_init();
+	source src = source_part_init(filepath);
 	src->type = TYPE_FILE;
 	src->underlying.stream.stream = stream;
 	return src;
 }
 
-source source_stream(FILE *stream)
-{
-	if (!stream) {
-		eprintf("Source given null stream.");
-		return NULL;
-	}
-	source src = source_part_init();
-	src->type = TYPE_STREAM;
-	src->underlying.stream.stream = stream;
-	return src;
-}
-
-source source_string(char *text)
+source source_string(char *text, char *name)
 {
 	if (!text) {
 		eprintf("Source given null string");
 		return NULL;
 	}
-	source src = source_part_init();
+	source src = source_part_init(name);
 	src->type = TYPE_STRING;
 	src->underlying.string.string = text;
 	return src;
+}
+
+char *source_name(source src)
+{
+	return src->name;
 }
 
 char readc(source src)

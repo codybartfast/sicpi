@@ -13,6 +13,7 @@
 */
 typedef struct source {
 	int type;
+	char *name;
 	bool new_line;
 	int64_t offset;
 	int64_t x;
@@ -32,7 +33,7 @@ typedef struct source {
  * Returns a pointer to new source providing characters from the given stream.
  * Returns NULL if the stream is NULL.
  */
-source source_stream(FILE *stream);
+source source_stream(FILE *stream, char *name);
 
 /*
  * Attempts to open the given file and return and new source providing
@@ -45,7 +46,9 @@ source source_file(char *filepath);
  * Returns a pointer to new source providing characters from the given string.
  * Returns NULL if the string is NULL.
  */
-source source_string(char *string);
+source source_string(char *string, char *name);
+
+char *source_name(source src);
 
 /*
  * Returns the next character from the source or SOURCE_EOS ('\0') if end of

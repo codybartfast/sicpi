@@ -17,6 +17,7 @@ void src_file_happy(void)
 		sb_addc(sb, c);
 	}
 	TEST_ASSERT_EQUAL_STRING(file_expected, sb_current(sb));
+	TEST_ASSERT_EQUAL_STRING(file_path, source_name(src));
 	sb_free(sb);
 	source_close(src);
 }
@@ -32,20 +33,21 @@ void src_string_happy(void)
 {
 	char *text = "Lorem\nIpsum";
 	char c;
-	source src = source_string(text);
+	source src = source_string(text, "A Name");
 	string_builder sb = sb_new(0);
 	while ((c = source_c(src))) {
 		sb_addc(sb, c);
 	}
 	char expected[] = "Lorem\nIpsum";
 	TEST_ASSERT_EQUAL_STRING(expected, sb_current(sb));
+	TEST_ASSERT_EQUAL_STRING("A Name", source_name(src));
 	sb_free(sb);
 	source_close(src);
 }
 
 void src_string_null(void)
 {
-	source src = source_string(NULL);
+	source src = source_string(NULL, NULL);
 	TEST_ASSERT_NULL(src);
 	source_close(src);
 }

@@ -15,7 +15,7 @@ void lxr_new_null_src(void)
 
 void lxr_new(void)
 {
-	source src = source_string("");
+	source src = source_string("", "");
 	lexer lxr = lexer_new(src);
 	TEST_ASSERT_NOT_NULL(lxr);
 	TEST_ASSERT_EQUAL_size_t(0, strlen(sb_current(lxr->text)));
@@ -30,7 +30,7 @@ void lxr_free_null(void)
 
 void lxr_free(void)
 {
-	source src = source_string("");
+	source src = source_string("", "");
 	lexer lxr = lexer_new(src);
 	TEST_ASSERT_NOT_NULL(lxr->text);
 	TEST_ASSERT_NOT_NULL(lxr->temp);
