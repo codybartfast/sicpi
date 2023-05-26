@@ -2,9 +2,10 @@
 
 #include <stdlib.h>
 
-#include "token.h"
+#include "character-classes.h"
 #include "sicpstd.h"
 #include "source.h"
+#include "token.h"
 
 lexer lexer_new(source src)
 {
@@ -44,12 +45,48 @@ static char peekc(lexer lxr)
 	return source_peek(lxr->source);
 }
 
-static char skip_atmosphere(lexer lxr)
+static char add_temp(lexer lxr, char c)
 {
+	return sb_addc(lxr->temp, c);
+}
+
+static inline bool skip_whitespace(lexer lxr)
+{
+	bool did_skip = false;
+	while (is_whitespace(peekc(lxr))) {
+		did_skip = true;
+		readc(lxr);
+	}
+	return did_skip;
+}
+
+static inline bool skip_comment(lexer lxr)
+{
+	bool did_skip = false;
+	if (peekc(lxr) == ';') {
+		did_skip = true;
+		readc(lxr);
+		char c;
+		while (((c = peekc(lxr)) != '\n' && (c != SOURCE_EOS))) {
+			readc(lxr);
+		}
+	}
+	return did_skip;
+}
+
+static inline void skip_atmosphere(lexer lxr)
+{
+	while (skip_whitespace(lxr) || skip_comment(lxr))
+		;
 }
 
 token lexer_read(lexer lxr)
 {
-	// char c = skip_atmosphere(lxr);
-	return NULL;
+	skip_atmosphere(lxr);
+
+	token tkn = malloc(sizeof(struct token));
+	add_temp(lxr, readc(lxr));
+	tkn->type = TKN_LIST_OPEN;
+	tkn->text = sb_copy(lxr->temp);
+	return tkn;
 }

@@ -69,7 +69,7 @@ char readc(source src)
 	case TYPE_FILE:
 	case TYPE_STREAM:
 		c = getc(src->underlying.stream.stream);
-		c = c == EOF ? '\0' : c;
+		c = c == EOF ? SOURCE_EOS : c;
 		break;
 	case TYPE_STRING:
 		c = *src->underlying.string.string;

@@ -5,6 +5,8 @@
 #include <inttypes.h>
 #include <stdio.h>
 
+#define SOURCE_EOS '\0'
+
 /*
  * Provides a source of characters that can orignate from a file, a stream such
  * StdIn or a string.
@@ -46,8 +48,8 @@ source source_file(char *filepath);
 source source_string(char *string);
 
 /*
- * Returns the next character from the source or '\0' if end of string or stream
- * is reached
+ * Returns the next character from the source or SOURCE_EOS ('\0') if end of
+ * string or stream is reached.
  */
 char source_c(source src);
 
