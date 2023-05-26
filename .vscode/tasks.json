@@ -18,6 +18,7 @@
                 "-o",
                 "${workspaceFolder}/bin/sicp",
 
+                "src/character-classes.c",
                 "src/sicp.c",
                 "src/sicpstd.c",
                 "src/source.c",
