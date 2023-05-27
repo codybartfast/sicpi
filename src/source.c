@@ -14,7 +14,7 @@ enum type { TYPE_FILE = 1, TYPE_STREAM, TYPE_STRING };
 source source_part_init(char *name)
 {
 	if (!name) {
-		eprintfx("source given a NULL name.");
+		name = "";
 	}
 	source src = malloc(sizeof(struct source));
 	if (!src) {
