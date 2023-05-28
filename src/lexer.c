@@ -77,6 +77,11 @@ static inline char add_temp(lexer lxr, char c)
 	return sb_addc(lxr->temp, c);
 }
 
+static inline bool is_delimiter_or_eos(char c)
+{
+	return is_delimiter(c) || c == SOURCE_EOS;
+}
+
 static inline bool skip_whitespace(lexer lxr)
 {
 	bool did_skip = false;
@@ -107,16 +112,44 @@ static inline void skip_atmosphere(lexer lxr)
 		;
 }
 
+static inline bool read_identifier(lexer lxr)
+{
+	while (is_subsequent(peekc(lxr))) {
+		add_temp(lxr, readc(lxr));
+	}
+	if (is_delimiter_or_eos(peekc(lxr))) {
+		return true;
+	} else {
+		// lxr->msg = invalid char in identifier
+		return false;
+	}
+}
+
 token lexer_read(lexer lxr)
 {
 	skip_atmosphere(lxr);
-	char c = readc(lxr);
+	token_type type = TKN_UNDEFINED;
 
+	char c = readc(lxr);
 	lexer_start_new_token(lxr);
 	token tkn = token_new(lxr);
-
 	add_temp(lxr, c);
-	tkn->type = TKN_LIST_OPEN;
+// printf("one: %c\n", c);
+	switch (c) {
+	case '(':
+		type = TKN_LIST_OPEN;
+		break;
+	default:
+// printf("two\n");
+		if (is_initial(c)) {
+// printf("three\n");
+			type = TKN_IDENTIFIER;
+			read_identifier(lxr);
+			break;
+		}
+	}
+
+	tkn->type = type;
 	tkn->text = sb_copy(lxr->temp);
 	return tkn;
 }
