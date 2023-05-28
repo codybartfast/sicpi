@@ -19,6 +19,7 @@
                 "${workspaceFolder}/bin/sicp",
 
                 "src/character-classes.c",
+                "src/lexer.c",
                 "src/sicp.c",
                 "src/sicpstd.c",
                 "src/source.c",

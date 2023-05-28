@@ -6,14 +6,13 @@
 typedef struct lexer *lexer;
 
 typedef enum token_type {
-	TKN_ERROR = -3,
-	TKN_EOF_UNEXPECTED = -2,
+	TKN_ERROR = -2,
 	TKN_EOF = -1,
 	TKN_UNDEFINED = 0,
-	TKN_IDENTIFIER,
-	TKN_LIST_OPEN,
-	// TKN_LIST_CLOSE,
-	TKN_NUMBER,
+	TKN_IDENTIFIER, // 1
+	TKN_LIST_OPEN, // 2
+	TKN_LIST_CLOSE, // 3
+	TKN_NUMBER, // 4
 	// TKN_STRING,
 	// TKN_DOT,
 	// TKN_QUOTE,

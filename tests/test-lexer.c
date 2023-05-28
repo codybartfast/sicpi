@@ -77,35 +77,65 @@ void lxr_read(void)
 	tkn = lexer_read(lxr);
 	expected_token(tkn, TKN_NUMBER, "3.14159", 61, 1, 11);
 
+	tkn = lexer_read(lxr);
+	expected_token(tkn, TKN_LIST_CLOSE, ")", 68, 1, 18);
+
+	tkn = lexer_read(lxr);
+	expected_token(tkn, TKN_LIST_OPEN, "(", 88, 2, 1);
+
+	tkn = lexer_read(lxr);
+	expected_token(tkn, TKN_IDENTIFIER, "define", 90, 2, 3);
+
+	tkn = lexer_read(lxr);
+	expected_token(tkn, TKN_IDENTIFIER, "radius", 122, 3, 1);
+
+	tkn = lexer_read(lxr);
+	expected_token(tkn, TKN_NUMBER, "10", 138, 4, 8);
+
+	tkn = lexer_read(lxr);
+	expected_token(tkn, TKN_LIST_CLOSE, ")", 141, 4, 11);
+
 	TEST_ASSERT_FALSE(lexer_is_errored(lxr));
 }
 
 void lxr_invalid_char_in_identifier(void)
 {
-	source src =
-		source_string("ident#fier", "test-lexer");
+	source src = source_string("ident#fier", "test-lexer");
 	lexer lxr = lexer_new(src);
 	token tkn;
 
 	tkn = lexer_read(lxr);
 	expected_token(tkn, TKN_ERROR, "ident#", 0, 0, 0);
 	TEST_ASSERT_EQUAL_STRING(
-		"Unexpected char, '#' (0x23), in identifier starting 'ident#'.",
+		"Unexpected character '#', 0x23, in identifier: 'ident#'.",
 		tkn_err_msg(tkn));
 	TEST_ASSERT_TRUE(lexer_is_errored(lxr));
 }
 
 void lxr_invalid_char_in_number(void)
 {
-	source src =
-		source_string("123x456", "test-lexer");
+	source src = source_string("123x456", "test-lexer");
 	lexer lxr = lexer_new(src);
 	token tkn;
 
 	tkn = lexer_read(lxr);
 	expected_token(tkn, TKN_ERROR, "123x", 0, 0, 0);
 	TEST_ASSERT_EQUAL_STRING(
-		"Unexpected char, 'x' (0x78), in number starting '123x'.",
+		"Unexpected character 'x', 0x78, in number: '123x'.",
+		tkn_err_msg(tkn));
+	TEST_ASSERT_TRUE(lexer_is_errored(lxr));
+}
+
+void lxr_number_ends_with_dot(void)
+{
+	source src = source_string("123.", "test-lexer");
+	lexer lxr = lexer_new(src);
+	token tkn;
+
+	tkn = lexer_read(lxr);
+	expected_token(tkn, TKN_ERROR, "123.", 0, 0, 0);
+	TEST_ASSERT_EQUAL_STRING(
+		"Unexpected character '.', 0x2E, at end of number: '123.'.",
 		tkn_err_msg(tkn));
 	TEST_ASSERT_TRUE(lexer_is_errored(lxr));
 }
@@ -122,4 +152,5 @@ int test_lexer(void)
 	RUN_TEST(lxr_read);
 	RUN_TEST(lxr_invalid_char_in_identifier);
 	RUN_TEST(lxr_invalid_char_in_number);
+	RUN_TEST(lxr_number_ends_with_dot);
 }

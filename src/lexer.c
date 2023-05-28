@@ -42,7 +42,7 @@ inline bool lexer_is_errored(lexer lxr)
 	return lxr->is_errored;
 }
 
-static inline lexer lexer_start_new_token(lexer lxr)
+static inline void lexer_start_new_token(lexer lxr)
 {
 	sb_clear(lxr->temp);
 }
@@ -63,11 +63,11 @@ static inline token token_new(lexer lxr)
 	return tkn;
 }
 
-static inline token token_finalize(lexer lxr, token tkn, token_type type)
-{
-	tkn->type = type;
-	tkn->text = sb_copy(lxr->text);
-}
+// static inline token token_finalize(lexer lxr, token tkn, token_type type)
+// {
+// 	tkn->type = type;
+// 	tkn->text = sb_copy(lxr->text);
+// }
 
 static inline char readc(lexer lxr)
 {
@@ -119,6 +119,19 @@ static inline void skip_atmosphere(lexer lxr)
 		;
 }
 
+static char *str_identifier = "identifier";
+static char *str_number = "number";
+static char *str_in = "in";
+static char *str_ending = "at end of";
+
+static char *error_message(char c, char *relation, char *type, lexer lxr)
+{
+	char err_buff[256];
+	sprintf(err_buff, "Unexpected character '%c', 0x%0X, %s %s: '%.128s'.",
+		c, c, relation, type, sb_current(lxr->temp));
+	return strdup(err_buff);
+}
+
 static inline char *read_identifier(lexer lxr)
 {
 	while (is_subsequent(peekc(lxr))) {
@@ -128,21 +141,22 @@ static inline char *read_identifier(lexer lxr)
 		return NULL;
 	} else {
 		char c = add_temp(lxr, readc(lxr));
-		char err_buff[256];
-		sprintf(err_buff,
-			"Unexpected char, '%c' (0x%0X), in identifier starting '%.128s'.",
-			c, c, sb_current(lxr->temp));
-		return strdup(err_buff);
+		return error_message(c, str_in, str_identifier, lxr);
 	}
 }
 
 static inline char *read_number(lexer lxr)
 {
+	char c;
+
 	while (is_digit(peekc(lxr))) {
 		add_temp(lxr, readc(lxr));
 	}
 	if (peekc(lxr) == '.') {
 		add_temp(lxr, readc(lxr));
+		if (!is_digit(peekc(lxr))) {
+			return error_message('.', str_ending, str_number, lxr);
+		}
 		while (is_digit(peekc(lxr))) {
 			add_temp(lxr, readc(lxr));
 		}
@@ -150,12 +164,8 @@ static inline char *read_number(lexer lxr)
 	if (is_delimiter_or_eos(peekc(lxr))) {
 		return NULL;
 	} else {
-		char c = add_temp(lxr, readc(lxr));
-		char err_buff[256];
-		sprintf(err_buff,
-			"Unexpected char, '%c' (0x%0X), in number starting '%.128s'.",
-			c, c, sb_current(lxr->temp));
-		return strdup(err_buff);
+		c = add_temp(lxr, readc(lxr));
+		return error_message(c, str_in, str_number, lxr);
 	}
 }
 
@@ -172,6 +182,9 @@ token lexer_read(lexer lxr)
 	switch (c) {
 	case '(':
 		type = TKN_LIST_OPEN;
+		break;
+	case ')':
+		type = TKN_LIST_CLOSE;
 		break;
 	default:
 		if (is_initial(c)) {
