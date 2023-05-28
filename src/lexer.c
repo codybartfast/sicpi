@@ -79,15 +79,20 @@ static inline char peekc(lexer lxr)
 	return source_peek(lxr->source);
 }
 
-static inline char add_temp(lexer lxr, char c)
+static inline char temp_addc(lexer lxr, char c)
 {
 	return sb_addc(lxr->temp, c);
 }
 
-static inline bool is_delimiter_or_eos(char c)
+static inline char temp_readc(lexer lxr)
 {
-	return is_delimiter(c) || c == SOURCE_EOS;
+	return sb_addc(lxr->temp, readc(lxr));
 }
+
+// static inline bool is_delimiter_or_eos(char c)
+// {
+// 	return is_delimiter(c) || c == SOURCE_EOS;
+// }
 
 static inline bool skip_whitespace(lexer lxr)
 {
@@ -132,41 +137,46 @@ static char *error_message(char c, char *relation, char *type, lexer lxr)
 	return strdup(err_buff);
 }
 
+static inline char *check_at_end_of_token(lexer lxr, char *tkn_type_str)
+{
+	char c = peekc(lxr);
+	if (is_delimiter(c) || c == SOURCE_EOS) {
+		return NULL;
+	} else {
+		char c = temp_readc(lxr);
+		return error_message(c, str_in, tkn_type_str, lxr);
+	}
+}
+
 static inline char *read_identifier(lexer lxr)
 {
 	while (is_subsequent(peekc(lxr))) {
-		add_temp(lxr, readc(lxr));
+		temp_readc(lxr);
 	}
-	if (is_delimiter_or_eos(peekc(lxr))) {
-		return NULL;
-	} else {
-		char c = add_temp(lxr, readc(lxr));
-		return error_message(c, str_in, str_identifier, lxr);
+	return check_at_end_of_token(lxr, str_identifier);
+}
+
+static inline char *read_decimal_part(lexer lxr)
+{
+	if (!is_digit(peekc(lxr))) {
+		return error_message('.', str_ending, str_number, lxr);
 	}
+	while (is_digit(peekc(lxr))) {
+		temp_readc(lxr);
+	}
+	return check_at_end_of_token(lxr, str_number);
 }
 
 static inline char *read_number(lexer lxr)
 {
-	char c;
-
 	while (is_digit(peekc(lxr))) {
-		add_temp(lxr, readc(lxr));
+		temp_readc(lxr);
 	}
 	if (peekc(lxr) == '.') {
-		add_temp(lxr, readc(lxr));
-		if (!is_digit(peekc(lxr))) {
-			return error_message('.', str_ending, str_number, lxr);
-		}
-		while (is_digit(peekc(lxr))) {
-			add_temp(lxr, readc(lxr));
-		}
+		temp_readc(lxr);
+		return read_decimal_part(lxr);
 	}
-	if (is_delimiter_or_eos(peekc(lxr))) {
-		return NULL;
-	} else {
-		c = add_temp(lxr, readc(lxr));
-		return error_message(c, str_in, str_number, lxr);
-	}
+	return check_at_end_of_token(lxr, str_number);
 }
 
 token lexer_read(lexer lxr)
@@ -178,7 +188,7 @@ token lexer_read(lexer lxr)
 	char c = readc(lxr);
 	lexer_start_new_token(lxr);
 	token tkn = token_new(lxr);
-	add_temp(lxr, c);
+	temp_addc(lxr, c);
 	switch (c) {
 	case '(':
 		type = TKN_LIST_OPEN;
