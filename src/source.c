@@ -127,6 +127,14 @@ char source_c(source src)
 	return c;
 }
 
+char source_peek(source src)
+{
+	if (src->peeked == NO_PEEKED) {
+		src->peeked = readc(src);
+	}
+	return src->peeked;
+}
+
 int64_t source_offset(source src)
 {
 	return src->offset;
@@ -140,14 +148,6 @@ int64_t source_x(source src)
 int64_t source_y(source src)
 {
 	return src->y;
-}
-
-char source_peek(source src)
-{
-	if (src->peeked == NO_PEEKED) {
-		src->peeked = readc(src);
-	}
-	return src->peeked;
 }
 
 void source_close(source src)

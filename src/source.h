@@ -57,6 +57,11 @@ char *source_name(source src);
 char source_c(source src);
 
 /*
+ * The next char that will be returned by source_c
+ */
+char source_peek(source src);
+
+/*
  * Zero based index of the last character returned by source_c
  */
 int64_t source_offset(source src);
@@ -70,11 +75,6 @@ int64_t source_x(source src);
  * Zero based line of the last character returned by source_c
  */
 int64_t source_y(source src);
-
-/*
- * The next char that will be returned by source_c
- */
-char source_peek(source src);
 
 /*
  * Releases memory allocated to the source.
