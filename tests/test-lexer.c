@@ -71,7 +71,12 @@ void lxr_read(void)
 	expected_token(tkn, TKN_IDENTIFIER, "define", 51, 1, 1);
 }
 
-// lxr_invalid_char_in_identifier(void)
+void lxr_invalid_char_in_identifier(void)
+{
+	TEST_FAIL();
+}
+// void lxr_read_after_error
+// void lxr_free_source
 
 int test_lexer(void)
 {
@@ -80,4 +85,5 @@ int test_lexer(void)
 	RUN_TEST(lxr_free_null);
 	RUN_TEST(lxr_free);
 	RUN_TEST(lxr_read);
+	RUN_TEST(lxr_invalid_char_in_identifier);
 }

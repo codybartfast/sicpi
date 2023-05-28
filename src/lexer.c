@@ -1,6 +1,7 @@
 #include "lexer.h"
 
 #include <stdlib.h>
+#include <string.h>
 
 #include "character-classes.h"
 #include "sicpstd.h"
@@ -112,16 +113,20 @@ static inline void skip_atmosphere(lexer lxr)
 		;
 }
 
-static inline bool read_identifier(lexer lxr)
+static inline char *read_identifier(lexer lxr)
 {
 	while (is_subsequent(peekc(lxr))) {
 		add_temp(lxr, readc(lxr));
 	}
 	if (is_delimiter_or_eos(peekc(lxr))) {
-		return true;
+		return NULL;
 	} else {
-		// lxr->msg = invalid char in identifier
-		return false;
+		char c = add_temp(lxr, readc(lxr));
+		char err_buff[256];
+		sprintf(err_buff,
+			"Unexpected char in identifier starting '%.128s': %c' (0x%0X)",
+			sb_current(lxr->temp), c, c);
+		return strdup(err_buff);
 	}
 }
 
@@ -129,27 +134,30 @@ token lexer_read(lexer lxr)
 {
 	skip_atmosphere(lxr);
 	token_type type = TKN_UNDEFINED;
+	char *err_msg = NULL;
 
 	char c = readc(lxr);
 	lexer_start_new_token(lxr);
 	token tkn = token_new(lxr);
 	add_temp(lxr, c);
-// printf("one: %c\n", c);
 	switch (c) {
 	case '(':
 		type = TKN_LIST_OPEN;
 		break;
 	default:
-// printf("two\n");
 		if (is_initial(c)) {
-// printf("three\n");
 			type = TKN_IDENTIFIER;
-			read_identifier(lxr);
+			err_msg = read_identifier(lxr);
 			break;
 		}
 	}
 
-	tkn->type = type;
 	tkn->text = sb_copy(lxr->temp);
+	if (err_msg) {
+		tkn->err_msg = err_msg;
+		tkn->type = TKN_ERROR;
+	} else {
+		tkn->type = type;
+	}
 	return tkn;
 }
