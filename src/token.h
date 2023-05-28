@@ -13,7 +13,7 @@ typedef enum token_type {
 	TKN_IDENTIFIER,
 	TKN_LIST_OPEN,
 	// TKN_LIST_CLOSE,
-	// TKN_NUMBER,
+	TKN_NUMBER,
 	// TKN_STRING,
 	// TKN_DOT,
 	// TKN_QUOTE,

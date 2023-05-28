@@ -37,7 +37,8 @@ void lexer_free(lexer lxr)
 	}
 }
 
-inline bool lexer_is_errored(lexer lxr){
+inline bool lexer_is_errored(lexer lxr)
+{
 	return lxr->is_errored;
 }
 
@@ -135,6 +136,29 @@ static inline char *read_identifier(lexer lxr)
 	}
 }
 
+static inline char *read_number(lexer lxr)
+{
+	while (is_digit(peekc(lxr))) {
+		add_temp(lxr, readc(lxr));
+	}
+	if (peekc(lxr) == '.') {
+		add_temp(lxr, readc(lxr));
+		while (is_digit(peekc(lxr))) {
+			add_temp(lxr, readc(lxr));
+		}
+	}
+	if (is_delimiter_or_eos(peekc(lxr))) {
+		return NULL;
+	} else {
+		char c = add_temp(lxr, readc(lxr));
+		char err_buff[256];
+		sprintf(err_buff,
+			"Unexpected char, '%c' (0x%0X), in number starting '%.128s'.",
+			c, c, sb_current(lxr->temp));
+		return strdup(err_buff);
+	}
+}
+
 token lexer_read(lexer lxr)
 {
 	skip_atmosphere(lxr);
@@ -153,8 +177,11 @@ token lexer_read(lexer lxr)
 		if (is_initial(c)) {
 			type = TKN_IDENTIFIER;
 			err_msg = read_identifier(lxr);
-			break;
+		} else if (is_digit(c)) {
+			type = TKN_NUMBER;
+			err_msg = read_number(lxr);
 		}
+		break;
 	}
 
 	tkn->text = sb_copy(lxr->temp);

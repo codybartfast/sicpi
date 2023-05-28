@@ -71,12 +71,19 @@ void lxr_read(void)
 	tkn = lexer_read(lxr);
 	expected_token(tkn, TKN_IDENTIFIER, "define", 51, 1, 1);
 
+	tkn = lexer_read(lxr);
+	expected_token(tkn, TKN_IDENTIFIER, "pi", 58, 1, 8);
+
+	tkn = lexer_read(lxr);
+	expected_token(tkn, TKN_NUMBER, "3.14159", 61, 1, 11);
+
 	TEST_ASSERT_FALSE(lexer_is_errored(lxr));
 }
 
 void lxr_invalid_char_in_identifier(void)
 {
-	source src = source_string("ident#fier", "lxr_invalid_char_in_identifier");
+	source src =
+		source_string("ident#fier", "test-lexer");
 	lexer lxr = lexer_new(src);
 	token tkn;
 
@@ -84,6 +91,21 @@ void lxr_invalid_char_in_identifier(void)
 	expected_token(tkn, TKN_ERROR, "ident#", 0, 0, 0);
 	TEST_ASSERT_EQUAL_STRING(
 		"Unexpected char, '#' (0x23), in identifier starting 'ident#'.",
+		tkn_err_msg(tkn));
+	TEST_ASSERT_TRUE(lexer_is_errored(lxr));
+}
+
+void lxr_invalid_char_in_number(void)
+{
+	source src =
+		source_string("123x456", "test-lexer");
+	lexer lxr = lexer_new(src);
+	token tkn;
+
+	tkn = lexer_read(lxr);
+	expected_token(tkn, TKN_ERROR, "123x", 0, 0, 0);
+	TEST_ASSERT_EQUAL_STRING(
+		"Unexpected char, 'x' (0x78), in number starting '123x'.",
 		tkn_err_msg(tkn));
 	TEST_ASSERT_TRUE(lexer_is_errored(lxr));
 }
@@ -99,4 +121,5 @@ int test_lexer(void)
 	RUN_TEST(lxr_free);
 	RUN_TEST(lxr_read);
 	RUN_TEST(lxr_invalid_char_in_identifier);
+	RUN_TEST(lxr_invalid_char_in_number);
 }
