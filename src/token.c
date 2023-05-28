@@ -1,11 +1,26 @@
 #include "token.h"
 
-token_type tkn_type(token tkn)
+inline token_type tkn_type(token tkn)
 {
 	return tkn->type;
 }
 
-char *tkn_text(token tkn)
+inline char *tkn_text(token tkn)
 {
 	return tkn->text;
+}
+
+inline long tkn_offset(token tkn)
+{
+	return tkn->offset;
+}
+
+inline long tkn_x(token tkn)
+{
+	return tkn->x;
+}
+
+inline long tkn_y(token tkn)
+{
+	return tkn->y;
 }

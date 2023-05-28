@@ -45,11 +45,15 @@ void lxr_free(void)
 	TEST_ASSERT_FALSE(temp_buffer == temp->buff);
 }
 
-void expected_token(token tkn, token_type type, char *text)
+void expected_token(token tkn, token_type type, char *text, long offset, long x,
+		    long y)
 {
 	TEST_ASSERT_NOT_NULL(tkn);
 	TEST_ASSERT_EQUAL_INT(type, tkn_type(tkn));
 	TEST_ASSERT_EQUAL_STRING(text, tkn_text(tkn));
+	TEST_ASSERT_EQUAL_INT(offset, tkn_offset(tkn));
+	TEST_ASSERT_EQUAL_INT(x, tkn_x(tkn));
+	TEST_ASSERT_EQUAL_INT(y, tkn_y(tkn));
 }
 
 void lxr_read(void)
@@ -59,8 +63,12 @@ void lxr_read(void)
 	lexer lxr = lexer_new(src);
 	TEST_ASSERT_NOT_NULL(lxr);
 	token tkn;
+
 	tkn = lexer_read(lxr);
-	expected_token(tkn, TKN_LIST_OPEN, "(");
+	expected_token(tkn, TKN_LIST_OPEN, "(", 50, 0, 1);
+
+	// tkn = lexer_read(lxr);
+	// expected_token(tkn, TKN_IDENTIFIER, "define");
 }
 
 int test_lexer(void)

@@ -35,17 +35,44 @@ void lexer_free(lexer lxr)
 	}
 }
 
-static char readc(lexer lxr)
+static inline lexer lexer_start_new_token(lexer lxr)
+{
+	sb_clear(lxr->temp);
+}
+
+static inline token token_new(lexer lxr)
+{
+	token tkn = malloc(sizeof(struct token));
+	if (!tkn) {
+		alloc_error("token_new");
+	}
+	tkn->lxr = lxr;
+	tkn->type = TKN_UNDEFINED;
+	tkn->text = NULL;
+	tkn->message = NULL;
+	tkn->offset = source_offset(lxr->source);
+	tkn->x = source_x(lxr->source);
+	tkn->y = source_y(lxr->source);
+	return tkn;
+}
+
+static inline token token_finalize(lexer lxr, token tkn, token_type type)
+{
+	tkn->type = type;
+	tkn->text = sb_copy(lxr->text);
+}
+
+static inline char readc(lexer lxr)
 {
 	return sb_addc(lxr->text, source_c(lxr->source));
 }
 
-static char peekc(lexer lxr)
+static inline char peekc(lexer lxr)
 {
 	return source_peek(lxr->source);
 }
 
-static char add_temp(lexer lxr, char c)
+static inline char add_temp(lexer lxr, char c)
 {
 	return sb_addc(lxr->temp, c);
 }
@@ -83,9 +110,12 @@ static inline void skip_atmosphere(lexer lxr)
 token lexer_read(lexer lxr)
 {
 	skip_atmosphere(lxr);
+	char c = readc(lxr);
 
-	token tkn = malloc(sizeof(struct token));
-	add_temp(lxr, readc(lxr));
+	lexer_start_new_token(lxr);
+	token tkn = token_new(lxr);
+
+	add_temp(lxr, c);
 	tkn->type = TKN_LIST_OPEN;
 	tkn->text = sb_copy(lxr->temp);
 	return tkn;
