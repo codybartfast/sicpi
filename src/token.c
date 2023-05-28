@@ -10,6 +10,11 @@ inline char *tkn_text(token tkn)
 	return tkn->text;
 }
 
+inline char *tkn_err_msg(token tkn)
+{
+	return tkn->err_msg;
+}
+
 inline long tkn_offset(token tkn)
 {
 	return tkn->offset;

@@ -33,6 +33,7 @@ typedef struct token {
 
 token_type tkn_type(token tkn);
 char *tkn_text(token tkn);
+char *tkn_err_msg(token tkn);
 long tkn_offset(token tkn);
 long tkn_x(token tkn);
 long tkn_y(token tkn);

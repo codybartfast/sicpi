@@ -21,6 +21,7 @@ lexer lexer_new(source src)
 	lxr->source = src;
 	lxr->text = sb_new(0);
 	lxr->temp = sb_new(0);
+	lxr->is_errored = false;
 	return lxr;
 }
 
@@ -34,6 +35,10 @@ void lexer_free(lexer lxr)
 		lxr->temp = NULL;
 		free(lxr);
 	}
+}
+
+inline bool lexer_is_errored(lexer lxr){
+	return lxr->is_errored;
 }
 
 static inline lexer lexer_start_new_token(lexer lxr)
@@ -124,8 +129,8 @@ static inline char *read_identifier(lexer lxr)
 		char c = add_temp(lxr, readc(lxr));
 		char err_buff[256];
 		sprintf(err_buff,
-			"Unexpected char in identifier starting '%.128s': %c' (0x%0X)",
-			sb_current(lxr->temp), c, c);
+			"Unexpected char, '%c' (0x%0X), in identifier starting '%.128s'.",
+			c, c, sb_current(lxr->temp));
 		return strdup(err_buff);
 	}
 }
@@ -156,6 +161,7 @@ token lexer_read(lexer lxr)
 	if (err_msg) {
 		tkn->err_msg = err_msg;
 		tkn->type = TKN_ERROR;
+		lxr->is_errored = true;
 	} else {
 		tkn->type = type;
 	}

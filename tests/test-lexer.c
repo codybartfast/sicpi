@@ -65,16 +65,29 @@ void lxr_read(void)
 	token tkn;
 
 	tkn = lexer_read(lxr);
+	TEST_ASSERT_NOT_NULL(tkn);
 	expected_token(tkn, TKN_LIST_OPEN, "(", 50, 1, 0);
 
 	tkn = lexer_read(lxr);
 	expected_token(tkn, TKN_IDENTIFIER, "define", 51, 1, 1);
+
+	TEST_ASSERT_FALSE(lexer_is_errored(lxr));
 }
 
 void lxr_invalid_char_in_identifier(void)
 {
-	TEST_FAIL();
+	source src = source_string("ident#fier", "lxr_invalid_char_in_identifier");
+	lexer lxr = lexer_new(src);
+	token tkn;
+
+	tkn = lexer_read(lxr);
+	expected_token(tkn, TKN_ERROR, "ident#", 0, 0, 0);
+	TEST_ASSERT_EQUAL_STRING(
+		"Unexpected char, '#' (0x23), in identifier starting 'ident#'.",
+		tkn_err_msg(tkn));
+	TEST_ASSERT_TRUE(lexer_is_errored(lxr));
 }
+
 // void lxr_read_after_error
 // void lxr_free_source
 

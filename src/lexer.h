@@ -9,13 +9,15 @@ struct lexer {
 	source source;
 	string_builder text;
 	string_builder temp;
+	bool is_errored;
 };
 
 lexer lexer_new(source src);
 token lexer_read(lexer lxr);
+bool lexer_is_errored(lexer lxr);
 void lexer_free(lexer lxr);
 
-token_type tkn_type(token tkn);
-char *tkn_text(token tkn);
+// token_type tkn_type(token tkn);
+// char *tkn_text(token tkn);
 
 #endif
