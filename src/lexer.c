@@ -49,7 +49,7 @@ static inline token token_new(lexer lxr)
 	tkn->lxr = lxr;
 	tkn->type = TKN_UNDEFINED;
 	tkn->text = NULL;
-	tkn->message = NULL;
+	tkn->err_msg = NULL;
 	tkn->offset = source_offset(lxr->source);
 	tkn->x = source_x(lxr->source);
 	tkn->y = source_y(lxr->source);

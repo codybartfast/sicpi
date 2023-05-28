@@ -25,7 +25,7 @@ typedef struct token {
 	lexer lxr;
 	enum token_type type;
 	char *text;
-	char *message;
+	char *err_msg;
 	long offset;
 	long x; // zero-based column
 	long y; // zero-based line
