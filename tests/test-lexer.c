@@ -58,7 +58,6 @@ void lxr_free(void)
 
 	lexer_free(lxr);
 
-	TEST_ASSERT_TRUE(src == lxr->source);
 	TEST_ASSERT_TRUE(name == src->name);
 
 	TEST_ASSERT_FALSE(text == lxr->text);
@@ -89,6 +88,20 @@ void lxr_invalid_char_in_identifier(void)
 	expected_token(tkn, TKN_ERROR, "ident#", 0, 0, 0);
 	TEST_ASSERT_EQUAL_STRING(
 		"Unexpected character '#', 0x23, in identifier: 'ident#'.",
+		tkn_err_msg(tkn));
+	TEST_ASSERT_TRUE(lexer_is_errored(lxr));
+}
+
+void lxr_bad_token_start(void)
+{
+	source src = source_string("#identfier", "blah");
+	lexer lxr = lexer_new(src);
+	token tkn;
+
+	tkn = lexer_read(lxr);
+	expected_token(tkn, TKN_ERROR, "#", 0, 0, 0);
+	TEST_ASSERT_EQUAL_STRING(
+		"Unexpected character '#', 0x23, at start of token: '#'.",
 		tkn_err_msg(tkn));
 	TEST_ASSERT_TRUE(lexer_is_errored(lxr));
 }
@@ -312,10 +325,6 @@ void lxr_signed_naked_decimal(void)
 	expected_token(tkn, TKN_NUMBER, "-.678", 0, 0, 0);
 }
 
-// don't free lxr sourc :(
-// + - identifiers
-// * \ against numbers
-
 int test_lexer(void)
 {
 	RUN_TEST(lxr_new_null_src);
@@ -324,8 +333,11 @@ int test_lexer(void)
 	RUN_TEST(test_lexer_free_source);
 	RUN_TEST(lxr_free);
 	RUN_TEST(lxr_invalid_char_in_identifier);
+	RUN_TEST(lxr_bad_token_start);
 	RUN_TEST(lxr_dot);
 	RUN_TEST(lxr_dot_bad);
+	RUN_TEST(lxr_plus_sub);
+	RUN_TEST(lxr_plus_sub_bad);
 	RUN_TEST(lxr_returns_error_after_returning_error);
 	RUN_TEST(lxr_read);
 	RUN_TEST(lxr_invalid_char_in_number);
@@ -334,6 +346,4 @@ int test_lexer(void)
 	RUN_TEST(lxr_naked_decimal);
 	RUN_TEST(lxr_signed_number);
 	RUN_TEST(lxr_signed_naked_decimal);
-	RUN_TEST(lxr_plus_sub);
-	RUN_TEST(lxr_plus_sub_bad);
 }

@@ -240,15 +240,17 @@ token lexer_read(lexer lxr)
 	}
 
 	tkn->text = sb_copy(lxr->temp);
+
+	if (type == TKN_UNDEFINED) {
+		err_msg = error_message(c, "at start of", "token", lxr);
+	}
+
 	if (err_msg) {
 		tkn->err_msg = err_msg;
 		tkn->type = TKN_ERROR;
 		lxr->is_errored = true;
 	} else {
 		tkn->type = type;
-	}
-	if (tkn->type == TKN_UNDEFINED) {
-		inyim("Lexer faied to set the token type.");
 	}
 	return tkn;
 }
