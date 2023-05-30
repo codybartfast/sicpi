@@ -121,6 +121,29 @@ void lxr_returns_error_after_returning_error(void)
 		tkn_err_msg(tkn));
 }
 
+void lxr_dot(void)
+{
+	source src = source_string(". 456", "dot");
+	lexer lxr = lexer_new(src);
+	token tkn;
+
+	tkn = lexer_read(lxr);
+	expected_token(tkn, TKN_DOT, ".", 0, 0, 0);
+}
+
+void lxr_dot_bad(void)
+{
+	source src = source_string(".blah", "dot other");
+	lexer lxr = lexer_new(src);
+	token tkn;
+
+	tkn = lexer_read(lxr);
+	expected_token(tkn, TKN_ERROR, ".b", 0, 0, 0);
+	TEST_ASSERT_EQUAL_STRING(
+		"Unexpected character 'b', 0x62, in dot: '.b'.",
+		tkn_err_msg(tkn));
+}
+
 void lxr_read(void)
 {
 	source src = source_file(file_path);
@@ -245,6 +268,8 @@ int test_lexer(void)
 	RUN_TEST(test_lexer_free_source);
 	RUN_TEST(lxr_free);
 	RUN_TEST(lxr_invalid_char_in_identifier);
+	RUN_TEST(lxr_dot);
+	RUN_TEST(lxr_dot_bad);
 	RUN_TEST(lxr_returns_error_after_returning_error);
 	RUN_TEST(lxr_read);
 	RUN_TEST(lxr_invalid_char_in_number);

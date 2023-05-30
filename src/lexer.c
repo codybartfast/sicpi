@@ -93,11 +93,6 @@ static inline char temp_add_readc(lexer lxr)
 	return sb_addc(lxr->temp, readc(lxr));
 }
 
-static char *str_identifier = "identifier";
-static char *str_number = "number";
-static char *str_in = "in";
-static char *str_ending = "at end of";
-
 static char *error_message(char c, char *relation, char *type, lexer lxr)
 {
 	char err_buff[256];
@@ -123,7 +118,7 @@ static inline char *check_at_end_of_token(lexer lxr, char *tkn_type_str)
 		return NULL;
 	} else {
 		char c = temp_add_readc(lxr);
-		return error_message(c, str_in, tkn_type_str, lxr);
+		return error_message(c, "in", tkn_type_str, lxr);
 	}
 }
 
@@ -162,18 +157,18 @@ static inline char *read_identifier(lexer lxr)
 	while (is_subsequent(peekc(lxr))) {
 		temp_add_readc(lxr);
 	}
-	return check_at_end_of_token(lxr, str_identifier);
+	return check_at_end_of_token(lxr, "identifier");
 }
 
 static inline char *read_decimal_part(lexer lxr)
 {
 	if (!is_digit(peekc(lxr))) {
-		return error_message('.', str_ending, str_number, lxr);
+		return error_message('.', "at end of", "number", lxr);
 	}
 	while (is_digit(peekc(lxr))) {
 		temp_add_readc(lxr);
 	}
-	return check_at_end_of_token(lxr, str_number);
+	return check_at_end_of_token(lxr, "number");
 }
 
 static inline char *read_number(lexer lxr)
@@ -185,7 +180,7 @@ static inline char *read_number(lexer lxr)
 		temp_add_readc(lxr);
 		return read_decimal_part(lxr);
 	}
-	return check_at_end_of_token(lxr, str_number);
+	return check_at_end_of_token(lxr, "number");
 }
 
 token lexer_read(lexer lxr)
@@ -215,6 +210,9 @@ token lexer_read(lexer lxr)
 		if (is_digit(peekc(lxr))) {
 			type = TKN_NUMBER;
 			err_msg = read_decimal_part(lxr);
+		} else {
+			type = TKN_DOT;
+			err_msg = check_at_end_of_token(lxr, "dot");
 		}
 		break;
 	case SOURCE_EOS:

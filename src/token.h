@@ -10,11 +10,11 @@ typedef enum token_type {
 	TKN_EOF = -1,
 	TKN_UNDEFINED = 0,
 	TKN_IDENTIFIER, // 1
-	TKN_LIST_OPEN, // 2
+	TKN_LIST_OPEN, /// 2
 	TKN_LIST_CLOSE, // 3
-	TKN_NUMBER, // 4
+	TKN_NUMBER, ////// 4
 	// TKN_STRING,
-	// TKN_DOT,
+	TKN_DOT, ///////// 5
 	// TKN_QUOTE,
 	// TKN_QUASIQUOTE,
 	// TKN_UNQUOTE
