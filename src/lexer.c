@@ -43,7 +43,6 @@ void lexer_free_source(lexer lxr)
 void lexer_free(lexer lxr)
 {
 	if (lxr) {
-		lexer_free_source(lxr);
 		sb_free(lxr->text);
 		sb_free(lxr->temp);
 		lxr->text = NULL;

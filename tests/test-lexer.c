@@ -58,8 +58,8 @@ void lxr_free(void)
 
 	lexer_free(lxr);
 
-	TEST_ASSERT_FALSE(src == lxr->source);
-	TEST_ASSERT_FALSE(name == src->name);
+	TEST_ASSERT_TRUE(src == lxr->source);
+	TEST_ASSERT_TRUE(name == src->name);
 
 	TEST_ASSERT_FALSE(text == lxr->text);
 	TEST_ASSERT_FALSE(text_buffer == text->buff);
