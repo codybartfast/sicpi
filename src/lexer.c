@@ -32,12 +32,20 @@ lexer lexer_new(source src)
 	return lxr;
 }
 
+void lexer_free_source(lexer lxr)
+{
+	if (lxr && lxr->source) {
+		source_close(lxr->source);
+		lxr->source = NULL;
+	}
+}
+
 void lexer_free(lexer lxr)
 {
 	if (lxr) {
+		lexer_free_source(lxr);
 		sb_free(lxr->text);
 		sb_free(lxr->temp);
-		lxr->source = NULL;
 		lxr->text = NULL;
 		lxr->temp = NULL;
 		free(lxr);
