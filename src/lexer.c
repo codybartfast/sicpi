@@ -42,11 +42,6 @@ inline bool lexer_is_errored(lexer lxr)
 	return lxr->is_errored;
 }
 
-static inline void lexer_start_new_token(lexer lxr)
-{
-	sb_clear(lxr->temp);
-}
-
 static inline token token_new(lexer lxr)
 {
 	token tkn = malloc(sizeof(struct token));
@@ -84,7 +79,7 @@ static inline char temp_addc(lexer lxr, char c)
 	return sb_addc(lxr->temp, c);
 }
 
-static inline char temp_readc(lexer lxr)
+static inline char temp_add_readc(lexer lxr)
 {
 	return sb_addc(lxr->temp, readc(lxr));
 }
@@ -113,7 +108,7 @@ static inline char *check_at_end_of_token(lexer lxr, char *tkn_type_str)
 	if (is_delimiter(c) || c == SOURCE_EOS) {
 		return NULL;
 	} else {
-		char c = temp_readc(lxr);
+		char c = temp_add_readc(lxr);
 		return error_message(c, str_in, tkn_type_str, lxr);
 	}
 }
@@ -151,7 +146,7 @@ static inline void skip_atmosphere(lexer lxr)
 static inline char *read_identifier(lexer lxr)
 {
 	while (is_subsequent(peekc(lxr))) {
-		temp_readc(lxr);
+		temp_add_readc(lxr);
 	}
 	return check_at_end_of_token(lxr, str_identifier);
 }
@@ -162,7 +157,7 @@ static inline char *read_decimal_part(lexer lxr)
 		return error_message('.', str_ending, str_number, lxr);
 	}
 	while (is_digit(peekc(lxr))) {
-		temp_readc(lxr);
+		temp_add_readc(lxr);
 	}
 	return check_at_end_of_token(lxr, str_number);
 }
@@ -170,10 +165,10 @@ static inline char *read_decimal_part(lexer lxr)
 static inline char *read_number(lexer lxr)
 {
 	while (is_digit(peekc(lxr))) {
-		temp_readc(lxr);
+		temp_add_readc(lxr);
 	}
 	if (peekc(lxr) == '.') {
-		temp_readc(lxr);
+		temp_add_readc(lxr);
 		return read_decimal_part(lxr);
 	}
 	return check_at_end_of_token(lxr, str_number);
@@ -184,12 +179,12 @@ token lexer_read(lexer lxr)
 	skip_atmosphere(lxr);
 
 	char *err_msg = NULL;
-	char c = readc(lxr);
 	token_type type = TKN_UNDEFINED;
-	lexer_start_new_token(lxr);
+	sb_clear(lxr->temp);
+
+	char c = temp_add_readc(lxr);
 	token tkn = token_new(lxr);
 
-	temp_addc(lxr, c);
 	switch (c) {
 	case '(':
 		type = TKN_LIST_OPEN;
