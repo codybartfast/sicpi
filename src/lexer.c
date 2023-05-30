@@ -1,5 +1,6 @@
 #include "lexer.h"
 
+#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -10,6 +11,12 @@
 
 lexer lexer_new(source src)
 {
+	/* 
+	 * There's at least one place where lexer relies on SOURCE_EOS being
+	 * implemented as 0.
+	 */
+	assert(SOURCE_EOS == '\0');
+
 	if (!src) {
 		eprintf("lexer_new given null source");
 		return NULL;
@@ -58,12 +65,6 @@ static inline token token_new(lexer lxr)
 	return tkn;
 }
 
-// static inline token token_finalize(lexer lxr, token tkn, token_type type)
-// {
-// 	tkn->type = type;
-// 	tkn->text = sb_copy(lxr->text);
-// }
-
 static inline char readc(lexer lxr)
 {
 	return sb_addc(lxr->text, source_c(lxr->source));
@@ -84,11 +85,6 @@ static inline char temp_add_readc(lexer lxr)
 	return sb_addc(lxr->temp, readc(lxr));
 }
 
-// static inline bool is_delimiter_or_eos(char c)
-// {
-// 	return is_delimiter(c) || c == SOURCE_EOS;
-// }
-
 static char *str_identifier = "identifier";
 static char *str_number = "number";
 static char *str_in = "in";
@@ -100,6 +96,16 @@ static char *error_message(char c, char *relation, char *type, lexer lxr)
 	sprintf(err_buff, "Unexpected character '%c', 0x%0X, %s %s: '%.128s'.",
 		c, c, relation, type, sb_current(lxr->temp));
 	return strdup(err_buff);
+}
+
+static token lexer_is_errored_token(lexer lxr)
+{
+	token tkn = token_new(lxr);
+	tkn->text = strdup("");
+	tkn->err_msg = strdup(
+		"Attempted to read from a lexer after a preceeding error.");
+	tkn->type = TKN_ERROR;
+	return tkn;
 }
 
 static inline char *check_at_end_of_token(lexer lxr, char *tkn_type_str)
@@ -176,12 +182,17 @@ static inline char *read_number(lexer lxr)
 
 token lexer_read(lexer lxr)
 {
+	if (lexer_is_errored(lxr)) {
+		return lexer_is_errored_token(lxr);
+	}
+
 	skip_atmosphere(lxr);
 
 	char *err_msg = NULL;
 	token_type type = TKN_UNDEFINED;
 	sb_clear(lxr->temp);
 
+	// Only safe to add c to temp this early if SOURCE_EOS is 0.
 	char c = temp_add_readc(lxr);
 	token tkn = token_new(lxr);
 
@@ -213,6 +224,9 @@ token lexer_read(lexer lxr)
 		lxr->is_errored = true;
 	} else {
 		tkn->type = type;
+	}
+	if (tkn->type == TKN_UNDEFINED) {
+		inyim("Lexer faied to set the token type.");
 	}
 	return tkn;
 }

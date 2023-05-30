@@ -174,7 +174,34 @@ void lxr_number_with_two_dots(void)
 	TEST_ASSERT_TRUE(lexer_is_errored(lxr));
 }
 
-// void lxr_read_after_error
+void lxr_returns_error_after_returning_error(void)
+{
+	source src = source_string("123.456.789", "test-lexer");
+	lexer lxr = lexer_new(src);
+	token tkn;
+
+	tkn = lexer_read(lxr);
+	TEST_ASSERT_TRUE(tkn_type(tkn) == TKN_ERROR);
+	TEST_ASSERT_TRUE(lexer_is_errored(lxr));
+	TEST_ASSERT_EQUAL_STRING(
+		"Unexpected character '.', 0x2E, in number: '123.456.'.",
+		tkn_err_msg(tkn));
+
+	tkn = lexer_read(lxr);
+	TEST_ASSERT_TRUE(tkn_type(tkn) == TKN_ERROR);
+	TEST_ASSERT_TRUE(lexer_is_errored(lxr));
+	TEST_ASSERT_EQUAL_STRING(
+		"Attempted to read from a lexer after a preceeding error.",
+		tkn_err_msg(tkn));
+
+	tkn = lexer_read(lxr);
+	TEST_ASSERT_TRUE(tkn_type(tkn) == TKN_ERROR);
+	TEST_ASSERT_TRUE(lexer_is_errored(lxr));
+	TEST_ASSERT_EQUAL_STRING(
+		"Attempted to read from a lexer after a preceeding error.",
+		tkn_err_msg(tkn));
+}
+
 // void lxr_free_source
 
 int test_lexer(void)
@@ -188,4 +215,5 @@ int test_lexer(void)
 	RUN_TEST(lxr_invalid_char_in_number);
 	RUN_TEST(lxr_number_ends_with_dot);
 	RUN_TEST(lxr_number_with_two_dots);
+	RUN_TEST(lxr_returns_error_after_returning_error);
 }
