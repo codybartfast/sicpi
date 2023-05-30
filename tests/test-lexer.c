@@ -95,6 +95,26 @@ void lxr_read(void)
 	tkn = lexer_read(lxr);
 	expected_token(tkn, TKN_LIST_CLOSE, ")", 141, 4, 11);
 
+	tkn = lexer_read(lxr);
+	expected_token(tkn, TKN_LIST_OPEN, "(", 144, 5, 0);
+
+	tkn = lexer_read(lxr);
+	expected_token(tkn, TKN_IDENTIFIER, "*", 145, 5, 1);
+
+	int i;
+	for (i = 0; i < 17; i++) {
+		lexer_read(lxr);
+	}
+
+	tkn = lexer_read(lxr);
+	expected_token(tkn, TKN_IDENTIFIER, "circumference", 208, 7, 0);
+
+	tkn = lexer_read(lxr);
+	expected_token(tkn, TKN_EOF, "", 278, 8, 56);
+
+	tkn = lexer_read(lxr);
+	expected_token(tkn, TKN_EOF, "", 278, 8, 56);
+
 	TEST_ASSERT_FALSE(lexer_is_errored(lxr));
 }
 

@@ -94,6 +94,30 @@ static inline char temp_readc(lexer lxr)
 // 	return is_delimiter(c) || c == SOURCE_EOS;
 // }
 
+static char *str_identifier = "identifier";
+static char *str_number = "number";
+static char *str_in = "in";
+static char *str_ending = "at end of";
+
+static char *error_message(char c, char *relation, char *type, lexer lxr)
+{
+	char err_buff[256];
+	sprintf(err_buff, "Unexpected character '%c', 0x%0X, %s %s: '%.128s'.",
+		c, c, relation, type, sb_current(lxr->temp));
+	return strdup(err_buff);
+}
+
+static inline char *check_at_end_of_token(lexer lxr, char *tkn_type_str)
+{
+	char c = peekc(lxr);
+	if (is_delimiter(c) || c == SOURCE_EOS) {
+		return NULL;
+	} else {
+		char c = temp_readc(lxr);
+		return error_message(c, str_in, tkn_type_str, lxr);
+	}
+}
+
 static inline bool skip_whitespace(lexer lxr)
 {
 	bool did_skip = false;
@@ -122,30 +146,6 @@ static inline void skip_atmosphere(lexer lxr)
 {
 	while (skip_whitespace(lxr) || skip_comment(lxr))
 		;
-}
-
-static char *str_identifier = "identifier";
-static char *str_number = "number";
-static char *str_in = "in";
-static char *str_ending = "at end of";
-
-static char *error_message(char c, char *relation, char *type, lexer lxr)
-{
-	char err_buff[256];
-	sprintf(err_buff, "Unexpected character '%c', 0x%0X, %s %s: '%.128s'.",
-		c, c, relation, type, sb_current(lxr->temp));
-	return strdup(err_buff);
-}
-
-static inline char *check_at_end_of_token(lexer lxr, char *tkn_type_str)
-{
-	char c = peekc(lxr);
-	if (is_delimiter(c) || c == SOURCE_EOS) {
-		return NULL;
-	} else {
-		char c = temp_readc(lxr);
-		return error_message(c, str_in, tkn_type_str, lxr);
-	}
 }
 
 static inline char *read_identifier(lexer lxr)
@@ -182,12 +182,13 @@ static inline char *read_number(lexer lxr)
 token lexer_read(lexer lxr)
 {
 	skip_atmosphere(lxr);
-	token_type type = TKN_UNDEFINED;
-	char *err_msg = NULL;
 
+	char *err_msg = NULL;
 	char c = readc(lxr);
+	token_type type = TKN_UNDEFINED;
 	lexer_start_new_token(lxr);
 	token tkn = token_new(lxr);
+
 	temp_addc(lxr, c);
 	switch (c) {
 	case '(':
@@ -195,6 +196,9 @@ token lexer_read(lexer lxr)
 		break;
 	case ')':
 		type = TKN_LIST_CLOSE;
+		break;
+	case SOURCE_EOS:
+		type = TKN_EOF;
 		break;
 	default:
 		if (is_initial(c)) {
