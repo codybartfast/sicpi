@@ -211,6 +211,12 @@ token lexer_read(lexer lxr)
 	case ')':
 		type = TKN_LIST_CLOSE;
 		break;
+	case '.':
+		if (is_digit(peekc(lxr))) {
+			type = TKN_NUMBER;
+			err_msg = read_decimal_part(lxr);
+		}
+		break;
 	case SOURCE_EOS:
 		type = TKN_EOF;
 		break;

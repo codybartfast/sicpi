@@ -225,6 +225,16 @@ void lxr_number_with_two_dots(void)
 	TEST_ASSERT_TRUE(lexer_is_errored(lxr));
 }
 
+void lxr_naked_decimal(void)
+{
+	source src = source_string(".456", "naked_decimal");
+	lexer lxr = lexer_new(src);
+	token tkn;
+
+	tkn = lexer_read(lxr);
+	expected_token(tkn, TKN_NUMBER, ".456", 0, 0, 0);
+}
+
 // (signed) naked decimal
 
 int test_lexer(void)
@@ -240,4 +250,5 @@ int test_lexer(void)
 	RUN_TEST(lxr_invalid_char_in_number);
 	RUN_TEST(lxr_number_ends_with_dot);
 	RUN_TEST(lxr_number_with_two_dots);
+	RUN_TEST(lxr_naked_decimal);
 }
