@@ -198,6 +198,7 @@ token lexer_read(lexer lxr)
 	// Only safe to add c to temp this early if SOURCE_EOS is 0.
 	char c = temp_add_readc(lxr);
 	token tkn = token_new(lxr);
+	char next = peekc(lxr);
 
 	switch (c) {
 	case '(':
@@ -206,8 +207,18 @@ token lexer_read(lexer lxr)
 	case ')':
 		type = TKN_LIST_CLOSE;
 		break;
+	case '+':
+	case '-':
+		if (is_digit(next) || next == '.') {
+			type = TKN_NUMBER;
+			err_msg = read_number(lxr);
+		} else {
+			type = TKN_IDENTIFIER;
+			err_msg = check_at_end_of_token(lxr, "+/-");
+		}
+		break;
 	case '.':
-		if (is_digit(peekc(lxr))) {
+		if (is_digit(next)) {
 			type = TKN_NUMBER;
 			err_msg = read_decimal_part(lxr);
 		} else {

@@ -144,6 +144,32 @@ void lxr_dot_bad(void)
 		tkn_err_msg(tkn));
 }
 
+void lxr_plus_sub(void)
+{
+	source src = source_string("+ .567", "blah");
+	lexer lxr = lexer_new(src);
+	token tkn;
+
+	tkn = lexer_read(lxr);
+	expected_token(tkn, TKN_IDENTIFIER, "+", 0, 0, 0);
+
+	tkn = lexer_read(lexer_new(source_string("- .678", "blah")));
+	expected_token(tkn, TKN_IDENTIFIER, "-", 0, 0, 0);
+}
+
+void lxr_plus_sub_bad(void)
+{
+	source src = source_string("+plus", "blah");
+	lexer lxr = lexer_new(src);
+	token tkn;
+
+	tkn = lexer_read(lxr);
+	expected_token(tkn, TKN_ERROR, "+p", 0, 0, 0);
+
+	tkn = lexer_read(lexer_new(source_string("-minus", "blah")));
+	expected_token(tkn, TKN_ERROR, "-m", 0, 0, 0);
+}
+
 void lxr_read(void)
 {
 	source src = source_file(file_path);
@@ -258,7 +284,37 @@ void lxr_naked_decimal(void)
 	expected_token(tkn, TKN_NUMBER, ".456", 0, 0, 0);
 }
 
-// (signed) naked decimal
+void lxr_signed_number(void)
+{
+	source src = source_string("+12.34", "signed_nuber");
+	lexer lxr = lexer_new(src);
+	token tkn;
+
+	tkn = lexer_read(lxr);
+	expected_token(tkn, TKN_NUMBER, "+12.34", 0, 0, 0);
+
+	tkn = lexer_read(
+		lexer_new(source_string("-23.45", "negative signed number")));
+	expected_token(tkn, TKN_NUMBER, "-23.45", 0, 0, 0);
+}
+
+void lxr_signed_naked_decimal(void)
+{
+	source src = source_string("+.567", "pos naked decimal");
+	lexer lxr = lexer_new(src);
+	token tkn;
+
+	tkn = lexer_read(lxr);
+	expected_token(tkn, TKN_NUMBER, "+.567", 0, 0, 0);
+
+	tkn = lexer_read(
+		lexer_new(source_string("-.678", "neg naked decimal")));
+	expected_token(tkn, TKN_NUMBER, "-.678", 0, 0, 0);
+}
+
+// don't free lxr sourc :(
+// + - identifiers
+// * \ against numbers
 
 int test_lexer(void)
 {
@@ -276,4 +332,8 @@ int test_lexer(void)
 	RUN_TEST(lxr_number_ends_with_dot);
 	RUN_TEST(lxr_number_with_two_dots);
 	RUN_TEST(lxr_naked_decimal);
+	RUN_TEST(lxr_signed_number);
+	RUN_TEST(lxr_signed_naked_decimal);
+	RUN_TEST(lxr_plus_sub);
+	RUN_TEST(lxr_plus_sub_bad);
 }
