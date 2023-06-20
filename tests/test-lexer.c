@@ -325,6 +325,40 @@ void lxr_signed_naked_decimal(void)
 	expected_token(tkn, TKN_NUMBER, "-.678", 0, 0, 0);
 }
 
+void lxr_string(void)
+{
+	token tkn;
+
+	tkn = lexer_read(
+		lexer_new(source_string("\"Simple String\"", "Simple String")));
+	expected_token(tkn, TKN_STRING, "Simple String", 0, 0, 0);
+
+	tkn = lexer_read(lexer_new(
+		source_string("\"Simple \n String\"", "Simple String")));
+	expected_token(tkn, TKN_STRING, "Simple \n String", 0, 0, 0);
+
+	tkn = lexer_read(lexer_new(
+		source_string("\"Simple \\\" String\"", "Simple String")));
+
+	tkn = lexer_read(lexer_new(
+		source_string("\"Simple \\\\ String\"", "Simple String")));
+	expected_token(tkn, TKN_STRING, "Simple \\ String", 0, 0, 0);
+
+	tkn = lexer_read(lexer_new(
+		source_string("\"Simple \\x  String\"", "Simple String")));
+	expected_token(tkn, TKN_ERROR, "Simple ", 0, 0, 0);
+	TEST_ASSERT_EQUAL_STRING(
+		"Unexpected character 'x', 0x78, following \\ (backslash) in string: 'Simple '.",
+		tkn_err_msg(tkn));
+
+	tkn = lexer_read(
+		lexer_new(source_string("\"Simple String", "Simple String")));
+	expected_token(tkn, TKN_ERROR, "Simple String", 0, 0, 0);
+	TEST_ASSERT_EQUAL_STRING(
+		"No closing double quote '\"' found for string starting: 'Simple String'.",
+		tkn_err_msg(tkn));
+}
+
 int test_lexer(void)
 {
 	RUN_TEST(lxr_new_null_src);
@@ -346,4 +380,5 @@ int test_lexer(void)
 	RUN_TEST(lxr_naked_decimal);
 	RUN_TEST(lxr_signed_number);
 	RUN_TEST(lxr_signed_naked_decimal);
+	RUN_TEST(lxr_string);
 }

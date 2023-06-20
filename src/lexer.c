@@ -9,9 +9,11 @@
 #include "source.h"
 #include "token.h"
 
+char err_buff[256];
+
 lexer lexer_new(source src)
 {
-	/* 
+	/*
 	 * There's at least one place where lexer relies on SOURCE_EOS being
 	 * implemented as 0.
 	 */
@@ -94,9 +96,16 @@ static inline char temp_add_readc(lexer lxr)
 
 static char *error_message(char c, char *relation, char *type, lexer lxr)
 {
-	char err_buff[256];
 	sprintf(err_buff, "Unexpected character '%c', 0x%0X, %s %s: '%.128s'.",
 		c, c, relation, type, sb_current(lxr->temp));
+	return strdup(err_buff);
+}
+
+static char *error_unexpected_end_of_string(lexer lxr)
+{
+	sprintf(err_buff,
+		"No closing double quote '\"' found for string starting: '%.128s'.",
+		sb_current(lxr->temp));
 	return strdup(err_buff);
 }
 
@@ -182,6 +191,36 @@ static inline char *read_number(lexer lxr)
 	return check_at_end_of_token(lxr, "number");
 }
 
+static inline char *read_string(lexer lxr)
+{
+	char c;
+	while ((c = readc(lxr)) != SOURCE_EOS) {
+		switch (c) {
+		case '"':
+			return check_at_end_of_token(lxr, "string");
+		case '\\':
+			char next = readc(lxr);
+			switch (next) {
+			case '\\':
+			case '"':
+				temp_addc(lxr, next);
+				break;
+			default:
+				return error_message(
+					next, "following \\ (backslash) in",
+					"string", lxr);
+			}
+			break;
+		case SOURCE_EOS:
+
+		default:
+			temp_addc(lxr, c);
+			break;
+		}
+	}
+	return error_unexpected_end_of_string(lxr);
+}
+
 token lexer_read(lexer lxr)
 {
 	if (lexer_is_errored(lxr)) {
@@ -194,20 +233,22 @@ token lexer_read(lexer lxr)
 	token_type type = TKN_UNDEFINED;
 	sb_clear(lxr->temp);
 
-	// Only safe to add c to temp this early if SOURCE_EOS is 0.
-	char c = temp_add_readc(lxr);
+	char c = readc(lxr);
 	token tkn = token_new(lxr);
 	char next = peekc(lxr);
 
 	switch (c) {
 	case '(':
+		temp_addc(lxr, c);
 		type = TKN_LIST_OPEN;
 		break;
 	case ')':
+		temp_addc(lxr, c);
 		type = TKN_LIST_CLOSE;
 		break;
 	case '+':
 	case '-':
+		temp_addc(lxr, c);
 		if (is_digit(next) || next == '.') {
 			type = TKN_NUMBER;
 			err_msg = read_number(lxr);
@@ -217,6 +258,7 @@ token lexer_read(lexer lxr)
 		}
 		break;
 	case '.':
+		temp_addc(lxr, c);
 		if (is_digit(next)) {
 			type = TKN_NUMBER;
 			err_msg = read_decimal_part(lxr);
@@ -225,10 +267,15 @@ token lexer_read(lexer lxr)
 			err_msg = check_at_end_of_token(lxr, "dot");
 		}
 		break;
+	case '"':
+		type = TKN_STRING;
+		err_msg = read_string(lxr);
+		break;
 	case SOURCE_EOS:
 		type = TKN_EOF;
 		break;
 	default:
+		temp_addc(lxr, c);
 		if (is_initial(c)) {
 			type = TKN_IDENTIFIER;
 			err_msg = read_identifier(lxr);
