@@ -271,6 +271,14 @@ token lexer_read(lexer lxr)
 		type = TKN_STRING;
 		err_msg = read_string(lxr);
 		break;
+	case '\'':
+		type = TKN_QUOTE;
+		temp_addc(lxr, c);
+		if (is_whitespace(next) || next == SOURCE_EOS) {
+			err_msg = error_message(next, "immediatedly after",
+						"quote \"'\"", lxr);
+		}
+		break;
 	case SOURCE_EOS:
 		type = TKN_EOF;
 		break;

@@ -359,6 +359,17 @@ void lxr_string(void)
 		tkn_err_msg(tkn));
 }
 
+void lxr_quote(void)
+{
+	token tkn;
+
+	tkn = lexer_read(
+		lexer_new(source_string("'apple", "foo")));
+	expected_token(tkn, TKN_QUOTE, "'", 0, 0, 0);
+
+	// don't allow atmosphere
+}
+
 int test_lexer(void)
 {
 	RUN_TEST(lxr_new_null_src);
@@ -381,4 +392,5 @@ int test_lexer(void)
 	RUN_TEST(lxr_signed_number);
 	RUN_TEST(lxr_signed_naked_decimal);
 	RUN_TEST(lxr_string);
+	RUN_TEST(lxr_quote);
 }

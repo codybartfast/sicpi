@@ -15,7 +15,7 @@ typedef enum token_type {
 	TKN_NUMBER, ////// 4
 	TKN_STRING, ////// 5
 	TKN_DOT, ///////// 6
-	// TKN_QUOTE,
+	TKN_QUOTE, /////// 7
 	// TKN_QUASIQUOTE,
 	// TKN_UNQUOTE
 } token_type;
