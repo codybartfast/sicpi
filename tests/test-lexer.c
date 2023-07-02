@@ -28,7 +28,7 @@ void lxr_free_null(void)
 	lexer_free(NULL);
 }
 
-void test_lexer_free_source(void)
+void lxr_free_source_test(void)
 {
 	source src = source_string("123", "test-lexer");
 	lexer lxr = lexer_new(src);
@@ -423,12 +423,25 @@ void lxr_multiquote(void)
 	expected_token(lexer_read(lxr), TKN_EOF, "\0", 34, 1, 11);
 }
 
+void lxr_text(void)
+{
+	token tkn;
+	lexer lxr = lexer_new(
+		source_string("'apple `banana ,cherry\n`(list) ,123", "foo"));
+
+	while (lexer_read(lxr)->type > TKN_UNDEFINED)
+		;
+
+	TEST_ASSERT_EQUAL_STRING("'apple `banana ,cherry\n`(list) ,123",
+				 sb_current(lxr->text));
+}
+
 int test_lexer(void)
 {
 	RUN_TEST(lxr_new_null_src);
 	RUN_TEST(lxr_new);
 	RUN_TEST(lxr_free_null);
-	RUN_TEST(test_lexer_free_source);
+	RUN_TEST(lxr_free_source_test);
 	RUN_TEST(lxr_free);
 	RUN_TEST(lxr_invalid_char_in_identifier);
 	RUN_TEST(lxr_bad_token_start);
@@ -447,4 +460,5 @@ int test_lexer(void)
 	RUN_TEST(lxr_string);
 	RUN_TEST(lxr_quote);
 	RUN_TEST(lxr_multiquote);
+	RUN_TEST(lxr_text);
 }
