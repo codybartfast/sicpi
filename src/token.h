@@ -16,8 +16,8 @@ typedef enum token_type {
 	TKN_STRING, ////// 5
 	TKN_DOT, ///////// 6
 	TKN_QUOTE, /////// 7
-	// TKN_QUASIQUOTE,
-	// TKN_UNQUOTE
+	TKN_QUASIQUOTE, // 8
+	TKN_UNQUOTE, ///// 9
 } token_type;
 
 typedef struct token {

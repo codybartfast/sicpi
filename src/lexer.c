@@ -109,6 +109,12 @@ static char *error_unexpected_end_of_string(lexer lxr)
 	return strdup(err_buff);
 }
 
+static char *error_expected_expression(char prefix)
+{
+	sprintf(err_buff, "Expected an expression after '%c'.", prefix);
+	return strdup(err_buff);
+}
+
 static token lexer_is_errored_token(lexer lxr)
 {
 	token tkn = token_new(lxr);
@@ -221,6 +227,20 @@ static inline char *read_string(lexer lxr)
 	return error_unexpected_end_of_string(lxr);
 }
 
+static inline char *read_expression_prefix(lexer lxr, char c, char next,
+					   char *prefixName)
+{
+	temp_addc(lxr, c);
+
+	if (is_whitespace(next)) {
+		return error_message(next, "immediatedly after", prefixName,
+				     lxr);
+	} else if (next == SOURCE_EOS) {
+		return error_expected_expression(c);
+	}
+	return NULL;
+}
+
 token lexer_read(lexer lxr)
 {
 	if (lexer_is_errored(lxr)) {
@@ -273,11 +293,15 @@ token lexer_read(lexer lxr)
 		break;
 	case '\'':
 		type = TKN_QUOTE;
-		temp_addc(lxr, c);
-		if (is_whitespace(next) || next == SOURCE_EOS) {
-			err_msg = error_message(next, "immediatedly after",
-						"quote \"'\"", lxr);
-		}
+		err_msg = read_expression_prefix(lxr, c, next, "quote");
+		break;
+	case '`':
+		type = TKN_QUASIQUOTE;
+		err_msg = read_expression_prefix(lxr, c, next, "quasiquote");
+		break;
+	case ',':
+		type = TKN_UNQUOTE;
+		err_msg = read_expression_prefix(lxr, c, next, "unquote");
 		break;
 	case SOURCE_EOS:
 		type = TKN_EOF;

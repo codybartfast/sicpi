@@ -363,11 +363,64 @@ void lxr_quote(void)
 {
 	token tkn;
 
-	tkn = lexer_read(
-		lexer_new(source_string("'apple", "foo")));
+	tkn = lexer_read(lexer_new(source_string("'apple", "foo")));
 	expected_token(tkn, TKN_QUOTE, "'", 0, 0, 0);
 
-	// don't allow atmosphere
+	tkn = lexer_read(lexer_new(source_string("'123", "foo")));
+	expected_token(tkn, TKN_QUOTE, "'", 0, 0, 0);
+
+	tkn = lexer_read(lexer_new(source_string("'(apple)", "foo")));
+	expected_token(tkn, TKN_QUOTE, "'", 0, 0, 0);
+
+	tkn = lexer_read(lexer_new(source_string("' apple", "foo")));
+	expected_token(tkn, TKN_ERROR, "'", 0, 0, 0);
+	TEST_ASSERT_EQUAL_STRING(
+		"Unexpected character ' ', 0x20, immediatedly after quote: '''.",
+		tkn_err_msg(tkn));
+
+	tkn = lexer_read(lexer_new(source_string("` apple", "foo")));
+	expected_token(tkn, TKN_ERROR, "`", 0, 0, 0);
+	TEST_ASSERT_EQUAL_STRING(
+		"Unexpected character ' ', 0x20, immediatedly after quasiquote: '`'.",
+		tkn_err_msg(tkn));
+
+	tkn = lexer_read(lexer_new(source_string(", apple", "foo")));
+	expected_token(tkn, TKN_ERROR, ",", 0, 0, 0);
+	TEST_ASSERT_EQUAL_STRING(
+		"Unexpected character ' ', 0x20, immediatedly after unquote: ','.",
+		tkn_err_msg(tkn));
+
+	tkn = lexer_read(lexer_new(source_string("'", "foo")));
+	expected_token(tkn, TKN_ERROR, "'", 0, 0, 0);
+	TEST_ASSERT_EQUAL_STRING("Expected an expression after '''.",
+				 tkn_err_msg(tkn));
+}
+
+void lxr_multiquote(void)
+{
+	token tkn;
+	lexer lxr = lexer_new(
+		source_string("'apple `banana ,cherry\n`(list) ,123", "foo"));
+
+	expected_token(lexer_read(lxr), TKN_QUOTE, "'", 0, 0, 0);
+	expected_token(lexer_read(lxr), TKN_IDENTIFIER, "apple", 1, 0, 1);
+
+	expected_token(lexer_read(lxr), TKN_QUASIQUOTE, "`", 7, 0, 7);
+	expected_token(lexer_read(lxr), TKN_IDENTIFIER, "banana", 8, 0, 8);
+
+	expected_token(lexer_read(lxr), TKN_UNQUOTE, ",", 15, 0, 15);
+	expected_token(lexer_read(lxr), TKN_IDENTIFIER, "cherry", 16, 0, 16);
+
+	expected_token(lexer_read(lxr), TKN_QUASIQUOTE, "`", 23, 1, 0);
+	expected_token(lexer_read(lxr), TKN_LIST_OPEN, "(", 24, 1, 1);
+	expected_token(lexer_read(lxr), TKN_IDENTIFIER, "list", 25, 1, 2);
+	expected_token(lexer_read(lxr), TKN_LIST_CLOSE, ")", 29, 1, 6);
+
+	expected_token(lexer_read(lxr), TKN_UNQUOTE, ",", 31, 1, 8);
+	expected_token(lexer_read(lxr), TKN_NUMBER, "123", 32, 1, 9);
+
+	expected_token(lexer_read(lxr), TKN_EOF, "\0", 34, 1, 11);
+	expected_token(lexer_read(lxr), TKN_EOF, "\0", 34, 1, 11);
 }
 
 int test_lexer(void)
@@ -393,4 +446,5 @@ int test_lexer(void)
 	RUN_TEST(lxr_signed_naked_decimal);
 	RUN_TEST(lxr_string);
 	RUN_TEST(lxr_quote);
+	RUN_TEST(lxr_multiquote);
 }
