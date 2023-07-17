@@ -32,7 +32,7 @@ void lxr_free_source_test(void)
 {
 	source src = source_string("123", "test-lexer");
 	lexer lxr = lexer_new(src);
-	token tkn = lexer_read(lxr);
+	lexer_read(lxr);
 	char *name = src->name;
 
 	lexer_free_source(lxr);
@@ -398,7 +398,6 @@ void lxr_quote(void)
 
 void lxr_multiquote(void)
 {
-	token tkn;
 	lexer lxr = lexer_new(
 		source_string("'apple `banana ,cherry\n`(list) ,123", "foo"));
 
@@ -425,7 +424,6 @@ void lxr_multiquote(void)
 
 void lxr_text(void)
 {
-	token tkn;
 	lexer lxr = lexer_new(
 		source_string("'apple `banana ,cherry\n`(list) ,123", "foo"));
 
@@ -461,4 +459,5 @@ int test_lexer(void)
 	RUN_TEST(lxr_quote);
 	RUN_TEST(lxr_multiquote);
 	RUN_TEST(lxr_text);
+	return 0;
 }
