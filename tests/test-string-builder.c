@@ -172,4 +172,5 @@ int test_string_builder(void)
 	RUN_TEST(sb_copy_string_with_growth);
 	RUN_TEST(sb_clear_resets_and_retains_capacity);
 	RUN_TEST(sb_free_frees);
+	return 0;
 }

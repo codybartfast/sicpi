@@ -54,7 +54,6 @@ void src_string_null(void)
 
 void src_position(void)
 {
-	int i = -1;
 	source src = source_file(file_path);
 
 	TEST_ASSERT_EQUAL_INT(-1, source_offset(src));
@@ -229,4 +228,5 @@ int test_source(void)
 	RUN_TEST(src_string_null);
 	RUN_TEST(src_position);
 	RUN_TEST(src_peek);
+	return 0;
 }
