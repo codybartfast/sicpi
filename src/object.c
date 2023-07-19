@@ -38,6 +38,15 @@ meta_data object_meta_data(object obj)
 	return obj->meta_data;
 }
 
+void object_free(object obj)
+{
+	switch (object_value_kind(obj)) {
+	default:
+		break;
+	}
+	free(obj);
+}
+
 // Number
 // =============================================================================
 //

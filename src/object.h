@@ -21,6 +21,7 @@ typedef struct object {
 //
 
 meta_data object_meta_data(object obj);
+void object_free(object obj);
 
 // Number
 // =============================================================================

@@ -13,6 +13,11 @@ bool has_one_type(object obj)
 	return 1 == count;
 }
 
+void obj_free(void)
+{
+	object_free(from_integer(0, NO_META_DATA));
+}
+
 void obj_new_integer(void)
 {
 	meta_data meta_data = 124;
@@ -28,6 +33,7 @@ void obj_new_integer(void)
 
 int test_object(void)
 {
+	RUN_TEST(obj_free);
 	RUN_TEST(obj_new_integer);
 	return 0;
 }

@@ -6,7 +6,7 @@
 typedef int64_t integer;
 typedef double floating;
 typedef uint32_t meta_data;
-#define NO_META_DATA = 0;
+#define NO_META_DATA 0
 
 void alloc_error(char *caller);
 void eprintf(const char *msg, ...);
