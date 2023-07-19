@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "sicpstd.h"
+#include "sicp-std.h"
 #include "source.h"
 
 #define NO_PEEKED -1

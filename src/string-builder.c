@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "sicpstd.h"
+#include "sicp-std.h"
 
 /*
  * Code here has been copied in:

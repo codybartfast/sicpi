@@ -1,7 +1,7 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
-#include "sicpstd.h"
+#include "sicp-std.h"
 
 #include <stdbool.h>
 #include <inttypes.h>

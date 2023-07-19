@@ -5,7 +5,7 @@
 #include <string.h>
 
 #include "character-classes.h"
-#include "sicpstd.h"
+#include "sicp-std.h"
 #include "source.h"
 #include "token.h"
 
