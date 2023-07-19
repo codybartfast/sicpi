@@ -1,12 +1,12 @@
+#include "source.h"
+
+#include "sicp-error.h"
+
 #include <errno.h>
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "sicp-error.h"
-// #include "sicp-std.h"
-#include "source.h"
 
 #define NO_PEEKED -1
 

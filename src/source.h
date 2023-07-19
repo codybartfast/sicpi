@@ -1,8 +1,8 @@
 #ifndef SOURCE_H
 #define SOURCE_H
 
-#include <stdbool.h>
 #include <inttypes.h>
+#include <stdbool.h>
 #include <stdio.h>
 
 #define SOURCE_EOS '\0'

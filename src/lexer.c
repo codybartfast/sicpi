@@ -1,14 +1,13 @@
 #include "lexer.h"
 
-#include <assert.h>
-#include <stdlib.h>
-#include <string.h>
-
 #include "character-classes.h"
-#include "sicp-std.h"
 #include "sicp-error.h"
 #include "source.h"
 #include "token.h"
+
+#include <assert.h>
+#include <stdlib.h>
+#include <string.h>
 
 char err_buff[256];
 

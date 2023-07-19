@@ -1,13 +1,12 @@
 #ifndef TOKEN_TABLE_H
 #define TOKEN_TABLE_H
 
-#include <limits.h>
-#include <stdint.h>
-
 #include "lexer.h"
 #include "sicp-error.h"
-// #include "sicp-std.h"
 #include "token.h"
+
+#include <limits.h>
+#include <stdint.h>
 
 /*
  * This is intended to store references to tokens created by the lexer so they

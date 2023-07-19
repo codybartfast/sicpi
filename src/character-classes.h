@@ -1,6 +1,5 @@
 #ifndef CHARACTER_CLASSES_H
 #define CHARACTER_CLASSES_H
-#include "sicp-std.h"
 
 #include <stdbool.h>
 

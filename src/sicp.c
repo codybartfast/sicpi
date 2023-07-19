@@ -1,9 +1,9 @@
+#include "notices.h"
+#include "version.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "notices.h"
-#include "version.h"
 
 void print_usage(void)
 {

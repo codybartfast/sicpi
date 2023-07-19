@@ -1,10 +1,11 @@
 #include "string-builder.h"
 
+#include "sicp-error.h"
+
 #include <limits.h>
 #include <stdio.h>
 #include <string.h>
 
-#include "sicp-error.h"
 
 /*
  * Code here has been copied in:
