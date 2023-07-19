@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "sicp-std.h"
+#include "sicp-error.h"
 
 /*
  * Code here has been copied in:

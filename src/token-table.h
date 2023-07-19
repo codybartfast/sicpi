@@ -5,7 +5,8 @@
 #include <stdint.h>
 
 #include "lexer.h"
-#include "sicp-std.h"
+#include "sicp-error.h"
+// #include "sicp-std.h"
 #include "token.h"
 
 /*

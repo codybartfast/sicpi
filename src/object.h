@@ -1,6 +1,7 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
+#include "sicp-error.h"
 #include "sicp-std.h"
 
 #include <stdbool.h>

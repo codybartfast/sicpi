@@ -1,5 +1,8 @@
 #include "object.h"
 
+#include "sicp-error.h"
+#include "sicp-std.h"
+
 #include <inttypes.h>
 #include <stdbool.h>
 #include <stdlib.h>

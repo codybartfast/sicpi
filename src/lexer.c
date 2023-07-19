@@ -6,6 +6,7 @@
 
 #include "character-classes.h"
 #include "sicp-std.h"
+#include "sicp-error.h"
 #include "source.h"
 #include "token.h"
 
