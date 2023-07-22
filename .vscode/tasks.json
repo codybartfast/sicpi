@@ -21,6 +21,7 @@
                 "src/character-classes.c",
                 "src/lexer.c",
                 "src/object.c",
+                "src/parser.c",
                 "src/sicp.c",
                 "src/sicp-error.c",
                 "src/source.c",
@@ -83,6 +84,9 @@
                 "src/character-classes.c",
                 "src/token.c",
                 "tests/test-lexer.c",
+
+                "src/parser.c",
+                "tests/test-parser.c",
 
                 "src/source.c",
                 "tests/test-source.c",
