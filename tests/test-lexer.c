@@ -434,6 +434,14 @@ void lxr_text(void)
 				 sb_current(lxr->text));
 }
 
+void lxr_sets_token_source(void){
+	token_source tkn_src;
+	lexer lxr = lexer_new(source_string("durian", ""));
+	lexer_set_token_source(lxr, &tkn_src);
+	TEST_ASSERT_EQUAL_PTR(lxr, tkn_src.state);
+	TEST_ASSERT_EQUAL_PTR(lexer_read, tkn_src.read_token);
+}
+
 int test_lexer(void)
 {
 	RUN_TEST(lxr_new_null_src);
@@ -459,5 +467,6 @@ int test_lexer(void)
 	RUN_TEST(lxr_quote);
 	RUN_TEST(lxr_multiquote);
 	RUN_TEST(lxr_text);
+	RUN_TEST(lxr_sets_token_source);
 	return 0;
 }

@@ -37,4 +37,9 @@ long tkn_offset(token tkn);
 long tkn_x(token tkn);
 long tkn_y(token tkn);
 
+typedef struct token_source {
+	void *state;
+	token (*read_token)(void *state);
+} token_source;
+
 #endif

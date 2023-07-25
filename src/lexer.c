@@ -333,3 +333,8 @@ token lexer_read(lexer lxr)
 	}
 	return tkn;
 }
+
+void lexer_set_token_source(lexer lxr, token_source *tkn_src){
+	tkn_src->read_token = (token (*)(void *state))lexer_read;
+	tkn_src->state = lxr;
+}
