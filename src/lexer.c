@@ -65,7 +65,7 @@ static inline token token_new(lexer lxr)
 		alloc_error("token_new");
 	}
 	tkn->lxr = lxr;
-	tkn->type = TKN_UNDEFINED;
+	tkn->type = TOKEN_UNDEFINED;
 	tkn->text = NULL;
 	tkn->err_msg = NULL;
 	tkn->offset = source_offset(lxr->source);
@@ -121,7 +121,7 @@ static token lexer_is_errored_token(lexer lxr)
 	tkn->text = strdup("");
 	tkn->err_msg = strdup(
 		"Attempted to read from a lexer after a preceeding error.");
-	tkn->type = TKN_ERROR;
+	tkn->type = TOKEN_ERROR;
 	return tkn;
 }
 
@@ -250,7 +250,7 @@ token lexer_read(lexer lxr)
 	skip_atmosphere(lxr);
 
 	char *err_msg = NULL;
-	token_type type = TKN_UNDEFINED;
+	token_type type = TOKEN_UNDEFINED;
 	sb_clear(lxr->temp);
 
 	char c = readc(lxr);
@@ -260,59 +260,59 @@ token lexer_read(lexer lxr)
 	switch (c) {
 	case '(':
 		temp_addc(lxr, c);
-		type = TKN_LIST_OPEN;
+		type = TOKEN_LIST_OPEN;
 		break;
 	case ')':
 		temp_addc(lxr, c);
-		type = TKN_LIST_CLOSE;
+		type = TOKEN_LIST_CLOSE;
 		break;
 	case '+':
 	case '-':
 		temp_addc(lxr, c);
 		if (is_digit(next) || next == '.') {
-			type = TKN_NUMBER;
+			type = TOKEN_NUMBER;
 			err_msg = read_number(lxr);
 		} else {
-			type = TKN_IDENTIFIER;
+			type = TOKEN_IDENTIFIER;
 			err_msg = check_at_end_of_token(lxr, "+/-");
 		}
 		break;
 	case '.':
 		temp_addc(lxr, c);
 		if (is_digit(next)) {
-			type = TKN_NUMBER;
+			type = TOKEN_NUMBER;
 			err_msg = read_decimal_part(lxr);
 		} else {
-			type = TKN_DOT;
+			type = TOKEN_DOT;
 			err_msg = check_at_end_of_token(lxr, "dot");
 		}
 		break;
 	case '"':
-		type = TKN_STRING;
+		type = TOKEN_STRING;
 		err_msg = read_string(lxr);
 		break;
 	case '\'':
-		type = TKN_QUOTE;
+		type = TOKEN_QUOTE;
 		err_msg = read_expression_prefix(lxr, c, next, "quote");
 		break;
 	case '`':
-		type = TKN_QUASIQUOTE;
+		type = TOKEN_QUASIQUOTE;
 		err_msg = read_expression_prefix(lxr, c, next, "quasiquote");
 		break;
 	case ',':
-		type = TKN_UNQUOTE;
+		type = TOKEN_UNQUOTE;
 		err_msg = read_expression_prefix(lxr, c, next, "unquote");
 		break;
 	case SOURCE_EOS:
-		type = TKN_EOF;
+		type = TOKEN_EOF;
 		break;
 	default:
 		temp_addc(lxr, c);
 		if (is_initial(c)) {
-			type = TKN_IDENTIFIER;
+			type = TOKEN_IDENTIFIER;
 			err_msg = read_identifier(lxr);
 		} else if (is_digit(c)) {
-			type = TKN_NUMBER;
+			type = TOKEN_NUMBER;
 			err_msg = read_number(lxr);
 		}
 		break;
@@ -320,13 +320,13 @@ token lexer_read(lexer lxr)
 
 	tkn->text = sb_copy(lxr->temp);
 
-	if (type == TKN_UNDEFINED) {
+	if (type == TOKEN_UNDEFINED) {
 		err_msg = error_message(c, "at start of", "token", lxr);
 	}
 
 	if (err_msg) {
 		tkn->err_msg = err_msg;
-		tkn->type = TKN_ERROR;
+		tkn->type = TOKEN_ERROR;
 		lxr->is_errored = true;
 	} else {
 		tkn->type = type;
@@ -334,7 +334,8 @@ token lexer_read(lexer lxr)
 	return tkn;
 }
 
-void lexer_set_token_source(lexer lxr, token_source *tkn_src){
-	tkn_src->read_token = (token (*)(void *state))lexer_read;
+void lexer_set_token_source(lexer lxr, token_source *tkn_src)
+{
+	tkn_src->read_token = (token(*)(void *state))lexer_read;
 	tkn_src->state = lxr;
 }

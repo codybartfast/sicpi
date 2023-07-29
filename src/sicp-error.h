@@ -1,7 +1,8 @@
-#ifndef SICPERROR_H
-#define SICPERROR_H
+#ifndef SICP_ERROR_H
+#define SICP_ERROR_H
 
-#include <inttypes.h>
+
+
 
 void alloc_error(char *caller);
 void eprintf(const char *msg, ...);

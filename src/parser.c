@@ -32,7 +32,7 @@ object parse(token_source tkn_src)
 {
 	token tkn = tkn_src.read_token(tkn_src.state);
 	switch (tkn_type(tkn)) {
-	case TKN_NUMBER:
+	case TOKEN_NUMBER:
 		return number(tkn);
 	default:
 		return from_integer(-1, NO_META_DATA);
