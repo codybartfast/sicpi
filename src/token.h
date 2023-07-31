@@ -3,8 +3,6 @@
 
 #include "string-builder.h"
 
-typedef struct lexer *lexer;
-
 enum token_type {
 	TOKEN_ERROR = -2,
 	TOKEN_EOF = -1,
@@ -21,7 +19,7 @@ enum token_type {
 };
 
 typedef struct token {
-	lexer lxr;
+	void *meta_data;
 	enum token_type type;
 	char *text;
 	char *err_msg;
