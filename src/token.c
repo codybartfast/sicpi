@@ -1,6 +1,6 @@
 #include "token.h"
 
-inline token_type tkn_type(token tkn)
+inline enum token_type tkn_type(token tkn)
 {
 	return tkn->type;
 }

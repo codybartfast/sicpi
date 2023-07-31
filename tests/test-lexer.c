@@ -67,7 +67,7 @@ void lxr_free(void)
 	TEST_ASSERT_FALSE(temp_buffer == temp->buff);
 }
 
-void expected_token(token tkn, token_type type, char *text, long offset, long y,
+void expected_token(token tkn, enum token_type type, char *text, long offset, long y,
 		    long x)
 {
 	TEST_ASSERT_NOT_NULL(tkn);

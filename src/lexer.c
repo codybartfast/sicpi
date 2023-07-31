@@ -250,7 +250,7 @@ token lexer_read(lexer lxr)
 	skip_atmosphere(lxr);
 
 	char *err_msg = NULL;
-	token_type type = TOKEN_UNDEFINED;
+	enum token_type type = TOKEN_UNDEFINED;
 	sb_clear(lxr->temp);
 
 	char c = readc(lxr);

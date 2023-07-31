@@ -5,12 +5,12 @@
 #include "string-builder.h"
 #include "token.h"
 
-struct lexer {
+typedef struct lexer {
 	source source;
 	string_builder text;
 	string_builder temp;
 	bool is_errored;
-};
+} *lexer;
 
 lexer lexer_new(source src);
 token lexer_read(lexer lxr);

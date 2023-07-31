@@ -5,7 +5,7 @@
 
 typedef struct lexer *lexer;
 
-typedef enum token_type {
+enum token_type {
 	TOKEN_ERROR = -2,
 	TOKEN_EOF = -1,
 	TOKEN_UNDEFINED = 0,
@@ -18,7 +18,7 @@ typedef enum token_type {
 	TOKEN_QUOTE, /////// 7
 	TOKEN_QUASIQUOTE, // 8
 	TOKEN_UNQUOTE, ///// 9
-} token_type;
+};
 
 typedef struct token {
 	lexer lxr;
@@ -30,7 +30,7 @@ typedef struct token {
 	long y; // zero-based line
 } *token;
 
-token_type tkn_type(token tkn);
+enum token_type tkn_type(token tkn);
 char *tkn_text(token tkn);
 char *tkn_err_msg(token tkn);
 long tkn_offset(token tkn);
