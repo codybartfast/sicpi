@@ -9,7 +9,7 @@ static object number(token tkn)
 	char *end = NULL;
 	char *s = tkn_text(tkn);
 	errno = 0;
-	conv_int = strtoll(s, &end, 0);
+	conv_int = strtoll(s, &end, 10);
 	// check string number doesn't overflow long long and
 	// long long doesn't overflow whatever Integer is defined as.
 	if (end && !*end && errno != ERANGE && integer_min <= conv_int &&
