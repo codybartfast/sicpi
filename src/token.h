@@ -30,12 +30,12 @@ typedef struct token {
 	long y; // zero-based line
 } *token;
 
-enum token_type tkn_type(token tkn);
-char *tkn_text(token tkn);
-char *tkn_err_msg(token tkn);
-long tkn_offset(token tkn);
-long tkn_x(token tkn);
-long tkn_y(token tkn);
+enum token_type token_type(token tkn);
+char *token_text(token tkn);
+char *token_error_message(token tkn);
+long token_offset(token tkn);
+long token_x(token tkn);
+long token_y(token tkn);
 
 typedef struct token_source {
 	void *state;

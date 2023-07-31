@@ -7,7 +7,7 @@ static object number(token tkn)
 {
 	long long conv_int;
 	char *end = NULL;
-	char *s = tkn_text(tkn);
+	char *s = token_text(tkn);
 	errno = 0;
 	conv_int = strtoll(s, &end, 10);
 	// check string number doesn't overflow long long and
@@ -31,7 +31,7 @@ static object number(token tkn)
 object parse(token_source tkn_src)
 {
 	token tkn = tkn_src.read_token(tkn_src.state);
-	switch (tkn_type(tkn)) {
+	switch (token_type(tkn)) {
 	case TOKEN_NUMBER:
 		return number(tkn);
 	default:
