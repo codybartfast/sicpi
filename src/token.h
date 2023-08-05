@@ -22,7 +22,6 @@ typedef struct token {
 	void *meta_data;
 	enum token_type type;
 	char *text;
-	char *err_msg;
 	long offset;
 	long x; // zero-based column
 	long y; // zero-based line
@@ -30,7 +29,7 @@ typedef struct token {
 
 enum token_type token_type(token tkn);
 char *token_text(token tkn);
-char *token_error_message(token tkn);
+// char *token_error_message(token tkn);
 long token_offset(token tkn);
 long token_x(token tkn);
 long token_y(token tkn);

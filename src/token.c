@@ -10,10 +10,10 @@ inline char *token_text(token tkn)
 	return tkn->text;
 }
 
-inline char *token_error_message(token tkn)
-{
-	return tkn->err_msg;
-}
+// inline char *token_error_message(token tkn)
+// {
+// 	return tkn->err_msg;
+// }
 
 inline long token_offset(token tkn)
 {

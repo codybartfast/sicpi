@@ -20,6 +20,8 @@ void lxr_new(void)
 	TEST_ASSERT_NOT_NULL(lxr);
 	TEST_ASSERT_EQUAL_size_t(0, strlen(sb_current(lxr->text)));
 	TEST_ASSERT_EQUAL_size_t(0, strlen(sb_current(lxr->temp)));
+	TEST_ASSERT_FALSE(lxr->is_errored);
+	TEST_ASSERT_NULL(lxr->error_message);
 	TEST_ASSERT_EQUAL_PTR(src, lxr->source);
 }
 
@@ -65,6 +67,8 @@ void lxr_free(void)
 
 	TEST_ASSERT_FALSE(temp == lxr->temp);
 	TEST_ASSERT_FALSE(temp_buffer == temp->buff);
+
+	//// TODO:? free also frees error message?
 }
 
 void expected_token(token tkn, enum token_type type, char *text, long offset, long y,
@@ -88,7 +92,7 @@ void lxr_invalid_char_in_identifier(void)
 	expected_token(tkn, TOKEN_ERROR, "ident#", 0, 0, 0);
 	TEST_ASSERT_EQUAL_STRING(
 		"Unexpected character '#', 0x23, in identifier: 'ident#'.",
-		token_error_message(tkn));
+		lexer_error_message(lxr));
 	TEST_ASSERT_TRUE(lexer_is_errored(lxr));
 }
 
@@ -102,7 +106,7 @@ void lxr_bad_token_start(void)
 	expected_token(tkn, TOKEN_ERROR, "#", 0, 0, 0);
 	TEST_ASSERT_EQUAL_STRING(
 		"Unexpected character '#', 0x23, at start of token: '#'.",
-		token_error_message(tkn));
+		lexer_error_message(lxr));
 	TEST_ASSERT_TRUE(lexer_is_errored(lxr));
 }
 
@@ -117,21 +121,21 @@ void lxr_returns_error_after_returning_error(void)
 	TEST_ASSERT_TRUE(lexer_is_errored(lxr));
 	TEST_ASSERT_EQUAL_STRING(
 		"Unexpected character '.', 0x2E, in number: '123.456.'.",
-		token_error_message(tkn));
+		lexer_error_message(lxr));
 
 	tkn = lexer_read(lxr);
 	TEST_ASSERT_TRUE(token_type(tkn) == TOKEN_ERROR);
 	TEST_ASSERT_TRUE(lexer_is_errored(lxr));
 	TEST_ASSERT_EQUAL_STRING(
 		"Attempted to read from a lexer after a preceeding error.",
-		token_error_message(tkn));
+		lexer_error_message(lxr));
 
 	tkn = lexer_read(lxr);
 	TEST_ASSERT_TRUE(token_type(tkn) == TOKEN_ERROR);
 	TEST_ASSERT_TRUE(lexer_is_errored(lxr));
 	TEST_ASSERT_EQUAL_STRING(
 		"Attempted to read from a lexer after a preceeding error.",
-		token_error_message(tkn));
+		lexer_error_message(lxr));
 }
 
 void lxr_dot(void)
@@ -154,7 +158,7 @@ void lxr_dot_bad(void)
 	expected_token(tkn, TOKEN_ERROR, ".b", 0, 0, 0);
 	TEST_ASSERT_EQUAL_STRING(
 		"Unexpected character 'b', 0x62, in dot: '.b'.",
-		token_error_message(tkn));
+		lexer_error_message(lxr));
 }
 
 void lxr_plus_sub(void)
@@ -255,7 +259,7 @@ void lxr_invalid_char_in_number(void)
 	expected_token(tkn, TOKEN_ERROR, "123x", 0, 0, 0);
 	TEST_ASSERT_EQUAL_STRING(
 		"Unexpected character 'x', 0x78, in number: '123x'.",
-		token_error_message(tkn));
+		lexer_error_message(lxr));
 	TEST_ASSERT_TRUE(lexer_is_errored(lxr));
 }
 
@@ -269,7 +273,7 @@ void lxr_number_ends_with_dot(void)
 	expected_token(tkn, TOKEN_ERROR, "123.", 0, 0, 0);
 	TEST_ASSERT_EQUAL_STRING(
 		"Unexpected character '.', 0x2E, at end of number: '123.'.",
-		token_error_message(tkn));
+		lexer_error_message(lxr));
 	TEST_ASSERT_TRUE(lexer_is_errored(lxr));
 }
 
@@ -283,7 +287,7 @@ void lxr_number_with_two_dots(void)
 	expected_token(tkn, TOKEN_ERROR, "123.456.", 0, 0, 0);
 	TEST_ASSERT_EQUAL_STRING(
 		"Unexpected character '.', 0x2E, in number: '123.456.'.",
-		token_error_message(tkn));
+		lexer_error_message(lxr));
 	TEST_ASSERT_TRUE(lexer_is_errored(lxr));
 }
 
@@ -327,6 +331,7 @@ void lxr_signed_naked_decimal(void)
 
 void lxr_string(void)
 {
+	lexer lxr;
 	token tkn;
 
 	tkn = lexer_read(
@@ -344,23 +349,24 @@ void lxr_string(void)
 		source_string("\"Simple \\\\ String\"", "Simple String")));
 	expected_token(tkn, TOKEN_STRING, "Simple \\ String", 0, 0, 0);
 
-	tkn = lexer_read(lexer_new(
+	tkn = lexer_read(lxr = lexer_new(
 		source_string("\"Simple \\x  String\"", "Simple String")));
 	expected_token(tkn, TOKEN_ERROR, "Simple ", 0, 0, 0);
 	TEST_ASSERT_EQUAL_STRING(
 		"Unexpected character 'x', 0x78, following \\ (backslash) in string: 'Simple '.",
-		token_error_message(tkn));
+		lexer_error_message(lxr));
 
-	tkn = lexer_read(
+	tkn = lexer_read(lxr =
 		lexer_new(source_string("\"Simple String", "Simple String")));
 	expected_token(tkn, TOKEN_ERROR, "Simple String", 0, 0, 0);
 	TEST_ASSERT_EQUAL_STRING(
 		"No closing double quote '\"' found for string starting: 'Simple String'.",
-		token_error_message(tkn));
+		lexer_error_message(lxr));
 }
 
 void lxr_quote(void)
 {
+	lexer lxr;
 	token tkn;
 
 	tkn = lexer_read(lexer_new(source_string("'apple", "foo")));
@@ -372,28 +378,28 @@ void lxr_quote(void)
 	tkn = lexer_read(lexer_new(source_string("'(apple)", "foo")));
 	expected_token(tkn, TOKEN_QUOTE, "'", 0, 0, 0);
 
-	tkn = lexer_read(lexer_new(source_string("' apple", "foo")));
+	tkn = lexer_read(lxr = lexer_new(source_string("' apple", "foo")));
 	expected_token(tkn, TOKEN_ERROR, "'", 0, 0, 0);
 	TEST_ASSERT_EQUAL_STRING(
 		"Unexpected character ' ', 0x20, immediatedly after quote: '''.",
-		token_error_message(tkn));
+		lexer_error_message(lxr));
 
-	tkn = lexer_read(lexer_new(source_string("` apple", "foo")));
+	tkn = lexer_read(lxr = lexer_new(source_string("` apple", "foo")));
 	expected_token(tkn, TOKEN_ERROR, "`", 0, 0, 0);
 	TEST_ASSERT_EQUAL_STRING(
 		"Unexpected character ' ', 0x20, immediatedly after quasiquote: '`'.",
-		token_error_message(tkn));
+		lexer_error_message(lxr));
 
-	tkn = lexer_read(lexer_new(source_string(", apple", "foo")));
+	tkn = lexer_read(lxr = lexer_new(source_string(", apple", "foo")));
 	expected_token(tkn, TOKEN_ERROR, ",", 0, 0, 0);
 	TEST_ASSERT_EQUAL_STRING(
 		"Unexpected character ' ', 0x20, immediatedly after unquote: ','.",
-		token_error_message(tkn));
+		lexer_error_message(lxr));
 
-	tkn = lexer_read(lexer_new(source_string("'", "foo")));
+	tkn = lexer_read(lxr = lexer_new(source_string("'", "foo")));
 	expected_token(tkn, TOKEN_ERROR, "'", 0, 0, 0);
 	TEST_ASSERT_EQUAL_STRING("Expected an expression after '''.",
-				 token_error_message(tkn));
+				 lexer_error_message(lxr));
 }
 
 void lxr_multiquote(void)

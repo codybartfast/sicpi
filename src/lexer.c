@@ -31,6 +31,7 @@ lexer lexer_new(source src)
 	lxr->text = sb_new(0);
 	lxr->temp = sb_new(0);
 	lxr->is_errored = false;
+	lxr->error_message = NULL;
 	return lxr;
 }
 
@@ -58,6 +59,11 @@ inline bool lexer_is_errored(lexer lxr)
 	return lxr->is_errored;
 }
 
+inline char *lexer_error_message(lexer lxr)
+{
+	return lxr->error_message;
+}
+
 static inline token token_new(lexer lxr)
 {
 	token tkn = malloc(sizeof(struct token));
@@ -67,7 +73,6 @@ static inline token token_new(lexer lxr)
 	// tkn->meta_data = lxr->source;
 	tkn->type = TOKEN_UNDEFINED;
 	tkn->text = NULL;
-	tkn->err_msg = NULL;
 	tkn->offset = source_offset(lxr->source);
 	tkn->x = source_x(lxr->source);
 	tkn->y = source_y(lxr->source);
@@ -115,11 +120,11 @@ static char *error_expected_expression(char prefix)
 	return strdup(err_buff);
 }
 
-static token lexer_is_errored_token(lexer lxr)
+static token lexer_is_errored_token(lexer lxr) //// TODO: Rename.
 {
 	token tkn = token_new(lxr);
 	tkn->text = strdup("");
-	tkn->err_msg = strdup(
+	lxr->error_message = strdup(
 		"Attempted to read from a lexer after a preceeding error.");
 	tkn->type = TOKEN_ERROR;
 	return tkn;
@@ -325,7 +330,7 @@ token lexer_read(lexer lxr)
 	}
 
 	if (err_msg) {
-		tkn->err_msg = err_msg;
+		lxr->error_message = err_msg;
 		tkn->type = TOKEN_ERROR;
 		lxr->is_errored = true;
 	} else {
