@@ -120,7 +120,7 @@ static char *error_expected_expression(char prefix)
 	return strdup(err_buff);
 }
 
-static token lexer_is_errored_token(lexer lxr) //// TODO: Rename.
+static token handle_lexer_is_errored(lexer lxr)
 {
 	token tkn = token_new(lxr);
 	tkn->text = strdup("");
@@ -249,7 +249,7 @@ static inline char *read_expression_prefix(lexer lxr, char c, char next,
 token lexer_read(lexer lxr)
 {
 	if (lexer_is_errored(lxr)) {
-		return lexer_is_errored_token(lxr);
+		return handle_lexer_is_errored(lxr);
 	}
 
 	skip_atmosphere(lxr);
