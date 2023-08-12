@@ -75,12 +75,12 @@ static inline token token_new(lexer lxr)
 	if (!tkn) {
 		alloc_error("token_new");
 	}
-	// tkn->meta_data = lxr->source;
 	tkn->type = TOKEN_UNDEFINED;
 	tkn->text = NULL;
 	tkn->offset = source_offset(lxr->source);
 	tkn->x = source_x(lxr->source);
 	tkn->y = source_y(lxr->source);
+	tkn->meta_data = lxr->source;
 	return tkn;
 }
 

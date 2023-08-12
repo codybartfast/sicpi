@@ -8,6 +8,8 @@
 
 static char file_path[] = "tests/stuff/test-lexer.txt";
 
+// TODO: free lexer / source ?
+
 void lxr_new_null_src(void)
 {
 	TEST_ASSERT_NULL(lexer_new(NULL));
@@ -444,6 +446,13 @@ void lxr_text(void)
 				 sb_current(lxr->text));
 }
 
+void lxr_meta_data_is_set(void){
+	source src = source_string("fig", "");
+	lexer lxr = lexer_new(src);
+	token tkn = lexer_read(lxr);
+	TEST_ASSERT_EQUAL_PTR(src, tkn->meta_data);
+}
+
 void lxr_sets_token_source(void)
 {
 	token_source tkn_src;
@@ -478,6 +487,7 @@ int test_lexer(void)
 	RUN_TEST(lxr_quote);
 	RUN_TEST(lxr_multiquote);
 	RUN_TEST(lxr_text);
+	RUN_TEST(lxr_meta_data_is_set);
 	RUN_TEST(lxr_sets_token_source);
 	return 0;
 }
