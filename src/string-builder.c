@@ -93,7 +93,6 @@ char *sb_copy(string_builder sb)
 	if (!(copy = strdup(sb->buff))) {
 		alloc_error("sb_copy");
 	}
-	strcpy(copy, sb_current(sb)); //// TODO: remove?
 	return copy;
 }
 
