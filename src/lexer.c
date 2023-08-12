@@ -47,9 +47,14 @@ void lexer_free(lexer lxr)
 {
 	if (lxr) {
 		sb_free(lxr->text);
-		sb_free(lxr->temp);
 		lxr->text = NULL;
+
+		sb_free(lxr->temp);
 		lxr->temp = NULL;
+
+		free(lxr->error_message);
+		lxr->error_message = NULL;
+
 		free(lxr);
 	}
 }

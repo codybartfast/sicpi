@@ -46,9 +46,11 @@ void lxr_free(void)
 {
 	source src = source_string("", "lxr_free");
 	lexer lxr = lexer_new(src);
+	lxr->error_message = strdup("I am error message");
 	TEST_ASSERT_NOT_NULL(lxr->source);
 	TEST_ASSERT_NOT_NULL(lxr->text);
 	TEST_ASSERT_NOT_NULL(lxr->temp);
+	TEST_ASSERT_NOT_NULL(lxr->error_message);
 
 	char *name = src->name;
 
@@ -57,6 +59,8 @@ void lxr_free(void)
 
 	string_builder temp = lxr->temp;
 	char *temp_buffer = temp->buff;
+
+	char *err_msg = lxr->error_message;
 
 	lexer_free(lxr);
 
@@ -68,7 +72,7 @@ void lxr_free(void)
 	TEST_ASSERT_FALSE(temp == lxr->temp);
 	TEST_ASSERT_FALSE(temp_buffer == temp->buff);
 
-	//// TODO:? free also frees error message?
+	TEST_ASSERT_FALSE(err_msg == lxr->error_message);
 }
 
 void expected_token(token tkn, enum token_type type, char *text, long offset, long y,
