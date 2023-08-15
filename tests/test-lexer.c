@@ -8,8 +8,6 @@
 
 static char file_path[] = "tests/stuff/test-lexer.txt";
 
-// TODO: free lexer / source ?
-
 void lxr_new_null_src(void)
 {
 	TEST_ASSERT_NULL(lexer_new(NULL));
@@ -25,6 +23,9 @@ void lxr_new(void)
 	TEST_ASSERT_FALSE(lxr->is_errored);
 	TEST_ASSERT_NULL(lxr->error_message);
 	TEST_ASSERT_EQUAL_PTR(src, lxr->source);
+
+	lexer_free_source(lxr);
+	lexer_free(lxr);
 }
 
 void lxr_free_null(void)
@@ -42,6 +43,8 @@ void lxr_free_source_test(void)
 	lexer_free_source(lxr);
 	TEST_ASSERT_NULL(lxr->source);
 	TEST_ASSERT_FALSE(name == src->name);
+
+	lexer_free(lxr);
 }
 
 void lxr_free(void)
@@ -75,10 +78,12 @@ void lxr_free(void)
 	TEST_ASSERT_FALSE(temp_buffer == temp->buff);
 
 	TEST_ASSERT_FALSE(err_msg == lxr->error_message);
+
+	source_close(src);
 }
 
-void expected_token(token tkn, enum token_type type, char *text, long offset, long y,
-		    long x)
+void expected_token(token tkn, enum token_type type, char *text, long offset,
+		    long y, long x)
 {
 	TEST_ASSERT_NOT_NULL(tkn);
 	TEST_ASSERT_EQUAL_INT(type, token_type(tkn));
@@ -88,11 +93,15 @@ void expected_token(token tkn, enum token_type type, char *text, long offset, lo
 	TEST_ASSERT_EQUAL_INT64(x, token_x(tkn));
 }
 
-void lxr_sets_token_metadata_to_source(void){
+void lxr_sets_token_metadata_to_source(void)
+{
 	source src = source_string("metadata", "");
 	lexer lxr = lexer_new(src);
 	token tkn = lexer_read(lxr);
 	TEST_ASSERT_EQUAL_PTR(src, token_metadata(tkn));
+	token_free(tkn);
+	lexer_free_source(lxr);
+	lexer_free(lxr);
 }
 
 void lxr_invalid_char_in_identifier(void)
@@ -107,6 +116,10 @@ void lxr_invalid_char_in_identifier(void)
 		"Unexpected character '#', 0x23, in identifier: 'ident#'.",
 		lexer_error_message(lxr));
 	TEST_ASSERT_TRUE(lexer_is_errored(lxr));
+
+	token_free(tkn);
+	lexer_free_source(lxr);
+	lexer_free(lxr);
 }
 
 void lxr_bad_token_start(void)
@@ -121,6 +134,10 @@ void lxr_bad_token_start(void)
 		"Unexpected character '#', 0x23, at start of token: '#'.",
 		lexer_error_message(lxr));
 	TEST_ASSERT_TRUE(lexer_is_errored(lxr));
+
+	token_free(tkn);
+	lexer_free_source(lxr);
+	lexer_free(lxr);
 }
 
 void lxr_returns_error_after_returning_error(void)
@@ -136,6 +153,7 @@ void lxr_returns_error_after_returning_error(void)
 		"Unexpected character '.', 0x2E, in number: '123.456.'.",
 		lexer_error_message(lxr));
 
+	token_free(tkn);
 	tkn = lexer_read(lxr);
 	TEST_ASSERT_TRUE(token_type(tkn) == TOKEN_ERROR);
 	TEST_ASSERT_TRUE(lexer_is_errored(lxr));
@@ -143,12 +161,17 @@ void lxr_returns_error_after_returning_error(void)
 		"Attempted to read from a lexer after a preceeding error.",
 		lexer_error_message(lxr));
 
+	token_free(tkn);
 	tkn = lexer_read(lxr);
 	TEST_ASSERT_TRUE(token_type(tkn) == TOKEN_ERROR);
 	TEST_ASSERT_TRUE(lexer_is_errored(lxr));
 	TEST_ASSERT_EQUAL_STRING(
 		"Attempted to read from a lexer after a preceeding error.",
 		lexer_error_message(lxr));
+
+	token_free(tkn);
+	lexer_free_source(lxr);
+	lexer_free(lxr);
 }
 
 void lxr_dot(void)
@@ -159,6 +182,10 @@ void lxr_dot(void)
 
 	tkn = lexer_read(lxr);
 	expected_token(tkn, TOKEN_DOT, ".", 0, 0, 0);
+
+	token_free(tkn);
+	lexer_free_source(lxr);
+	lexer_free(lxr);
 }
 
 void lxr_dot_bad(void)
@@ -172,6 +199,10 @@ void lxr_dot_bad(void)
 	TEST_ASSERT_EQUAL_STRING(
 		"Unexpected character 'b', 0x62, in dot: '.b'.",
 		lexer_error_message(lxr));
+
+	token_free(tkn);
+	lexer_free_source(lxr);
+	lexer_free(lxr);
 }
 
 void lxr_plus_sub(void)
@@ -183,8 +214,16 @@ void lxr_plus_sub(void)
 	tkn = lexer_read(lxr);
 	expected_token(tkn, TOKEN_IDENTIFIER, "+", 0, 0, 0);
 
-	tkn = lexer_read(lexer_new(source_string("- .678", "blah")));
+	token_free(tkn);
+	lexer_free_source(lxr);
+	lexer_free(lxr);
+
+	tkn = lexer_read(lxr = lexer_new(source_string("- .678", "blah")));
 	expected_token(tkn, TOKEN_IDENTIFIER, "-", 0, 0, 0);
+
+	token_free(tkn);
+	lexer_free_source(lxr);
+	lexer_free(lxr);
 }
 
 void lxr_plus_sub_bad(void)
@@ -196,8 +235,16 @@ void lxr_plus_sub_bad(void)
 	tkn = lexer_read(lxr);
 	expected_token(tkn, TOKEN_ERROR, "+p", 0, 0, 0);
 
-	tkn = lexer_read(lexer_new(source_string("-minus", "blah")));
+	token_free(tkn);
+	lexer_free_source(lxr);
+	lexer_free(lxr);
+
+	tkn = lexer_read(lxr = lexer_new(source_string("-minus", "blah")));
 	expected_token(tkn, TOKEN_ERROR, "-m", 0, 0, 0);
+
+	token_free(tkn);
+	lexer_free_source(lxr);
+	lexer_free(lxr);
 }
 
 void lxr_read(void)
@@ -212,36 +259,46 @@ void lxr_read(void)
 	TEST_ASSERT_NOT_NULL(tkn);
 	expected_token(tkn, TOKEN_LIST_OPEN, "(", 50, 1, 0);
 
+	token_free(tkn);
 	tkn = lexer_read(lxr);
 	expected_token(tkn, TOKEN_IDENTIFIER, "define", 51, 1, 1);
 
+	token_free(tkn);
 	tkn = lexer_read(lxr);
 	expected_token(tkn, TOKEN_IDENTIFIER, "pi", 58, 1, 8);
 
+	token_free(tkn);
 	tkn = lexer_read(lxr);
 	expected_token(tkn, TOKEN_NUMBER, "3.14159", 61, 1, 11);
 
+	token_free(tkn);
 	tkn = lexer_read(lxr);
 	expected_token(tkn, TOKEN_LIST_CLOSE, ")", 68, 1, 18);
 
+	token_free(tkn);
 	tkn = lexer_read(lxr);
 	expected_token(tkn, TOKEN_LIST_OPEN, "(", 88, 2, 1);
 
+	token_free(tkn);
 	tkn = lexer_read(lxr);
 	expected_token(tkn, TOKEN_IDENTIFIER, "define", 90, 2, 3);
 
 	tkn = lexer_read(lxr);
 	expected_token(tkn, TOKEN_IDENTIFIER, "radius", 122, 3, 1);
 
+	token_free(tkn);
 	tkn = lexer_read(lxr);
 	expected_token(tkn, TOKEN_NUMBER, "10", 138, 4, 8);
 
+	token_free(tkn);
 	tkn = lexer_read(lxr);
 	expected_token(tkn, TOKEN_LIST_CLOSE, ")", 141, 4, 11);
 
+	token_free(tkn);
 	tkn = lexer_read(lxr);
 	expected_token(tkn, TOKEN_LIST_OPEN, "(", 144, 5, 0);
 
+	token_free(tkn);
 	tkn = lexer_read(lxr);
 	expected_token(tkn, TOKEN_IDENTIFIER, "*", 145, 5, 1);
 
@@ -250,16 +307,23 @@ void lxr_read(void)
 		lexer_read(lxr);
 	}
 
+	token_free(tkn);
 	tkn = lexer_read(lxr);
 	expected_token(tkn, TOKEN_IDENTIFIER, "circumference", 208, 7, 0);
 
+	token_free(tkn);
 	tkn = lexer_read(lxr);
 	expected_token(tkn, TOKEN_EOF, "", 278, 8, 56);
 
+	token_free(tkn);
 	tkn = lexer_read(lxr);
 	expected_token(tkn, TOKEN_EOF, "", 278, 8, 56);
 
 	TEST_ASSERT_FALSE(lexer_is_errored(lxr));
+
+	token_free(tkn);
+	lexer_free_source(lxr);
+	lexer_free(lxr);
 }
 
 void lxr_invalid_char_in_number(void)
@@ -274,6 +338,10 @@ void lxr_invalid_char_in_number(void)
 		"Unexpected character 'x', 0x78, in number: '123x'.",
 		lexer_error_message(lxr));
 	TEST_ASSERT_TRUE(lexer_is_errored(lxr));
+
+	token_free(tkn);
+	lexer_free_source(lxr);
+	lexer_free(lxr);
 }
 
 void lxr_number_ends_with_dot(void)
@@ -288,6 +356,10 @@ void lxr_number_ends_with_dot(void)
 		"Unexpected character '.', 0x2E, at end of number: '123.'.",
 		lexer_error_message(lxr));
 	TEST_ASSERT_TRUE(lexer_is_errored(lxr));
+
+	token_free(tkn);
+	lexer_free_source(lxr);
+	lexer_free(lxr);
 }
 
 void lxr_number_with_two_dots(void)
@@ -302,6 +374,10 @@ void lxr_number_with_two_dots(void)
 		"Unexpected character '.', 0x2E, in number: '123.456.'.",
 		lexer_error_message(lxr));
 	TEST_ASSERT_TRUE(lexer_is_errored(lxr));
+
+	token_free(tkn);
+	lexer_free_source(lxr);
+	lexer_free(lxr);
 }
 
 void lxr_naked_decimal(void)
@@ -312,6 +388,10 @@ void lxr_naked_decimal(void)
 
 	tkn = lexer_read(lxr);
 	expected_token(tkn, TOKEN_NUMBER, ".456", 0, 0, 0);
+
+	token_free(tkn);
+	lexer_free_source(lxr);
+	lexer_free(lxr);
 }
 
 void lxr_signed_number(void)
@@ -323,9 +403,17 @@ void lxr_signed_number(void)
 	tkn = lexer_read(lxr);
 	expected_token(tkn, TOKEN_NUMBER, "+12.34", 0, 0, 0);
 
-	tkn = lexer_read(
-		lexer_new(source_string("-23.45", "negative signed number")));
+	token_free(tkn);
+	lexer_free_source(lxr);
+	lexer_free(lxr);
+
+	tkn = lexer_read(lxr = lexer_new(source_string(
+				 "-23.45", "negative signed number")));
 	expected_token(tkn, TOKEN_NUMBER, "-23.45", 0, 0, 0);
+
+	token_free(tkn);
+	lexer_free_source(lxr);
+	lexer_free(lxr);
 }
 
 void lxr_signed_naked_decimal(void)
@@ -338,8 +426,12 @@ void lxr_signed_naked_decimal(void)
 	expected_token(tkn, TOKEN_NUMBER, "+.567", 0, 0, 0);
 
 	tkn = lexer_read(
-		lexer_new(source_string("-.678", "neg naked decimal")));
+		lxr = lexer_new(source_string("-.678", "neg naked decimal")));
 	expected_token(tkn, TOKEN_NUMBER, "-.678", 0, 0, 0);
+
+	token_free(tkn);
+	lexer_free_source(lxr);
+	lexer_free(lxr);
 }
 
 void lxr_string(void)
@@ -347,34 +439,58 @@ void lxr_string(void)
 	lexer lxr;
 	token tkn;
 
-	tkn = lexer_read(
-		lexer_new(source_string("\"Simple String\"", "Simple String")));
+	tkn = lexer_read(lxr = lexer_new(source_string("\"Simple String\"",
+						       "Simple String")));
 	expected_token(tkn, TOKEN_STRING, "Simple String", 0, 0, 0);
 
-	tkn = lexer_read(lexer_new(
-		source_string("\"Simple \n String\"", "Simple String")));
+	token_free(tkn);
+	lexer_free_source(lxr);
+	lexer_free(lxr);
+
+	tkn = lexer_read(lxr = lexer_new(source_string("\"Simple \n String\"",
+						       "Simple String")));
 	expected_token(tkn, TOKEN_STRING, "Simple \n String", 0, 0, 0);
 
-	tkn = lexer_read(lexer_new(
-		source_string("\"Simple \\\" String\"", "Simple String")));
+	token_free(tkn);
+	lexer_free_source(lxr);
+	lexer_free(lxr);
 
-	tkn = lexer_read(lexer_new(
-		source_string("\"Simple \\\\ String\"", "Simple String")));
+	tkn = lexer_read(lxr = lexer_new(source_string("\"Simple \\\" String\"",
+						       "Simple String")));
+
+	token_free(tkn);
+	lexer_free_source(lxr);
+	lexer_free(lxr);
+
+	tkn = lexer_read(lxr = lexer_new(source_string("\"Simple \\\\ String\"",
+						       "Simple String")));
 	expected_token(tkn, TOKEN_STRING, "Simple \\ String", 0, 0, 0);
 
-	tkn = lexer_read(lxr = lexer_new(
-		source_string("\"Simple \\x  String\"", "Simple String")));
+	token_free(tkn);
+	lexer_free_source(lxr);
+	lexer_free(lxr);
+
+	tkn = lexer_read(lxr = lexer_new(source_string("\"Simple \\x  String\"",
+						       "Simple String")));
 	expected_token(tkn, TOKEN_ERROR, "Simple ", 0, 0, 0);
 	TEST_ASSERT_EQUAL_STRING(
 		"Unexpected character 'x', 0x78, following \\ (backslash) in string: 'Simple '.",
 		lexer_error_message(lxr));
 
-	tkn = lexer_read(lxr =
-		lexer_new(source_string("\"Simple String", "Simple String")));
+	token_free(tkn);
+	lexer_free_source(lxr);
+	lexer_free(lxr);
+
+	tkn = lexer_read(lxr = lexer_new(source_string("\"Simple String",
+						       "Simple String")));
 	expected_token(tkn, TOKEN_ERROR, "Simple String", 0, 0, 0);
 	TEST_ASSERT_EQUAL_STRING(
 		"No closing double quote '\"' found for string starting: 'Simple String'.",
 		lexer_error_message(lxr));
+
+	token_free(tkn);
+	lexer_free_source(lxr);
+	lexer_free(lxr);
 }
 
 void lxr_quote(void)
@@ -382,14 +498,26 @@ void lxr_quote(void)
 	lexer lxr;
 	token tkn;
 
-	tkn = lexer_read(lexer_new(source_string("'apple", "foo")));
+	tkn = lexer_read(lxr = lexer_new(source_string("'apple", "foo")));
 	expected_token(tkn, TOKEN_QUOTE, "'", 0, 0, 0);
 
-	tkn = lexer_read(lexer_new(source_string("'123", "foo")));
+	token_free(tkn);
+	lexer_free_source(lxr);
+	lexer_free(lxr);
+
+	tkn = lexer_read(lxr = lexer_new(source_string("'123", "foo")));
 	expected_token(tkn, TOKEN_QUOTE, "'", 0, 0, 0);
 
-	tkn = lexer_read(lexer_new(source_string("'(apple)", "foo")));
+	token_free(tkn);
+	lexer_free_source(lxr);
+	lexer_free(lxr);
+
+	tkn = lexer_read(lxr = lexer_new(source_string("'(apple)", "foo")));
 	expected_token(tkn, TOKEN_QUOTE, "'", 0, 0, 0);
+
+	token_free(tkn);
+	lexer_free_source(lxr);
+	lexer_free(lxr);
 
 	tkn = lexer_read(lxr = lexer_new(source_string("' apple", "foo")));
 	expected_token(tkn, TOKEN_ERROR, "'", 0, 0, 0);
@@ -397,17 +525,29 @@ void lxr_quote(void)
 		"Unexpected character ' ', 0x20, immediatedly after quote: '''.",
 		lexer_error_message(lxr));
 
+	token_free(tkn);
+	lexer_free_source(lxr);
+	lexer_free(lxr);
+
 	tkn = lexer_read(lxr = lexer_new(source_string("` apple", "foo")));
 	expected_token(tkn, TOKEN_ERROR, "`", 0, 0, 0);
 	TEST_ASSERT_EQUAL_STRING(
 		"Unexpected character ' ', 0x20, immediatedly after quasiquote: '`'.",
 		lexer_error_message(lxr));
 
+	token_free(tkn);
+	lexer_free_source(lxr);
+	lexer_free(lxr);
+
 	tkn = lexer_read(lxr = lexer_new(source_string(", apple", "foo")));
 	expected_token(tkn, TOKEN_ERROR, ",", 0, 0, 0);
 	TEST_ASSERT_EQUAL_STRING(
 		"Unexpected character ' ', 0x20, immediatedly after unquote: ','.",
 		lexer_error_message(lxr));
+
+	token_free(tkn);
+	lexer_free_source(lxr);
+	lexer_free(lxr);
 
 	tkn = lexer_read(lxr = lexer_new(source_string("'", "foo")));
 	expected_token(tkn, TOKEN_ERROR, "'", 0, 0, 0);
@@ -439,6 +579,9 @@ void lxr_multiquote(void)
 
 	expected_token(lexer_read(lxr), TOKEN_EOF, "\0", 34, 1, 11);
 	expected_token(lexer_read(lxr), TOKEN_EOF, "\0", 34, 1, 11);
+
+	lexer_free_source(lxr);
+	lexer_free(lxr);
 }
 
 void lxr_text(void)
@@ -451,13 +594,21 @@ void lxr_text(void)
 
 	TEST_ASSERT_EQUAL_STRING("'apple `banana ,cherry\n`(list) ,123",
 				 sb_current(lxr->text));
+
+	lexer_free_source(lxr);
+	lexer_free(lxr);
 }
 
-void lxr_meta_data_is_set(void){
+void lxr_meta_data_is_set(void)
+{
 	source src = source_string("fig", "");
 	lexer lxr = lexer_new(src);
 	token tkn = lexer_read(lxr);
 	TEST_ASSERT_EQUAL_PTR(src, tkn->meta_data);
+
+	token_free(tkn);
+	lexer_free_source(lxr);
+	lexer_free(lxr);
 }
 
 void lxr_sets_token_source(void)
@@ -467,6 +618,9 @@ void lxr_sets_token_source(void)
 	lexer_set_token_source(lxr, &tkn_src);
 	TEST_ASSERT_EQUAL_PTR(lxr, tkn_src.state);
 	TEST_ASSERT_EQUAL_PTR(lexer_read, tkn_src.read_token);
+
+	lexer_free_source(lxr);
+	lexer_free(lxr);
 }
 
 int test_lexer(void)
