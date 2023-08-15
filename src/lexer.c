@@ -14,8 +14,8 @@ char err_buff[256];
 lexer lexer_new(source src)
 {
 	/*
-	 * There's at least one place where lexer relies on SOURCE_EOS being
-	 * implemented as 0.
+	 * Code below may rely on SOUCE_EOS being zero, e.g., for string
+	 * termination or flow control.
 	 */
 	assert(SOURCE_EOS == '\0');
 

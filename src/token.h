@@ -33,6 +33,7 @@ char *token_text(token tkn);
 long token_offset(token tkn);
 long token_x(token tkn);
 long token_y(token tkn);
+void *token_metadata(token tkn);
 
 typedef struct token_source {
 	void *state;

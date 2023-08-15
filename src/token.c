@@ -24,3 +24,8 @@ inline long token_y(token tkn)
 {
 	return tkn->y;
 }
+
+inline void *token_metadata(token tkn)
+{
+	return tkn->meta_data;
+}

@@ -88,6 +88,13 @@ void expected_token(token tkn, enum token_type type, char *text, long offset, lo
 	TEST_ASSERT_EQUAL_INT64(x, token_x(tkn));
 }
 
+void lxr_sets_token_metadata_to_source(void){
+	source src = source_string("metadata", "");
+	lexer lxr = lexer_new(src);
+	token tkn = lexer_read(lxr);
+	TEST_ASSERT_EQUAL_PTR(src, token_metadata(tkn));
+}
+
 void lxr_invalid_char_in_identifier(void)
 {
 	source src = source_string("ident#fier", "test-lexer");
@@ -469,6 +476,7 @@ int test_lexer(void)
 	RUN_TEST(lxr_free_null);
 	RUN_TEST(lxr_free_source_test);
 	RUN_TEST(lxr_free);
+	RUN_TEST(lxr_sets_token_metadata_to_source);
 	RUN_TEST(lxr_invalid_char_in_identifier);
 	RUN_TEST(lxr_bad_token_start);
 	RUN_TEST(lxr_dot);
