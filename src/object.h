@@ -7,15 +7,16 @@
 #include <inttypes.h>
 
 typedef union value_union {
-	integer integer;
+	const integer integer;
 } value_union;
 
 typedef struct object {
-	uint8_t value_kind;
-	meta_data meta_data;
-	value_union value;
+	const uint8_t value_kind;
+	const meta_data meta_data;
+	const value_union value;
 } *object;
 
+//
 // General
 // =============================================================================
 //
@@ -23,6 +24,7 @@ typedef struct object {
 meta_data object_meta_data(object obj);
 void object_free(object obj);
 
+//
 // Number
 // =============================================================================
 //

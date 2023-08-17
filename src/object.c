@@ -4,11 +4,13 @@
 #include "sicp-std.h"
 
 #include <inttypes.h>
+#include <string.h>
 #include <stdbool.h>
 #include <stdlib.h>
 
 typedef enum value_kind { INTEGER = 1 } value_kind;
 
+//
 // Construction
 // =============================================================================
 //
@@ -16,17 +18,19 @@ typedef enum value_kind { INTEGER = 1 } value_kind;
 static object object_new(uint8_t value_kind, meta_data meta_data,
 			 value_union value)
 {
-	object obj = malloc(sizeof(struct object));
+	struct object tmp = { .value_kind = value_kind,
+			      .meta_data = meta_data,
+			      .value = value };
+	size_t size = sizeof(struct object);
+	object obj = malloc(size);
 	if (!obj) {
 		alloc_error("object_new");
 	}
-	obj->value_kind = value_kind;
-	obj->meta_data = meta_data;
-	obj->value = value;
-
+	memcpy(obj, &tmp, size);
 	return obj;
 }
 
+//
 // General
 // =============================================================================
 //
@@ -50,6 +54,7 @@ void object_free(object obj)
 	free(obj);
 }
 
+//
 // Number
 // =============================================================================
 //

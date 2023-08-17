@@ -18,6 +18,11 @@ void obj_free(void)
 	object_free(from_integer(0, NO_META_DATA));
 }
 
+//
+// Number
+// =============================================================================
+//
+
 void obj_new_integer(void)
 {
 	meta_data meta_data = 124;
