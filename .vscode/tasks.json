@@ -70,9 +70,12 @@
                 "-pedantic-errors",
                 "-Wall",
                 "-Wextra",
-                "-Wdouble-promotion",
                 "-Wold-style-definition",
                 "-Wno-psabi",
+
+                // "-Wdouble-promotion",
+                "-D", "UNITY_INCLUDE_DOUBLE",
+
                 "-o",
                 "${workspaceFolder}/bin/test",
 

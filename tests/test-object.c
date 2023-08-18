@@ -1,7 +1,8 @@
-#include <stdbool.h>
+#include "../src/object.h"
 #include "../unity/src/unity.h"
 
-#include "../src/object.h"
+#include <stdbool.h>
+
 
 bool has_one_type(object obj)
 {
@@ -36,9 +37,23 @@ void obj_new_integer(void)
 	TEST_ASSERT_EQUAL(integer, to_integer(obj));
 }
 
+void obj_new_floating(void)
+{
+	meta_data meta_data = 124;
+	floating floating = 48.6;
+	object obj = from_floating(floating, meta_data);
+
+	TEST_ASSERT_TRUE(is_number(obj));
+	TEST_ASSERT_TRUE(has_one_type(obj));
+
+	TEST_ASSERT_EQUAL(meta_data, object_meta_data(obj));
+	TEST_ASSERT_EQUAL(floating, to_floating(obj));
+}
+
 int test_object(void)
 {
 	RUN_TEST(obj_free);
 	RUN_TEST(obj_new_integer);
+	RUN_TEST(obj_new_floating);
 	return 0;
 }

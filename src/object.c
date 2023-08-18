@@ -8,7 +8,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-typedef enum value_kind { INTEGER = 1 } value_kind;
+typedef enum value_kind { INTEGER = 1, FLOATING = 2 } value_kind;
 
 //
 // Construction
@@ -62,7 +62,7 @@ void object_free(object obj)
 bool is_number(object obj)
 {
 	value_kind vk = object_value_kind(obj);
-	return vk == INTEGER;
+	return vk == INTEGER || vk == FLOATING;
 }
 
 object from_integer(integer integer, meta_data meta_data)
@@ -74,4 +74,15 @@ object from_integer(integer integer, meta_data meta_data)
 integer to_integer(object obj)
 {
 	return obj->value.integer;
+}
+
+object from_floating(floating floating, meta_data meta_data)
+{
+	return object_new(FLOATING, meta_data,
+			  (value_union){ .floating = floating });
+}
+
+floating to_floating(object obj)
+{
+	return obj->value.floating;
 }

@@ -7,6 +7,7 @@
 #include <inttypes.h>
 
 typedef union value_union {
+	const floating floating;
 	const integer integer;
 } value_union;
 
@@ -32,5 +33,7 @@ void object_free(object obj);
 bool is_number(object obj);
 object from_integer(integer integer, meta_data meta_data);
 integer to_integer(object obj);
+object from_floating(floating floating, meta_data meta_data);
+floating to_floating(object obj);
 
 #endif

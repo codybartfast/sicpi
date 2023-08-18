@@ -10,22 +10,23 @@ static object number(token tkn)
 	char *s = token_text(tkn);
 	errno = 0;
 	conv_int = strtoll(s, &end, 10);
-	// check string number doesn't overflow long long and
-	// long long doesn't overflow whatever Integer is defined as.
+	// check string number doesn't overflow long long and that
+	// long long doesn't overflow whatever 'integer' is defined as.
 	if (end && !*end && errno != ERANGE && integer_min <= conv_int &&
 	    conv_int <= integer_max) {
 		return from_integer(conv_int, NO_META_DATA);
 	}
-	// long double conv_flt;
-	// end = NULL;
-	// // errno = 0
-	// conv_flt = strtold(s, &end);
-	// if (end && !*end && errno != ERANGE && floating_min <= conv_flt &&
-	//     conv_flt <= floating_max) {
-	// 	return from_integer(-1, NO_META_DATA);
-	// 	// return from_floating(conv_flt, NO_META_DATA);
-	// }
-	return from_integer(-1, NO_META_DATA);
+
+	long double conv_flt;
+	end = NULL;
+	errno = 0;
+	conv_flt = strtold(s, &end);
+	if (end && !*end && errno != ERANGE && floating_min <= conv_flt &&
+	    conv_flt <= floating_max) {
+		return from_floating(conv_flt, NO_META_DATA);
+	}
+
+	return from_integer(-1, NO_META_DATA); // TODO: return proper error
 }
 
 object parse(token_source tknsrc)
