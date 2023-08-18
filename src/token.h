@@ -41,4 +41,6 @@ typedef struct token_source {
 	token (*read_token)(void *state);
 } token_source;
 
+token token_read(token_source tknsrc);
+
 #endif

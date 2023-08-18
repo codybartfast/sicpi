@@ -28,9 +28,9 @@ static object number(token tkn)
 	return from_integer(-1, NO_META_DATA);
 }
 
-object parse(token_source tkn_src)
+object parse(token_source tknsrc)
 {
-	token tkn = tkn_src.read_token(tkn_src.state);
+	token tkn = token_read(tknsrc);
 	switch (token_type(tkn)) {
 	case TOKEN_NUMBER:
 		return number(tkn);
