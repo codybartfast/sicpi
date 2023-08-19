@@ -26,7 +26,7 @@ static object number(token tkn)
 		return from_floating(conv_flt, NO_META_DATA);
 	}
 
-	return from_integer(-1, NO_META_DATA); // TODO: return proper error
+	return from_floating(-1, NO_META_DATA); // TODO: return proper error
 }
 
 object parse(token_source tknsrc)

@@ -48,21 +48,21 @@ void test_parser_decimal(void){
 	TEST_ASSERT_TRUE(is_number(rslt));
 	TEST_ASSERT_EQUAL_DOUBLE(12.3, to_floating(rslt));
 
-	// rslt = parse(tkn_src);
-	// TEST_ASSERT_TRUE(is_number(rslt));
-	// TEST_ASSERT_EQUAL_INT64(23.4, to_integer(rslt));
+	rslt = parse(tkn_src);
+	TEST_ASSERT_TRUE(is_number(rslt));
+	TEST_ASSERT_EQUAL_DOUBLE(23.4, to_floating(rslt));
 
-	// rslt = parse(tkn_src);
-	// TEST_ASSERT_TRUE(is_number(rslt));
-	// TEST_ASSERT_EQUAL_INT64(-34.5, to_integer(rslt));
+	rslt = parse(tkn_src);
+	TEST_ASSERT_TRUE(is_number(rslt));
+	TEST_ASSERT_EQUAL_DOUBLE(-34.5, to_floating(rslt));
 
-	// rslt = parse(tkn_src);
-	// TEST_ASSERT_TRUE(is_number(rslt));
-	// TEST_ASSERT_EQUAL_INT64(0.4560, to_integer(rslt));
+	rslt = parse(tkn_src);
+	TEST_ASSERT_TRUE(is_number(rslt));
+	TEST_ASSERT_EQUAL_DOUBLE(0.4560, to_floating(rslt));
 
-	// rslt = parse(tkn_src);
-	// TEST_ASSERT_TRUE(is_number(rslt));
-	// TEST_ASSERT_EQUAL_INT64(-.08030, to_integer(rslt));
+	rslt = parse(tkn_src);
+	TEST_ASSERT_TRUE(is_number(rslt));
+	TEST_ASSERT_EQUAL_DOUBLE(-0.08030, to_floating(rslt));
 
 	lexer_free_source(lxr);
 	lexer_free(lxr);}

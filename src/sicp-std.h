@@ -10,8 +10,8 @@ typedef int64_t integer;
 #define integer_max INT64_MAX
 
 typedef double floating;
-#define floating_min DBL_MIN
 #define floating_max DBL_MAX
+#define floating_min (- floating_max)
 
 typedef uint32_t meta_data;
 #define NO_META_DATA 0
