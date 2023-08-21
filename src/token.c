@@ -46,7 +46,13 @@ inline void *token_metadata(token tkn)
 	return tkn->meta_data;
 }
 
-inline token token_read(token_source tknsrc)
+void token_source_init(token_source tkn_src)
 {
-	return tknsrc.read_token(tknsrc.state);
+	tkn_src->state = NULL;
+	tkn_src->read_token = NULL;
+}
+
+inline token token_read(token_source tkn_src)
+{
+	return tkn_src->read_token(tkn_src->state);
 }

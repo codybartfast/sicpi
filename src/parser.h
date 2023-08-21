@@ -4,6 +4,16 @@
 #include "object.h"
 #include "token.h"
 
-object parse(token_source tkn_src);
+#include <stdbool.h>
+
+typedef struct parser {
+	token_source token_source;
+	bool is_errored;
+	char *error_message;
+} *parser;
+
+void parser_init(parser parser);
+
+object parse(parser parser);
 
 #endif

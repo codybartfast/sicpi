@@ -39,8 +39,9 @@ void token_free(token tkn);
 typedef struct token_source {
 	void *state;
 	token (*read_token)(void *state);
-} token_source;
+} *token_source;
 
-token token_read(token_source tknsrc);
+void token_source_init(token_source tkn_src);
+token token_read(token_source tkn_src);
 
 #endif

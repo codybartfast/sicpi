@@ -1,7 +1,15 @@
 #include "parser.h"
 
 #include <errno.h>
+#include <stdbool.h>
 #include <stdlib.h>
+
+void parser_init(parser parser)
+{
+	parser->token_source = NULL;
+	parser->is_errored = false;
+	parser->error_message = NULL;
+}
 
 static object number(token tkn)
 {
@@ -29,9 +37,9 @@ static object number(token tkn)
 	return from_floating(-1, NO_META_DATA); // TODO: return proper error
 }
 
-object parse(token_source tknsrc)
+object parse(parser parser)
 {
-	token tkn = token_read(tknsrc);
+	token tkn = token_read(parser->token_source);
 	switch (token_type(tkn)) {
 	case TOKEN_NUMBER:
 		return number(tkn);
