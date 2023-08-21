@@ -313,11 +313,11 @@ void lxr_read(void)
 
 	token_free(tkn);
 	tkn = lexer_read(lxr);
-	expected_token(tkn, TOKEN_EOF, "", 278, 8, 56);
+	expected_token(tkn, TOKEN_EOS, "", 278, 8, 56);
 
 	token_free(tkn);
 	tkn = lexer_read(lxr);
-	expected_token(tkn, TOKEN_EOF, "", 278, 8, 56);
+	expected_token(tkn, TOKEN_EOS, "", 278, 8, 56);
 
 	TEST_ASSERT_FALSE(lexer_is_errored(lxr));
 
@@ -577,8 +577,8 @@ void lxr_multiquote(void)
 	expected_token(lexer_read(lxr), TOKEN_UNQUOTE, ",", 31, 1, 8);
 	expected_token(lexer_read(lxr), TOKEN_NUMBER, "123", 32, 1, 9);
 
-	expected_token(lexer_read(lxr), TOKEN_EOF, "\0", 34, 1, 11);
-	expected_token(lexer_read(lxr), TOKEN_EOF, "\0", 34, 1, 11);
+	expected_token(lexer_read(lxr), TOKEN_EOS, "\0", 34, 1, 11);
+	expected_token(lexer_read(lxr), TOKEN_EOS, "\0", 34, 1, 11);
 
 	lexer_free_source(lxr);
 	lexer_free(lxr);

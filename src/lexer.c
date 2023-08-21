@@ -314,7 +314,7 @@ token lexer_read(lexer lxr)
 		err_msg = read_expression_prefix(lxr, c, next, "unquote");
 		break;
 	case SOURCE_EOS:
-		type = TOKEN_EOF;
+		type = TOKEN_EOS;
 		break;
 	default:
 		temp_addc(lxr, c);

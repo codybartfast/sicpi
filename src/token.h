@@ -5,7 +5,7 @@
 
 enum token_type {
 	TOKEN_ERROR = -2,
-	TOKEN_EOF = -1,
+	TOKEN_EOS = -1,
 	TOKEN_UNDEFINED = 0,
 	TOKEN_IDENTIFIER, // 1
 	TOKEN_LIST_OPEN, /// 2
