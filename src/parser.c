@@ -11,6 +11,28 @@ void parser_init(parser parser)
 	parser->error_message = NULL;
 }
 
+inline bool parser_is_errored(parser parser)
+{
+	return parser->is_errored;
+}
+
+inline char * parser_error_message(parser parser){
+	return parser->error_message;
+}
+
+static object lexer_error(parser parser)
+{
+	parser->is_errored = true;
+	return from_error_kind(ERROR_LEXER, NO_META_DATA);
+}
+
+static object parser_error(parser parser, char *error_message)
+{
+	parser->is_errored = true;
+	parser->error_message = error_message;
+	return from_error_kind(ERROR_PARSER, NO_META_DATA);
+}
+
 static object number(token tkn)
 {
 	long long conv_int;
@@ -39,13 +61,19 @@ static object number(token tkn)
 
 object parse(parser parser)
 {
+	if (parser_is_errored(parser)) {
+		return parser_error(
+			parser, "Attempted to parse after an earlier error.");
+	}
+
 	token tkn = token_read(parser->token_source);
 	switch (token_type(tkn)) {
 	case TOKEN_NUMBER:
 		return number(tkn);
-		case TOKEN_ERROR:
-		return from_error_kind(ERROR_LEXER, NO_META_DATA);
+	case TOKEN_ERROR:
+		return lexer_error(parser);
 	default:
-		return from_integer(-1, NO_META_DATA); // TODO: return proper error
+		return from_integer(-1,
+				    NO_META_DATA); // TODO: return proper error
 	}
 }

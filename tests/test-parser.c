@@ -6,13 +6,15 @@
 
 #include <stdbool.h>
 
-void init(parser parser, token_source tkn_src){
+void init(parser parser, token_source tkn_src)
+{
 	parser_init(parser);
 	parser->token_source = tkn_src;
 }
 
-void test_parser_catch_errors(void){
-	lexer lxr = lexer_new(source_string("1#1", ""));
+void test_parser_catch_errors(void)
+{
+	lexer lxr = lexer_new(source_string("1#1 1", ""));
 
 	struct token_source tkn_src;
 	struct parser parser;
@@ -23,8 +25,14 @@ void test_parser_catch_errors(void){
 	rslt = parse(&parser);
 	TEST_ASSERT_TRUE(is_error(rslt));
 	TEST_ASSERT_EQUAL_INT(ERROR_LEXER, to_error_kind(rslt));
+	TEST_ASSERT_TRUE(parser_is_errored(&parser));
 
-	// TODO: add parser error
+	rslt = parse(&parser);
+	TEST_ASSERT_TRUE(is_error(rslt));
+	TEST_ASSERT_EQUAL_INT(ERROR_PARSER, to_error_kind(rslt));
+	TEST_ASSERT_TRUE(parser_is_errored(&parser));
+	TEST_ASSERT_EQUAL_STRING("Attempted to parse after an earlier error.",
+				 parser_error_message(&parser));
 }
 
 void test_parser_integer(void)

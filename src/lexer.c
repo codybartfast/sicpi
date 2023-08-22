@@ -130,7 +130,7 @@ static token handle_lexer_is_errored(lexer lxr)
 	token tkn = token_new(lxr);
 	tkn->text = strdup("");
 	lxr->error_message = strdup(
-		"Attempted to read from a lexer after a preceeding error.");
+		"Attempted to read from a lexer after a preceeding error.");  // TODO: earlier?
 	tkn->type = TOKEN_ERROR;
 	return tkn;
 }

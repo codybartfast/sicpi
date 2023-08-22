@@ -13,6 +13,8 @@ typedef struct parser {
 } *parser;
 
 void parser_init(parser parser);
+bool parser_is_errored(parser parser);
+char *parser_error_message(parser parser);
 
 object parse(parser parser);
 
