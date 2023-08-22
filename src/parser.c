@@ -16,7 +16,8 @@ inline bool parser_is_errored(parser parser)
 	return parser->is_errored;
 }
 
-inline char * parser_error_message(parser parser){
+inline char *parser_error_message(parser parser)
+{
 	return parser->error_message;
 }
 
@@ -33,29 +34,31 @@ static object parser_error(parser parser, char *error_message)
 	return from_error_kind(ERROR_PARSER, NO_META_DATA);
 }
 
-static object number(token tkn)
+static object number_integer(token tkn)
 {
 	long long conv_int;
 	char *end = NULL;
 	char *s = token_text(tkn);
 	errno = 0;
 	conv_int = strtoll(s, &end, 10);
-	// check string number doesn't overflow long long and that
-	// long long doesn't overflow whatever 'integer' is defined as.
 	if (end && !*end && errno != ERANGE && integer_min <= conv_int &&
 	    conv_int <= integer_max) {
 		return from_integer(conv_int, NO_META_DATA);
 	}
+	return from_floating(-1, NO_META_DATA); // TODO: return proper error
+}
 
+static object number_decimal(token tkn)
+{
 	long double conv_flt;
-	end = NULL;
+	char *end = NULL;
 	errno = 0;
+	char *s = token_text(tkn);
 	conv_flt = strtold(s, &end);
 	if (end && !*end && errno != ERANGE && floating_min <= conv_flt &&
 	    conv_flt <= floating_max) {
 		return from_floating(conv_flt, NO_META_DATA);
 	}
-
 	return from_floating(-1, NO_META_DATA); // TODO: return proper error
 }
 
@@ -68,8 +71,10 @@ object parse(parser parser)
 
 	token tkn = token_read(parser->token_source);
 	switch (token_type(tkn)) {
-	case TOKEN_NUMBER:
-		return number(tkn);
+	case TOKEN_NUMBER_INTEGER:
+		return number_integer(tkn);
+	case TOKEN_NUMBER_DECIMAL:
+		return number_decimal(tkn);
 	case TOKEN_ERROR:
 		return lexer_error(parser);
 	default:

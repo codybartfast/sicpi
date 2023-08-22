@@ -75,7 +75,7 @@ static inline token token_new(lexer lxr)
 	if (!tkn) {
 		alloc_error("token_new");
 	}
-	tkn->type = TOKEN_UNDEFINED;
+	tkn->type = TOKEN_UNSPECIFIED;
 	tkn->text = NULL;
 	tkn->offset = source_offset(lxr->source);
 	tkn->x = source_x(lxr->source);
@@ -130,7 +130,7 @@ static token handle_lexer_is_errored(lexer lxr)
 	token tkn = token_new(lxr);
 	tkn->text = strdup("");
 	lxr->error_message = strdup(
-		"Attempted to read from a lexer after a preceeding error.");  // TODO: earlier?
+		"Attempted to read from a lexer after a preceeding error."); // TODO: earlier?
 	tkn->type = TOKEN_ERROR;
 	return tkn;
 }
@@ -195,15 +195,17 @@ static inline char *read_decimal_part(lexer lxr)
 	return check_at_end_of_token(lxr, "number");
 }
 
-static inline char *read_number(lexer lxr)
+static inline char *read_number(lexer lxr, enum token_type *type)
 {
 	while (is_digit(peekc(lxr))) {
 		temp_add_readc(lxr);
 	}
 	if (peekc(lxr) == '.') {
+		*type = TOKEN_NUMBER_DECIMAL;
 		temp_add_readc(lxr);
 		return read_decimal_part(lxr);
 	}
+	*type = TOKEN_NUMBER_INTEGER;
 	return check_at_end_of_token(lxr, "number");
 }
 
@@ -260,7 +262,7 @@ token lexer_read(lexer lxr)
 	skip_atmosphere(lxr);
 
 	char *err_msg = NULL;
-	enum token_type type = TOKEN_UNDEFINED;
+	enum token_type type = TOKEN_UNSPECIFIED;
 	sb_clear(lxr->temp);
 
 	char c = readc(lxr);
@@ -280,8 +282,7 @@ token lexer_read(lexer lxr)
 	case '-':
 		temp_addc(lxr, c);
 		if (is_digit(next) || next == '.') {
-			type = TOKEN_NUMBER;
-			err_msg = read_number(lxr);
+			err_msg = read_number(lxr, &type);
 		} else {
 			type = TOKEN_IDENTIFIER;
 			err_msg = check_at_end_of_token(lxr, "+/-");
@@ -290,7 +291,7 @@ token lexer_read(lexer lxr)
 	case '.':
 		temp_addc(lxr, c);
 		if (is_digit(next)) {
-			type = TOKEN_NUMBER;
+			type = TOKEN_NUMBER_DECIMAL;
 			err_msg = read_decimal_part(lxr);
 		} else {
 			type = TOKEN_DOT;
@@ -322,15 +323,14 @@ token lexer_read(lexer lxr)
 			type = TOKEN_IDENTIFIER;
 			err_msg = read_identifier(lxr);
 		} else if (is_digit(c)) {
-			type = TOKEN_NUMBER;
-			err_msg = read_number(lxr);
+			err_msg = read_number(lxr, &type);
 		}
 		break;
 	}
 
 	tkn->text = sb_copy(lxr->temp);
 
-	if (type == TOKEN_UNDEFINED) {
+	if (type == TOKEN_UNSPECIFIED) {
 		err_msg = error_message(c, "at start of", "token", lxr);
 	}
 

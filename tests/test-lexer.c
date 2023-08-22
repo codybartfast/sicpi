@@ -269,7 +269,7 @@ void lxr_read(void)
 
 	token_free(tkn);
 	tkn = lexer_read(lxr);
-	expected_token(tkn, TOKEN_NUMBER, "3.14159", 61, 1, 11);
+	expected_token(tkn, TOKEN_NUMBER_DECIMAL, "3.14159", 61, 1, 11);
 
 	token_free(tkn);
 	tkn = lexer_read(lxr);
@@ -288,7 +288,7 @@ void lxr_read(void)
 
 	token_free(tkn);
 	tkn = lexer_read(lxr);
-	expected_token(tkn, TOKEN_NUMBER, "10", 138, 4, 8);
+	expected_token(tkn, TOKEN_NUMBER_INTEGER, "10", 138, 4, 8);
 
 	token_free(tkn);
 	tkn = lexer_read(lxr);
@@ -387,7 +387,7 @@ void lxr_naked_decimal(void)
 	token tkn;
 
 	tkn = lexer_read(lxr);
-	expected_token(tkn, TOKEN_NUMBER, ".456", 0, 0, 0);
+	expected_token(tkn, TOKEN_NUMBER_DECIMAL, ".456", 0, 0, 0);
 
 	token_free(tkn);
 	lexer_free_source(lxr);
@@ -401,7 +401,7 @@ void lxr_signed_number(void)
 	token tkn;
 
 	tkn = lexer_read(lxr);
-	expected_token(tkn, TOKEN_NUMBER, "+12.34", 0, 0, 0);
+	expected_token(tkn, TOKEN_NUMBER_DECIMAL, "+12.34", 0, 0, 0);
 
 	token_free(tkn);
 	lexer_free_source(lxr);
@@ -409,7 +409,7 @@ void lxr_signed_number(void)
 
 	tkn = lexer_read(lxr = lexer_new(source_string(
 				 "-23.45", "negative signed number")));
-	expected_token(tkn, TOKEN_NUMBER, "-23.45", 0, 0, 0);
+	expected_token(tkn, TOKEN_NUMBER_DECIMAL, "-23.45", 0, 0, 0);
 
 	token_free(tkn);
 	lexer_free_source(lxr);
@@ -423,11 +423,11 @@ void lxr_signed_naked_decimal(void)
 	token tkn;
 
 	tkn = lexer_read(lxr);
-	expected_token(tkn, TOKEN_NUMBER, "+.567", 0, 0, 0);
+	expected_token(tkn, TOKEN_NUMBER_DECIMAL, "+.567", 0, 0, 0);
 
 	tkn = lexer_read(
 		lxr = lexer_new(source_string("-.678", "neg naked decimal")));
-	expected_token(tkn, TOKEN_NUMBER, "-.678", 0, 0, 0);
+	expected_token(tkn, TOKEN_NUMBER_DECIMAL, "-.678", 0, 0, 0);
 
 	token_free(tkn);
 	lexer_free_source(lxr);
@@ -575,7 +575,7 @@ void lxr_multiquote(void)
 	expected_token(lexer_read(lxr), TOKEN_LIST_CLOSE, ")", 29, 1, 6);
 
 	expected_token(lexer_read(lxr), TOKEN_UNQUOTE, ",", 31, 1, 8);
-	expected_token(lexer_read(lxr), TOKEN_NUMBER, "123", 32, 1, 9);
+	expected_token(lexer_read(lxr), TOKEN_NUMBER_INTEGER, "123", 32, 1, 9);
 
 	expected_token(lexer_read(lxr), TOKEN_EOS, "\0", 34, 1, 11);
 	expected_token(lexer_read(lxr), TOKEN_EOS, "\0", 34, 1, 11);
@@ -589,7 +589,7 @@ void lxr_text(void)
 	lexer lxr = lexer_new(
 		source_string("'apple `banana ,cherry\n`(list) ,123", "foo"));
 
-	while (lexer_read(lxr)->type > TOKEN_UNDEFINED)
+	while (lexer_read(lxr)->type > TOKEN_UNSPECIFIED)
 		;
 
 	TEST_ASSERT_EQUAL_STRING("'apple `banana ,cherry\n`(list) ,123",

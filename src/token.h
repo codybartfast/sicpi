@@ -6,16 +6,17 @@
 enum token_type {
 	TOKEN_ERROR = -2,
 	TOKEN_EOS = -1,
-	TOKEN_UNDEFINED = 0,
-	TOKEN_IDENTIFIER, // 1
-	TOKEN_LIST_OPEN, /// 2
-	TOKEN_LIST_CLOSE, // 3
-	TOKEN_NUMBER, ////// 4
-	TOKEN_STRING, ////// 5
-	TOKEN_DOT, ///////// 6
-	TOKEN_QUOTE, /////// 7
-	TOKEN_QUASIQUOTE, // 8
-	TOKEN_UNQUOTE, ///// 9
+	TOKEN_UNSPECIFIED = 0,
+	TOKEN_IDENTIFIER, //////  1
+	TOKEN_LIST_OPEN, ///////  2
+	TOKEN_LIST_CLOSE, //////  3
+	TOKEN_NUMBER_INTEGER, //  4
+	TOKEN_NUMBER_DECIMAL, //  5
+	TOKEN_STRING, //////////  6
+	TOKEN_DOT, /////////////  7
+	TOKEN_QUOTE, ///////////  8
+	TOKEN_QUASIQUOTE, //////  9
+	TOKEN_UNQUOTE, ///////// 10
 };
 
 typedef struct token {
