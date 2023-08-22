@@ -158,7 +158,7 @@ void lxr_returns_error_after_returning_error(void)
 	TEST_ASSERT_TRUE(token_type(tkn) == TOKEN_ERROR);
 	TEST_ASSERT_TRUE(lexer_is_errored(lxr));
 	TEST_ASSERT_EQUAL_STRING(
-		"Attempted to read lexer after an earlier error.",
+		"Unexpected character '.', 0x2E, in number: '123.456.'.",
 		lexer_error_message(lxr));
 
 	token_free(tkn);
@@ -166,7 +166,7 @@ void lxr_returns_error_after_returning_error(void)
 	TEST_ASSERT_TRUE(token_type(tkn) == TOKEN_ERROR);
 	TEST_ASSERT_TRUE(lexer_is_errored(lxr));
 	TEST_ASSERT_EQUAL_STRING(
-		"Attempted to read lexer after an earlier error.",
+		"Unexpected character '.', 0x2E, in number: '123.456.'.",
 		lexer_error_message(lxr));
 
 	token_free(tkn);

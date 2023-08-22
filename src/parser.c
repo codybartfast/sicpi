@@ -1,8 +1,11 @@
+#include "sicp-error.h"
 #include "parser.h"
 
 #include <errno.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 void parser_init(parser parser)
 {
@@ -78,7 +81,12 @@ object parse(parser parser)
 	case TOKEN_ERROR:
 		return lexer_error(parser);
 	default:
-		return from_integer(-1,
-				    NO_META_DATA); // TODO: return proper error
+		char buff[100];
+		sprintf(buff, "Parser given unexpected token type: %d", token_type(tkn));
+		char* errmsg = strdup(buff);
+		if(!errmsg){
+			alloc_error("parse");
+		}
+		return parser_error(parser, "Parser given unexpected token type");
 	}
 }
