@@ -83,14 +83,8 @@ object parse(parser parser)
 	case TOKEN_ERROR:
 		return lexer_error(parser);
 	default:
-		char buff[100];
-		sprintf(buff, "Parser given unexpected token type: %d",
-			token_type(tkn));
-		char *errmsg = strdup(buff);
-		if (!errmsg) {
-			alloc_error("parse");
-		}
-		return parser_error(parser,
-				    "Parser given unexpected token type");
+		inyim("Parser given unexpected token type: %d",
+		      token_type(tkn));
+		exit(1); // keep compiler quiet
 	}
 }

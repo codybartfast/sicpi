@@ -60,6 +60,14 @@ void object_free(object obj)
 	free(obj);
 }
 
+void check_value_kind(object obj, value_kind kind, char *caller)
+{
+	if (object_value_kind(obj) != kind) {
+		inyim("%s given wrong value kind. Expected %d, given %d.",
+		      caller, object_value_kind(obj), kind);
+	}
+}
+
 //
 // Error
 // =============================================================================
@@ -76,7 +84,9 @@ inline object from_error_kind(enum error_kind error_kind, meta_data meta_data)
 			  (value_union){ .error_kind = error_kind });
 }
 
-inline enum error_kind to_error_kind(object obj){
+inline enum error_kind to_error_kind(object obj)
+{
+	check_value_kind(obj, VK_ERROR, "to_error_kind");
 	return obj->value.error_kind;
 }
 
@@ -99,7 +109,7 @@ inline object from_integer(integer integer, meta_data meta_data)
 
 inline integer to_integer(object obj)
 {
-	// TODO: check is integer
+	check_value_kind(obj, VK_INTEGER, "to_integer");
 	return obj->value.integer;
 }
 
@@ -111,5 +121,6 @@ inline object from_floating(floating floating, meta_data meta_data)
 
 inline floating to_floating(object obj)
 {
+	check_value_kind(obj, VK_FLOATING, "to_floating");
 	return obj->value.floating;
 }
