@@ -43,7 +43,9 @@ object parse(parser parser)
 	switch (token_type(tkn)) {
 	case TOKEN_NUMBER:
 		return number(tkn);
+		case TOKEN_ERROR:
+		return from_error_kind(ERROR_LEXER, NO_META_DATA);
 	default:
-		return from_integer(-1, NO_META_DATA);
+		return from_integer(-1, NO_META_DATA); // TODO: return proper error
 	}
 }
