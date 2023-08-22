@@ -37,7 +37,7 @@ static object parser_error(parser parser, char *error_message)
 	return from_error_kind(ERROR_PARSER, NO_META_DATA);
 }
 
-static object number_integer(token tkn)
+static object number_integer(parser parser, token tkn)
 {
 	long long conv_int;
 	char *end = NULL;
@@ -48,10 +48,11 @@ static object number_integer(token tkn)
 	    conv_int <= integer_max) {
 		return from_integer(conv_int, NO_META_DATA);
 	}
-	return from_floating(-1, NO_META_DATA); // TODO: return proper error
+	return parser_error(parser,
+			    "Failed to convert string to integer (overflow?).");
 }
 
-static object number_decimal(token tkn)
+static object number_decimal(parser parser, token tkn)
 {
 	long double conv_flt;
 	char *end = NULL;
@@ -62,7 +63,8 @@ static object number_decimal(token tkn)
 	    conv_flt <= floating_max) {
 		return from_floating(conv_flt, NO_META_DATA);
 	}
-	return from_floating(-1, NO_META_DATA); // TODO: return proper error
+	return parser_error(parser,
+			    "Failed to convert string to decimal (overflow?).");
 }
 
 object parse(parser parser)
@@ -75,18 +77,20 @@ object parse(parser parser)
 	token tkn = token_read(parser->token_source);
 	switch (token_type(tkn)) {
 	case TOKEN_NUMBER_INTEGER:
-		return number_integer(tkn);
+		return number_integer(parser, tkn);
 	case TOKEN_NUMBER_DECIMAL:
-		return number_decimal(tkn);
+		return number_decimal(parser, tkn);
 	case TOKEN_ERROR:
 		return lexer_error(parser);
 	default:
 		char buff[100];
-		sprintf(buff, "Parser given unexpected token type: %d", token_type(tkn));
-		char* errmsg = strdup(buff);
-		if(!errmsg){
+		sprintf(buff, "Parser given unexpected token type: %d",
+			token_type(tkn));
+		char *errmsg = strdup(buff);
+		if (!errmsg) {
 			alloc_error("parse");
 		}
-		return parser_error(parser, "Parser given unexpected token type");
+		return parser_error(parser,
+				    "Parser given unexpected token type");
 	}
 }
