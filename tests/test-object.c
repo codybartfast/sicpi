@@ -3,12 +3,13 @@
 
 #include <stdbool.h>
 
-
 bool has_one_type(object obj)
 {
 	int count = 0;
 
 	if (is_number(obj))
+		count++;
+	else if (is_error(obj))
 		count++;
 
 	return 1 == count;
@@ -17,6 +18,24 @@ bool has_one_type(object obj)
 void obj_free(void)
 {
 	object_free(from_integer(0, NO_META_DATA));
+}
+
+//
+// Error
+// =============================================================================
+//
+
+void obj_new_error(void)
+{
+	meta_data meta_data = 125;
+	enum error_kind error_kind = ERROR_LEXER;
+	object obj = from_error_kind(error_kind, meta_data);
+
+	TEST_ASSERT_TRUE(is_error(obj));
+	TEST_ASSERT_TRUE(has_one_type(obj));
+
+	TEST_ASSERT_EQUAL(meta_data, object_meta_data(obj));
+	TEST_ASSERT_EQUAL(error_kind, to_error_kind(obj));
 }
 
 //
@@ -53,6 +72,7 @@ void obj_new_floating(void)
 int test_object(void)
 {
 	RUN_TEST(obj_free);
+	RUN_TEST(obj_new_error);
 	RUN_TEST(obj_new_integer);
 	RUN_TEST(obj_new_floating);
 	return 0;

@@ -9,8 +9,7 @@
 #include <stdlib.h>
 
 typedef enum value_kind {
-	VK_PARSER_ERROR = -3,
-	VK_LEXER_ERROR = -2,
+	VK_ERROR = -2,
 	VK_EOS = -1,
 	VK_UNDEFINED = 0,
 	VK_INTEGER,
@@ -42,7 +41,7 @@ static object object_new(uint8_t value_kind, meta_data meta_data,
 // =============================================================================
 //
 
-static uint8_t object_value_kind(object obj)
+static int8_t object_value_kind(object obj)
 {
 	return obj->value_kind;
 }
@@ -62,34 +61,55 @@ void object_free(object obj)
 }
 
 //
+// Error
+// =============================================================================
+//
+
+inline bool is_error(object obj)
+{
+	return object_value_kind(obj) == VK_ERROR;
+}
+
+inline object from_error_kind(enum error_kind error_kind, meta_data meta_data)
+{
+	return object_new(VK_ERROR, meta_data,
+			  (value_union){ .error_kind = error_kind });
+}
+
+inline enum error_kind to_error_kind(object obj){
+	return obj->value.error_kind;
+}
+
+//
 // Number
 // =============================================================================
 //
 
-bool is_number(object obj)
+inline bool is_number(object obj)
 {
 	value_kind vk = object_value_kind(obj);
 	return vk == VK_INTEGER || vk == VK_FLOATING;
 }
 
-object from_integer(integer integer, meta_data meta_data)
+inline object from_integer(integer integer, meta_data meta_data)
 {
 	return object_new(VK_INTEGER, meta_data,
 			  (value_union){ .integer = integer });
 }
 
-integer to_integer(object obj)
+inline integer to_integer(object obj)
 {
+	// TODO: check is integer
 	return obj->value.integer;
 }
 
-object from_floating(floating floating, meta_data meta_data)
+inline object from_floating(floating floating, meta_data meta_data)
 {
 	return object_new(VK_FLOATING, meta_data,
 			  (value_union){ .floating = floating });
 }
 
-floating to_floating(object obj)
+inline floating to_floating(object obj)
 {
 	return obj->value.floating;
 }
