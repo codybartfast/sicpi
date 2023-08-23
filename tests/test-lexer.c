@@ -38,7 +38,7 @@ void lxr_free_source_test(void)
 	source src = source_string("123", "test-lexer");
 	lexer lxr = lexer_new(src);
 	lexer_read(lxr);
-	char *name = src->name;
+	const char *name = src->name;
 
 	lexer_free_source(lxr);
 	TEST_ASSERT_NULL(lxr->source);
@@ -57,7 +57,7 @@ void lxr_free(void)
 	TEST_ASSERT_NOT_NULL(lxr->temp);
 	TEST_ASSERT_NOT_NULL(lxr->error_message);
 
-	char *name = src->name;
+	const char *name = src->name;
 
 	string_builder text = lxr->text;
 	char *text_buffer = text->buff;

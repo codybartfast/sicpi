@@ -13,16 +13,25 @@
 
 enum type { TYPE_FILE = 1, TYPE_STREAM, TYPE_STRING };
 
-source source_part_init(char *name)
+source source_part_init(char const *name, enum type type, union underlying underlying)
 {
 	if (!name) {
 		name = "";
 	}
-	source src = malloc(sizeof(struct source));
+
+	size_t size = sizeof(struct source);
+	struct source temp = {
+		.name = strdupx(name, "source init - duplicate name"),
+		.type = type,
+		.underlying = underlying
+	};
+	source src = malloc(size);
 	if (!src) {
 		alloc_error("source init");
 	}
-	src->name = strdupx(name, "source init - duplicate name");
+
+	memcpy(src, &temp, size);
+
 	src->new_line = true;
 	src->offset = -1;
 	src->x = -1;
@@ -31,19 +40,17 @@ source source_part_init(char *name)
 	return src;
 }
 
-source source_stream(FILE *stream, char *name)
+source source_stream(FILE * const stream, char const *name)
 {
 	if (!stream) {
 		eprintf("Source given null stream.");
 		return NULL;
 	}
-	source src = source_part_init(name);
-	src->type = TYPE_STREAM;
-	src->underlying.stream.stream = stream;
+	source src = source_part_init(name, TYPE_STREAM, (union underlying){.stream = {stream}});
 	return src;
 }
 
-source source_file(char *filepath)
+source source_file(const char *filepath)
 {
 	FILE *stream = fopen(filepath, "r");
 	if (!stream) {
@@ -51,27 +58,23 @@ source source_file(char *filepath)
 		perror("Error");
 		return NULL;
 	}
-	source src = source_part_init(filepath);
-	src->type = TYPE_FILE;
-	src->underlying.stream.stream = stream;
+	source src = source_part_init(filepath, TYPE_FILE, (union underlying){.stream = {stream}});
 	return src;
 }
 
-source source_string(char *text, char *name)
+source source_string(char const *text, char const *name)
 {
 	if (!text) {
 		eprintf("Source given null string");
 		return NULL;
 	}
-	source src = source_part_init(name);
-	src->type = TYPE_STRING;
-	src->underlying.string.string = text;
+	source src = source_part_init(name, TYPE_STRING, (union underlying){.string = {text}});
 	return src;
 }
 
-char *source_name(source src)
+char const * source_name(const source src)
 {
-	return src->name;
+	return (char const *)src->name;
 }
 
 char readc(source src)

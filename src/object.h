@@ -29,7 +29,7 @@ typedef struct object {
 // =============================================================================
 //
 
-meta_data object_meta_data(object obj);
+meta_data object_meta_data(const object obj);
 void object_free(object obj);
 
 //
@@ -37,19 +37,19 @@ void object_free(object obj);
 // =============================================================================
 //
 
-bool is_error(object obj);
+bool is_error(const object obj);
 object from_error_kind(enum error_kind error_kind, meta_data meta_data);
-enum error_kind to_error_kind(object obj);
+enum error_kind to_error_kind(const object obj);
 
 //
 // Number
 // =============================================================================
 //
 
-bool is_number(object obj);
+bool is_number(const object obj);
 object from_integer(integer integer, meta_data meta_data);
-integer to_integer(object obj);
+integer to_integer(const object obj);
 object from_floating(floating floating, meta_data meta_data);
-floating to_floating(object obj);
+floating to_floating(const object obj);
 
 #endif
