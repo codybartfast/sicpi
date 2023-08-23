@@ -1,6 +1,7 @@
 #include "source.h"
 
 #include "sicp-error.h"
+#include "sicp-std.h"
 
 #include <errno.h>
 #include <limits.h>
@@ -21,11 +22,7 @@ source source_part_init(char *name)
 	if (!src) {
 		alloc_error("source init");
 	}
-	char *dup_name = strdup(name);
-	if (!dup_name) {
-		alloc_error("source init - duplicate name");
-	}
-	src->name = dup_name;
+	src->name = strdupx(name, "source init - duplicate name");
 	src->new_line = true;
 	src->offset = -1;
 	src->x = -1;

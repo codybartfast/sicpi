@@ -8,6 +8,7 @@
     "files.insertFinalNewline": true,
     "files.eol": "\n",
     "files.associations": {
-        "string.h": "c"
+        "string.h": "c",
+        "sicp-error.h": "c"
     },
 }

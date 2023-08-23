@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void alloc_error(char *caller)
+void alloc_error(const char *caller)
 {
 	fprintf(stderr,
 		"ERROR: '%s' failed to allocate memory (out of memory?).",

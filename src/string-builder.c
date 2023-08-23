@@ -1,11 +1,11 @@
 #include "string-builder.h"
 
 #include "sicp-error.h"
+#include "sicp-std.h"
 
 #include <limits.h>
 #include <stdio.h>
 #include <string.h>
-
 
 /*
  * Code here has been copied in:
@@ -88,12 +88,8 @@ char *sb_current(string_builder sb)
 
 char *sb_copy(string_builder sb)
 {
-	char *copy;
 	terminate_string(sb);
-	if (!(copy = strdup(sb->buff))) {
-		alloc_error("sb_copy");
-	}
-	return copy;
+	return strdupx(sb->buff, "sb_copy");
 }
 
 void sb_clear(string_builder sb)

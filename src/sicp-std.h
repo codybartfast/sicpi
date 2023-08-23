@@ -16,4 +16,6 @@ typedef double floating;
 typedef uint32_t meta_data;
 #define NO_META_DATA 0
 
+char *strdupx(const char *s, const char *caller);
+
 #endif

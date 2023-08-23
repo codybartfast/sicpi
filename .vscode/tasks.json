@@ -24,6 +24,7 @@
                 "src/parser.c",
                 "src/sicp.c",
                 "src/sicp-error.c",
+                "src/sicp-std.c",
                 "src/source.c",
                 "src/string-builder.c",
                 "src/token.c",
@@ -82,6 +83,7 @@
                 "unity/src/unity.c",
                 "tests/test.c",
                 "src/sicp-error.c",
+                "src/sicp-std.c",
 
                 "src/lexer.c",
                 "src/character-classes.c",

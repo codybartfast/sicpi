@@ -2,6 +2,7 @@
 
 #include "character-classes.h"
 #include "sicp-error.h"
+#include "sicp-std.h"
 #include "source.h"
 #include "token.h"
 
@@ -108,11 +109,7 @@ static char *error_message(char c, char *relation, char *type, lexer lxr)
 {
 	sprintf(err_buff, "Unexpected character '%c', 0x%0X, %s %s: '%.128s'.",
 		c, c, relation, type, sb_current(lxr->temp));
-	char *errmsg = strdup(err_buff);
-	if (!errmsg) {
-		alloc_error("lexer:error_message");
-	}
-	return errmsg;
+	return strdupx(err_buff, "lexer:error_message");
 }
 
 static char *error_unexpected_end_of_string(lexer lxr)
@@ -120,21 +117,13 @@ static char *error_unexpected_end_of_string(lexer lxr)
 	sprintf(err_buff,
 		"No closing double quote '\"' found for string starting: '%.128s'.",
 		sb_current(lxr->temp));
-	char *errmsg = strdup(err_buff);
-	if (!errmsg) {
-		alloc_error("lexer:error_unexpected_end_of_string");
-	}
-	return errmsg;
+	return strdupx(err_buff, "lexer:error_unexpected_end_of_string");
 }
 
 static char *error_expected_expression(char prefix)
 {
 	sprintf(err_buff, "Expected an expression after '%c'.", prefix);
-	char *errmsg = strdup(err_buff);
-	if (!errmsg) {
-		alloc_error("error_expected_expression");
-	}
-	return errmsg;
+	return strdupx(err_buff, "error_expected_expression");
 }
 
 static token handle_lexer_is_errored(lexer lxr)
@@ -142,7 +131,7 @@ static token handle_lexer_is_errored(lexer lxr)
 	token tkn = token_new(lxr);
 	tkn->text = NULL;
 	// lxr->error_message =
-	// 	strdup("Attempted to read lexer after an earlier error.");
+	// 	strdupx("Attempted to read lexer after an earlier error.");
 	tkn->type = TOKEN_ERROR;
 	return tkn;
 }
