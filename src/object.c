@@ -13,7 +13,8 @@ typedef enum value_kind {
 	VK_EOS = -1,
 	VK_UNDEFINED = 0,
 	VK_INTEGER,
-	VK_FLOATING
+	VK_FLOATING,
+	VK_STRING
 } value_kind;
 
 //
@@ -123,4 +124,26 @@ inline floating to_floating(object obj)
 {
 	check_value_kind(obj, VK_FLOATING, "to_floating");
 	return obj->value.floating;
+}
+
+//
+// String
+// =============================================================================
+//
+
+inline bool is_string(object obj)
+{
+	return object_value_kind(obj) == VK_STRING;
+}
+
+inline object from_string(char * string, meta_data meta_data)
+{
+	return object_new(VK_STRING, meta_data,
+			  (value_union){ .string = string });
+}
+
+inline char const * to_string(object obj)
+{
+	check_value_kind(obj, VK_STRING, "to_string");
+	return obj->value.string;
 }

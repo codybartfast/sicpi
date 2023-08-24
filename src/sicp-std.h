@@ -18,4 +18,6 @@ typedef uint32_t meta_data;
 
 char *strdupx(const char *s, const char *caller);
 
+#define unused(x) (void)(x)
+
 #endif

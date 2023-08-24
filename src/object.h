@@ -16,6 +16,7 @@ typedef union value_union {
 	const floating floating;
 	const integer integer;
 	const enum error_kind error_kind;
+	const char * string;
 } value_union;
 
 typedef struct object {
@@ -51,5 +52,14 @@ object from_integer(integer integer, meta_data meta_data);
 integer to_integer(const object obj);
 object from_floating(floating floating, meta_data meta_data);
 floating to_floating(const object obj);
+
+//
+// String
+// =============================================================================
+//
+
+bool is_string(const object obj);
+object from_string(char * string, meta_data meta_data);
+char const * to_string(const object obj);
 
 #endif

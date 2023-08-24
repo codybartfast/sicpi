@@ -7,9 +7,11 @@ bool has_one_type(object obj)
 {
 	int count = 0;
 
-	if (is_number(obj))
+	if (is_error(obj))
 		count++;
-	else if (is_error(obj))
+	else if (is_number(obj))
+		count++;
+	else if (is_string(obj))
 		count++;
 
 	return 1 == count;
@@ -69,11 +71,25 @@ void obj_new_floating(void)
 	TEST_ASSERT_EQUAL(floating, to_floating(obj));
 }
 
+void obj_new_string(void)
+{
+	meta_data meta_data = 125;
+	char *string = "Blue dog";
+	object obj = from_string(string, meta_data);
+
+	TEST_ASSERT_TRUE(is_string(obj));
+	TEST_ASSERT_TRUE(has_one_type(obj));
+
+	TEST_ASSERT_EQUAL(meta_data, object_meta_data(obj));
+	TEST_ASSERT_EQUAL(string, to_string(obj));
+}
+
 int test_object(void)
 {
 	RUN_TEST(obj_free);
 	RUN_TEST(obj_new_error);
 	RUN_TEST(obj_new_integer);
 	RUN_TEST(obj_new_floating);
+	RUN_TEST(obj_new_string);
 	return 0;
 }

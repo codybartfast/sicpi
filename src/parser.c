@@ -67,6 +67,12 @@ static object number_decimal(parser parser, token tkn)
 			    "Failed to convert string to decimal (overflow?).");
 }
 
+static object string(parser parser, token tkn)
+{
+	unused(parser);
+	return from_string(token_text(tkn), NO_META_DATA);
+}
+
 object parse(parser parser)
 {
 	if (parser_is_errored(parser)) {
@@ -80,6 +86,8 @@ object parse(parser parser)
 		return number_integer(parser, tkn);
 	case TOKEN_NUMBER_DECIMAL:
 		return number_decimal(parser, tkn);
+	case TOKEN_STRING:
+		return string(parser, tkn);
 	case TOKEN_ERROR:
 		return lexer_error(parser);
 	default:

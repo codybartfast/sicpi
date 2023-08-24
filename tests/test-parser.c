@@ -104,10 +104,34 @@ void test_parser_decimal(void)
 	lexer_free(lxr);
 }
 
+void test_parser_string(void)
+{
+	lexer lxr =
+		lexer_new(source_string("\"Interested\" \"Fox\"", ""));
+
+	struct token_source tkn_src;
+	struct parser parser;
+	object rslt;
+	init(&parser, &tkn_src);
+	lexer_set_token_source(lxr, &tkn_src);
+
+	rslt = parse(&parser);
+	TEST_ASSERT_TRUE(is_string(rslt));
+	TEST_ASSERT_EQUAL_STRING("Interested", to_string(rslt));
+
+	rslt = parse(&parser);
+	TEST_ASSERT_TRUE(is_string(rslt));
+	TEST_ASSERT_EQUAL_STRING("Fox", to_string(rslt));
+
+	lexer_free_source(lxr);
+	lexer_free(lxr);
+}
+
 int test_parser(void)
 {
 	RUN_TEST(test_parser_catch_errors);
 	RUN_TEST(test_parser_integer);
 	RUN_TEST(test_parser_decimal);
+	RUN_TEST(test_parser_string);
 	return 0;
 }
