@@ -8,22 +8,23 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-typedef enum value_kind {
+enum value_kind {
 	VK_ERROR = -2,
 	VK_EOS = -1,
 	VK_UNDEFINED = 0,
+	VK_OBJECT_TYPE,
 	VK_INTEGER,
 	VK_FLOATING,
 	VK_STRING
-} value_kind;
+};
 
 //
 // Construction
 // =============================================================================
 //
 
-static object object_new(uint8_t value_kind, meta_data meta_data,
-			 value_union value)
+static object object_new(int8_t value_kind, meta_data meta_data,
+			 object_value value)
 {
 	struct object tmp = { .value_kind = value_kind,
 			      .meta_data = meta_data,
@@ -61,7 +62,7 @@ void object_free(object obj)
 	free(obj);
 }
 
-void check_value_kind(object obj, value_kind kind, char *caller)
+void check_value_kind(object obj, enum value_kind kind, char *caller)
 {
 	if (object_value_kind(obj) != kind) {
 		inyim("%s given wrong value kind. Expected %d, given %d.",
@@ -82,7 +83,7 @@ inline bool is_error(object obj)
 inline object from_error_kind(enum error_kind error_kind, meta_data meta_data)
 {
 	return object_new(VK_ERROR, meta_data,
-			  (value_union){ .error_kind = error_kind });
+			  (object_value){ .error_kind = error_kind });
 }
 
 inline enum error_kind to_error_kind(object obj)
@@ -96,16 +97,33 @@ inline enum error_kind to_error_kind(object obj)
 // =============================================================================
 //
 
+//////////////////////
+
+#define SINGLETON(TYPE)                                                        \
+	{                                                                      \
+		TYPE, NO_META_DATA,                                            \
+		{                                                              \
+			0                                                      \
+		}                                                              \
+	}
+
+const struct object EOS = SINGLETON(VK_EOS);
+
+//
+// Number
+// =============================================================================
+//
+
 inline bool is_number(object obj)
 {
-	value_kind vk = object_value_kind(obj);
+	enum value_kind vk = object_value_kind(obj);
 	return vk == VK_INTEGER || vk == VK_FLOATING;
 }
 
 inline object from_integer(integer integer, meta_data meta_data)
 {
 	return object_new(VK_INTEGER, meta_data,
-			  (value_union){ .integer = integer });
+			  (object_value){ .integer = integer });
 }
 
 inline integer to_integer(object obj)
@@ -117,7 +135,7 @@ inline integer to_integer(object obj)
 inline object from_floating(floating floating, meta_data meta_data)
 {
 	return object_new(VK_FLOATING, meta_data,
-			  (value_union){ .floating = floating });
+			  (object_value){ .floating = floating });
 }
 
 inline floating to_floating(object obj)
@@ -136,13 +154,13 @@ inline bool is_string(object obj)
 	return object_value_kind(obj) == VK_STRING;
 }
 
-inline object from_string(char * string, meta_data meta_data)
+inline object from_string(char *string, meta_data meta_data)
 {
 	return object_new(VK_STRING, meta_data,
-			  (value_union){ .string = string });
+			  (object_value){ .string = string });
 }
 
-inline char const * to_string(object obj)
+inline char const *to_string(object obj)
 {
 	check_value_kind(obj, VK_STRING, "to_string");
 	return obj->value.string;

@@ -6,23 +6,19 @@
 #include <stdbool.h>
 #include <inttypes.h>
 
-enum error_kind {
-	ERROR_UNSPECIFIED = 0,
-	ERROR_LEXER,
-	ERROR_PARSER
-};
+enum error_kind { ERROR_UNSPECIFIED = 0, ERROR_LEXER, ERROR_PARSER };
 
-typedef union value_union {
+typedef union object_value {
 	const floating floating;
 	const integer integer;
 	const enum error_kind error_kind;
-	const char * string;
-} value_union;
+	const char *string;
+} object_value;
 
 typedef struct object {
-	const uint8_t value_kind;
+	const int8_t value_kind;
 	const meta_data meta_data;
-	const value_union value;
+	const object_value value;
 } *object;
 
 //
@@ -43,6 +39,13 @@ object from_error_kind(enum error_kind error_kind, meta_data meta_data);
 enum error_kind to_error_kind(const object obj);
 
 //
+// Singleton
+// =============================================================================
+//
+
+extern const struct object Eos;
+
+//
 // Number
 // =============================================================================
 //
@@ -59,7 +62,7 @@ floating to_floating(const object obj);
 //
 
 bool is_string(const object obj);
-object from_string(char * string, meta_data meta_data);
-char const * to_string(const object obj);
+object from_string(char *string, meta_data meta_data);
+char const *to_string(const object obj);
 
 #endif
