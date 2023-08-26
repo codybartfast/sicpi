@@ -30,7 +30,7 @@ meta_data object_meta_data(const object obj);
 void object_free(object obj);
 
 //
-// Error
+// Errors
 // =============================================================================
 //
 
@@ -39,14 +39,16 @@ object from_error_kind(enum error_kind error_kind, meta_data meta_data);
 enum error_kind to_error_kind(const object obj);
 
 //
-// Singleton
+// Singletons
 // =============================================================================
 //
 
-extern const struct object Eos;
+bool is_singleton(const object obj);
+
+extern const object Eos;
 
 //
-// Number
+// Numbers
 // =============================================================================
 //
 
@@ -57,7 +59,7 @@ object from_floating(floating floating, meta_data meta_data);
 floating to_floating(const object obj);
 
 //
-// String
+// Strings
 // =============================================================================
 //
 

@@ -6,10 +6,11 @@
 
 #include <stdbool.h>
 
-void init(parser parser, token_source tkn_src)
+void init(token_source tkn_src, lexer lxr, parser parser)
 {
 	parser_init(parser);
 	parser->token_source = tkn_src;
+	lexer_set_token_source(lxr, tkn_src);
 }
 
 void test_parser_catch_errors(void)
@@ -19,8 +20,7 @@ void test_parser_catch_errors(void)
 	struct token_source tkn_src;
 	struct parser parser;
 	object rslt;
-	init(&parser, &tkn_src);
-	lexer_set_token_source(lxr, &tkn_src);
+	init(&tkn_src, lxr, &parser);
 
 	rslt = parse(&parser);
 	TEST_ASSERT_TRUE(is_error(rslt));
@@ -35,6 +35,24 @@ void test_parser_catch_errors(void)
 				 parser_error_message(&parser));
 }
 
+void test_parser_end_of_source(void)
+{
+	lexer lxr = lexer_new(source_string("123", ""));
+
+	struct token_source tkn_src;
+	struct parser parser;
+	object rslt;
+	init(&tkn_src, lxr, &parser);
+
+	rslt = parse(&parser); // ignore number
+
+	rslt = parse(&parser);
+	TEST_ASSERT_EQUAL(Eos, rslt);
+
+	rslt = parse(&parser);
+	TEST_ASSERT_EQUAL(Eos, rslt);
+}
+
 void test_parser_integer(void)
 {
 	lexer lxr = lexer_new(source_string("123 +234 -345 04560 -08030", ""));
@@ -42,8 +60,7 @@ void test_parser_integer(void)
 	struct token_source tkn_src;
 	struct parser parser;
 	object rslt;
-	init(&parser, &tkn_src);
-	lexer_set_token_source(lxr, &tkn_src);
+	init(&tkn_src, lxr, &parser);
 
 	rslt = parse(&parser);
 	TEST_ASSERT_TRUE(is_number(rslt));
@@ -77,8 +94,7 @@ void test_parser_decimal(void)
 	struct token_source tkn_src;
 	struct parser parser;
 	object rslt;
-	init(&parser, &tkn_src);
-	lexer_set_token_source(lxr, &tkn_src);
+	init(&tkn_src, lxr, &parser);
 
 	rslt = parse(&parser);
 	TEST_ASSERT_TRUE(is_number(rslt));
@@ -106,14 +122,12 @@ void test_parser_decimal(void)
 
 void test_parser_string(void)
 {
-	lexer lxr =
-		lexer_new(source_string("\"Interested\" \"Fox\"", ""));
+	lexer lxr = lexer_new(source_string("\"Interested\" \"Fox\"", ""));
 
 	struct token_source tkn_src;
 	struct parser parser;
 	object rslt;
-	init(&parser, &tkn_src);
-	lexer_set_token_source(lxr, &tkn_src);
+	init(&tkn_src, lxr, &parser);
 
 	rslt = parse(&parser);
 	TEST_ASSERT_TRUE(is_string(rslt));
@@ -130,6 +144,7 @@ void test_parser_string(void)
 int test_parser(void)
 {
 	RUN_TEST(test_parser_catch_errors);
+	RUN_TEST(test_parser_end_of_source);
 	RUN_TEST(test_parser_integer);
 	RUN_TEST(test_parser_decimal);
 	RUN_TEST(test_parser_string);

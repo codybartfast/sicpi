@@ -84,6 +84,13 @@ void obj_new_string(void)
 	TEST_ASSERT_EQUAL(string, to_string(obj));
 }
 
+void obj_singletons(void)
+{
+	is_singleton(Eos);
+	has_one_type(Eos);
+	// when adding more probably need to check singletons are distinct.
+}
+
 int test_object(void)
 {
 	RUN_TEST(obj_free);
@@ -91,5 +98,6 @@ int test_object(void)
 	RUN_TEST(obj_new_integer);
 	RUN_TEST(obj_new_floating);
 	RUN_TEST(obj_new_string);
+	RUN_TEST(obj_singletons);
 	return 0;
 }

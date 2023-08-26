@@ -9,13 +9,13 @@
 #include <stdlib.h>
 
 enum value_kind {
-	VK_ERROR = -2,
-	VK_EOS = -1,
+	VK_ERROR = -1,
 	VK_UNDEFINED = 0,
 	VK_OBJECT_TYPE,
 	VK_INTEGER,
 	VK_FLOATING,
-	VK_STRING
+	VK_STRING,
+	VK_SINGLETON
 };
 
 //
@@ -71,7 +71,7 @@ void check_value_kind(object obj, enum value_kind kind, char *caller)
 }
 
 //
-// Error
+// Errors
 // =============================================================================
 //
 
@@ -93,11 +93,9 @@ inline enum error_kind to_error_kind(object obj)
 }
 
 //
-// Number
+// Singletons
 // =============================================================================
 //
-
-//////////////////////
 
 #define SINGLETON(TYPE)                                                        \
 	{                                                                      \
@@ -107,10 +105,16 @@ inline enum error_kind to_error_kind(object obj)
 		}                                                              \
 	}
 
-const struct object EOS = SINGLETON(VK_EOS);
+bool is_singleton(const object obj)
+{
+	return object_value_kind(obj) == VK_SINGLETON;
+}
+
+static struct object _Eos = SINGLETON(VK_SINGLETON);
+const object Eos = &_Eos;
 
 //
-// Number
+// Numbers
 // =============================================================================
 //
 
@@ -145,7 +149,7 @@ inline floating to_floating(object obj)
 }
 
 //
-// String
+// Strings
 // =============================================================================
 //
 

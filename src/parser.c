@@ -88,6 +88,8 @@ object parse(parser parser)
 		return number_decimal(parser, tkn);
 	case TOKEN_STRING:
 		return string(parser, tkn);
+	case TOKEN_EOS:
+		return Eos;
 	case TOKEN_ERROR:
 		return lexer_error(parser);
 	default:
