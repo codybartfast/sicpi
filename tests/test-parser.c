@@ -13,6 +13,12 @@ void init(token_source tkn_src, lexer lxr, parser parser)
 	lexer_set_token_source(lxr, tkn_src);
 }
 
+void free_lexer(lexer lxr)
+{
+	lexer_free_source(lxr);
+	lexer_free(lxr);
+}
+
 void test_parser_catch_errors(void)
 {
 	lexer lxr = lexer_new(source_string("1#1 1", ""));
@@ -33,6 +39,8 @@ void test_parser_catch_errors(void)
 	TEST_ASSERT_TRUE(parser_is_errored(&parser));
 	TEST_ASSERT_EQUAL_STRING("Attempted to parse after an earlier error.",
 				 parser_error_message(&parser));
+
+	free_lexer(lxr);
 }
 
 void test_parser_end_of_source(void)
@@ -51,6 +59,9 @@ void test_parser_end_of_source(void)
 
 	rslt = parse(&parser);
 	TEST_ASSERT_EQUAL(Eos, rslt);
+
+	lexer_free_source(lxr);
+	lexer_free(lxr);
 }
 
 void test_parser_integer(void)
@@ -82,8 +93,7 @@ void test_parser_integer(void)
 	TEST_ASSERT_TRUE(is_number(rslt));
 	TEST_ASSERT_EQUAL_INT64(-8030, to_integer(rslt));
 
-	lexer_free_source(lxr);
-	lexer_free(lxr);
+	free_lexer(lxr);
 }
 
 void test_parser_decimal(void)
@@ -116,8 +126,7 @@ void test_parser_decimal(void)
 	TEST_ASSERT_TRUE(is_number(rslt));
 	TEST_ASSERT_EQUAL_DOUBLE(-0.08030, to_floating(rslt));
 
-	lexer_free_source(lxr);
-	lexer_free(lxr);
+	free_lexer(lxr);
 }
 
 void test_parser_string(void)
@@ -137,8 +146,7 @@ void test_parser_string(void)
 	TEST_ASSERT_TRUE(is_string(rslt));
 	TEST_ASSERT_EQUAL_STRING("Fox", to_string(rslt));
 
-	lexer_free_source(lxr);
-	lexer_free(lxr);
+	free_lexer(lxr);
 }
 
 int test_parser(void)
