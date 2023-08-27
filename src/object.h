@@ -15,6 +15,7 @@ typedef union object_value {
 	const char *string;
 } object_value;
 
+// Objects should be passed by reference?: https://www.sicp-book.com/book-Z-H-22.html#%_idx_3188
 typedef struct object {
 	const int8_t value_kind;
 	const meta_data meta_data;
@@ -28,6 +29,7 @@ typedef struct object {
 
 meta_data object_meta_data(const object obj);
 void object_free(object obj);
+bool eq_(object x, object y);
 
 //
 // Errors

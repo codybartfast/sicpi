@@ -19,6 +19,24 @@ enum value_kind {
 };
 
 //
+// Helpers
+// =============================================================================
+//
+
+static inline int8_t object_value_kind(object obj)
+{
+	return obj->value_kind;
+}
+
+void check_value_kind(object obj, enum value_kind kind, char *caller)
+{
+	if (object_value_kind(obj) != kind) {
+		inyim("%s given wrong value kind. Expected %d, given %d.",
+		      caller, object_value_kind(obj), kind);
+	}
+}
+
+//
 // Construction
 // =============================================================================
 //
@@ -43,11 +61,6 @@ static object object_new(int8_t value_kind, meta_data meta_data,
 // =============================================================================
 //
 
-static int8_t object_value_kind(object obj)
-{
-	return obj->value_kind;
-}
-
 meta_data object_meta_data(object obj)
 {
 	return obj->meta_data;
@@ -62,12 +75,9 @@ void object_free(object obj)
 	free(obj);
 }
 
-void check_value_kind(object obj, enum value_kind kind, char *caller)
+inline bool eq_(object x, object y)
 {
-	if (object_value_kind(obj) != kind) {
-		inyim("%s given wrong value kind. Expected %d, given %d.",
-		      caller, object_value_kind(obj), kind);
-	}
+	return x == y;
 }
 
 //

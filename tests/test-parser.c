@@ -55,10 +55,10 @@ void test_parser_end_of_source(void)
 	rslt = parse(&parser); // ignore number
 
 	rslt = parse(&parser);
-	TEST_ASSERT_EQUAL(Eos, rslt);
+	TEST_ASSERT_TRUE(eq_(Eos, rslt));
 
 	rslt = parse(&parser);
-	TEST_ASSERT_EQUAL(Eos, rslt);
+	TEST_ASSERT_TRUE(eq_(Eos, rslt));
 
 	lexer_free_source(lxr);
 	lexer_free(lxr);
