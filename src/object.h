@@ -61,6 +61,15 @@ object from_floating(floating floating, meta_data meta_data);
 floating to_floating(const object obj);
 
 //
+// Identifiers
+// =============================================================================
+//
+
+bool is_id(const object obj);
+object from_id(char *string, meta_data meta_data);
+char const *to_id(const object obj);
+
+//
 // Strings
 // =============================================================================
 //

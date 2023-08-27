@@ -76,6 +76,8 @@ object parse(parser parser)
 
 	token tkn = token_read(parser->token_source);
 	switch (token_type(tkn)) {
+	case TOKEN_IDENTIFIER:
+		return from_id(token_text(tkn), NO_META_DATA);
 	case TOKEN_NUMBER_INTEGER:
 		return number_integer(parser, tkn);
 	case TOKEN_NUMBER_DECIMAL:
