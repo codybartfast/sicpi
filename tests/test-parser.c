@@ -129,22 +129,6 @@ void test_parser_decimal(void)
 	free_lexer(lxr);
 }
 
-void test_parser_identifiers(void)
-{
-	lexer lxr = lexer_new(source_string(" Leap ", ""));
-
-	struct token_source tkn_src;
-	struct parser parser;
-	object rslt;
-	init(&tkn_src, lxr, &parser);
-
-	rslt = parse(&parser);
-	TEST_ASSERT_TRUE(is_id(rslt));
-	TEST_ASSERT_EQUAL_STRING("Leap", to_id(rslt));
-
-	free_lexer(lxr);
-}
-
 void test_parser_string(void)
 {
 	lexer lxr = lexer_new(source_string("\"Interested\" \"Fox\"", ""));
@@ -165,13 +149,29 @@ void test_parser_string(void)
 	free_lexer(lxr);
 }
 
+void test_parser_identifiers(void)
+{
+	lexer lxr = lexer_new(source_string(" Leap? ", ""));
+
+	struct token_source tkn_src;
+	struct parser parser;
+	object rslt;
+	init(&tkn_src, lxr, &parser);
+
+	rslt = parse(&parser);
+	TEST_ASSERT_TRUE(is_id(rslt));
+	TEST_ASSERT_EQUAL_STRING("Leap?", to_id(rslt));
+
+	free_lexer(lxr);
+}
+
 int test_parser(void)
 {
 	RUN_TEST(test_parser_catch_errors);
 	RUN_TEST(test_parser_end_of_source);
 	RUN_TEST(test_parser_integer);
 	RUN_TEST(test_parser_decimal);
-	RUN_TEST(test_parser_identifiers);
 	RUN_TEST(test_parser_string);
+	RUN_TEST(test_parser_identifiers);
 	return 0;
 }

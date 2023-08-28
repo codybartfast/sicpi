@@ -159,28 +159,6 @@ inline floating to_floating(object obj)
 }
 
 //
-// Identifiers
-// =============================================================================
-//
-
-inline bool is_id(object obj)
-{
-	return object_value_kind(obj) == VK_IDENTIFIER;
-}
-
-inline object from_id(char *string, meta_data meta_data)
-{
-	return object_new(VK_IDENTIFIER, meta_data,
-			  (object_value){ .string = string });
-}
-
-inline char const *to_id(object obj)
-{
-	check_value_kind(obj, VK_IDENTIFIER, "to_id");
-	return obj->value.string;
-}
-
-//
 // Strings
 // =============================================================================
 //
@@ -199,5 +177,27 @@ inline object from_string(char *string, meta_data meta_data)
 inline char const *to_string(object obj)
 {
 	check_value_kind(obj, VK_STRING, "to_string");
+	return obj->value.string;
+}
+
+//
+// Identifiers
+// =============================================================================
+//
+
+inline bool is_id(object obj)
+{
+	return object_value_kind(obj) == VK_IDENTIFIER;
+}
+
+inline object from_id(char *id, meta_data meta_data)
+{
+	return object_new(VK_IDENTIFIER, meta_data,
+			  (object_value){ .string = id });
+}
+
+inline char const *to_id(object obj)
+{
+	check_value_kind(obj, VK_IDENTIFIER, "to_id");
 	return obj->value.string;
 }

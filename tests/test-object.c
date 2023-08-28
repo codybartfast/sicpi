@@ -70,19 +70,6 @@ void obj_new_floating(void)
 	TEST_ASSERT_EQUAL(floating, to_floating(obj));
 }
 
-void obj_new_identifier(void)
-{
-	meta_data meta_data = 126;
-	char *id_str = "Blue sky";
-	object obj = from_id(id_str, meta_data);
-
-	TEST_ASSERT_TRUE(is_id(obj));
-	TEST_ASSERT_TRUE(has_one_type(obj));
-
-	TEST_ASSERT_EQUAL(meta_data, object_meta_data(obj));
-	TEST_ASSERT_EQUAL(id_str, to_id(obj));
-}
-
 void obj_new_string(void)
 {
 	meta_data meta_data = 125;
@@ -96,14 +83,27 @@ void obj_new_string(void)
 	TEST_ASSERT_EQUAL(string, to_string(obj));
 }
 
+void obj_new_identifier(void)
+{
+	meta_data meta_data = 126;
+	char *id_str = "Blue sky";
+	object obj = from_id(id_str, meta_data);
+
+	TEST_ASSERT_TRUE(is_id(obj));
+	TEST_ASSERT_TRUE(has_one_type(obj));
+
+	TEST_ASSERT_EQUAL(meta_data, object_meta_data(obj));
+	TEST_ASSERT_EQUAL(id_str, to_id(obj));
+}
+
 int test_object(void)
 {
 	RUN_TEST(obj_free);
 	RUN_TEST(obj_new_error);
+	RUN_TEST(obj_singletons);
 	RUN_TEST(obj_new_integer);
 	RUN_TEST(obj_new_floating);
-	RUN_TEST(obj_new_identifier);
 	RUN_TEST(obj_new_string);
-	RUN_TEST(obj_singletons);
+	RUN_TEST(obj_new_identifier);
 	return 0;
 }
