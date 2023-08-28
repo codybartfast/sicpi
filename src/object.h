@@ -15,7 +15,9 @@ typedef union object_value {
 	const char *string;
 } object_value;
 
-// Objects should be passed by reference?: https://www.sicp-book.com/book-Z-H-22.html#%_idx_3188
+// Objects should be passed by reference?:
+// 	https://www.sicp-book.com/book-Z-H-22.html#%_idx_3188
+
 typedef struct object {
 	const int8_t value_kind;
 	const meta_data meta_data;
@@ -46,7 +48,7 @@ enum error_kind to_error_kind(const object obj);
 //
 
 bool is_singleton(const object obj);
-
+const char *to_singleton_string(const object obj);
 extern const object Eos;
 
 //
@@ -70,11 +72,11 @@ object from_string(char *string, meta_data meta_data);
 char const *to_string(const object obj);
 
 //
-// Identifiers
+// Symbols
 // =============================================================================
 //
 
-bool is_id(const object obj);
+bool is_symbol(const object obj);
 object from_id(char *id, meta_data meta_data);
 char const *to_id(const object obj);
 

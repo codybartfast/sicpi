@@ -11,7 +11,7 @@ bool has_one_type(object obj)
 		count++;
 	else if (is_number(obj))
 		count++;
-	else if (is_id(obj))
+	else if (is_symbol(obj))
 		count++;
 	else if (is_string(obj))
 		count++;
@@ -24,7 +24,7 @@ void obj_free(void)
 	object_free(from_integer(0, NO_META_DATA));
 }
 
-void obj_new_error(void)
+void obj_error(void)
 {
 	meta_data meta_data = 125;
 	enum error_kind error_kind = ERROR_LEXER;
@@ -44,7 +44,7 @@ void obj_singletons(void)
 	// when adding more probably need to check singletons are distinct.
 }
 
-void obj_new_integer(void)
+void obj_integer(void)
 {
 	meta_data meta_data = 124;
 	integer integer = 486;
@@ -57,7 +57,7 @@ void obj_new_integer(void)
 	TEST_ASSERT_EQUAL(integer, to_integer(obj));
 }
 
-void obj_new_floating(void)
+void obj_floating(void)
 {
 	meta_data meta_data = 124;
 	floating floating = 48.6;
@@ -70,7 +70,7 @@ void obj_new_floating(void)
 	TEST_ASSERT_EQUAL(floating, to_floating(obj));
 }
 
-void obj_new_string(void)
+void obj_string(void)
 {
 	meta_data meta_data = 125;
 	char *string = "Blue dog";
@@ -83,27 +83,27 @@ void obj_new_string(void)
 	TEST_ASSERT_EQUAL(string, to_string(obj));
 }
 
-void obj_new_identifier(void)
+void obj_symbol(void)
 {
 	meta_data meta_data = 126;
-	char *id_str = "Blue sky";
-	object obj = from_id(id_str, meta_data);
+	char *id = "Blue sky";
+	object obj = from_id(id, meta_data);
 
-	TEST_ASSERT_TRUE(is_id(obj));
+	TEST_ASSERT_TRUE(is_symbol(obj));
 	TEST_ASSERT_TRUE(has_one_type(obj));
 
 	TEST_ASSERT_EQUAL(meta_data, object_meta_data(obj));
-	TEST_ASSERT_EQUAL(id_str, to_id(obj));
+	TEST_ASSERT_EQUAL(id, to_id(obj));
 }
 
 int test_object(void)
 {
 	RUN_TEST(obj_free);
-	RUN_TEST(obj_new_error);
+	RUN_TEST(obj_error);
 	RUN_TEST(obj_singletons);
-	RUN_TEST(obj_new_integer);
-	RUN_TEST(obj_new_floating);
-	RUN_TEST(obj_new_string);
-	RUN_TEST(obj_new_identifier);
+	RUN_TEST(obj_integer);
+	RUN_TEST(obj_floating);
+	RUN_TEST(obj_string);
+	RUN_TEST(obj_symbol);
 	return 0;
 }

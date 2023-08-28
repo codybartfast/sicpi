@@ -14,7 +14,7 @@ enum value_kind {
 	VK_SINGLETON,
 	VK_INTEGER,
 	VK_FLOATING,
-	VK_IDENTIFIER,
+	VK_SYMBOL,
 	VK_STRING
 };
 
@@ -107,11 +107,11 @@ inline enum error_kind to_error_kind(object obj)
 // =============================================================================
 //
 
-#define SINGLETON(TYPE)                                                        \
+#define SINGLETON(TEXT)                                                        \
 	{                                                                      \
-		TYPE, NO_META_DATA,                                            \
+		VK_SINGLETON, NO_META_DATA,                                    \
 		{                                                              \
-			0                                                      \
+			.string = TEXT                                         \
 		}                                                              \
 	}
 
@@ -120,7 +120,13 @@ bool is_singleton(const object obj)
 	return object_value_kind(obj) == VK_SINGLETON;
 }
 
-static struct object _Eos = SINGLETON(VK_SINGLETON);
+const char *to_singleton_string(const object obj)
+{
+	check_value_kind(obj, VK_SINGLETON, "to_singleton");
+	return obj->value.string;
+}
+
+static struct object _Eos = SINGLETON("end_of_source");
 const object Eos = &_Eos;
 
 //
@@ -181,23 +187,23 @@ inline char const *to_string(object obj)
 }
 
 //
-// Identifiers
+// Symbols
 // =============================================================================
 //
 
-inline bool is_id(object obj)
+inline bool is_symbol(object obj)
 {
-	return object_value_kind(obj) == VK_IDENTIFIER;
+	return object_value_kind(obj) == VK_SYMBOL;
 }
 
 inline object from_id(char *id, meta_data meta_data)
 {
-	return object_new(VK_IDENTIFIER, meta_data,
+	return object_new(VK_SYMBOL, meta_data,
 			  (object_value){ .string = id });
 }
 
 inline char const *to_id(object obj)
 {
-	check_value_kind(obj, VK_IDENTIFIER, "to_id");
+	check_value_kind(obj, VK_SYMBOL, "to_id");
 	return obj->value.string;
 }
