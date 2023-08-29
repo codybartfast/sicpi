@@ -5,18 +5,7 @@
 
 bool has_one_type(object obj)
 {
-	int count = 0;
-
-	if (is_error(obj))
-		count++;
-	else if (is_number(obj))
-		count++;
-	else if (is_symbol(obj))
-		count++;
-	else if (is_string(obj))
-		count++;
-
-	return 1 == count;
+	return is_error(obj) + is_number(obj) + is_symbol(obj) + is_string(obj);
 }
 
 void obj_free(void)
