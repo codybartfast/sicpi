@@ -77,7 +77,7 @@ char const *to_string(const object obj);
 //
 
 bool is_symbol(const object obj);
-object from_id(char *id, meta_data meta_data);
-char const *to_id(const object obj);
+object from_name(char *id, meta_data meta_data);
+char const *to_name(const object obj);
 
 #endif

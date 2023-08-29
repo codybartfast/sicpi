@@ -160,7 +160,7 @@ void test_parser_identifiers(void)
 
 	rslt = parse(&parser);
 	TEST_ASSERT_TRUE(is_symbol(rslt));
-	TEST_ASSERT_EQUAL_STRING("Leap?", to_id(rslt));
+	TEST_ASSERT_EQUAL_STRING("Leap?", to_name(rslt));
 
 	free_lexer(lxr);
 }

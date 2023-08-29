@@ -87,13 +87,13 @@ void obj_symbol(void)
 {
 	meta_data meta_data = 126;
 	char *id = "Blue sky";
-	object obj = from_id(id, meta_data);
+	object obj = from_name(id, meta_data);
 
 	TEST_ASSERT_TRUE(is_symbol(obj));
 	TEST_ASSERT_TRUE(has_one_type(obj));
 
 	TEST_ASSERT_EQUAL(meta_data, object_meta_data(obj));
-	TEST_ASSERT_EQUAL(id, to_id(obj));
+	TEST_ASSERT_EQUAL(id, to_name(obj));
 }
 
 int test_object(void)

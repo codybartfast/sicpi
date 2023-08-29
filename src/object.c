@@ -196,13 +196,12 @@ inline bool is_symbol(object obj)
 	return object_value_kind(obj) == VK_SYMBOL;
 }
 
-inline object from_id(char *id, meta_data meta_data)
+inline object from_name(char *id, meta_data meta_data)
 {
-	return object_new(VK_SYMBOL, meta_data,
-			  (object_value){ .string = id });
+	return object_new(VK_SYMBOL, meta_data, (object_value){ .string = id });
 }
 
-inline char const *to_id(object obj)
+inline char const *to_name(object obj)
 {
 	check_value_kind(obj, VK_SYMBOL, "to_id");
 	return obj->value.string;

@@ -77,13 +77,15 @@ object parse(parser parser)
 	token tkn = token_read(parser->token_source);
 	switch (token_type(tkn)) {
 	case TOKEN_IDENTIFIER:
-		return from_id(token_text(tkn), NO_META_DATA);
+		return from_name(token_text(tkn), NO_META_DATA);
 	case TOKEN_NUMBER_INTEGER:
 		return number_integer(parser, tkn);
 	case TOKEN_NUMBER_DECIMAL:
 		return number_decimal(parser, tkn);
 	case TOKEN_STRING:
-		return from_string(token_text(tkn), NO_META_DATA);
+		return from_string(strdupx(token_text(tkn),
+					   "parser:TOKEN_STRING"),
+				   NO_META_DATA);
 	case TOKEN_EOS:
 		return Eos;
 	case TOKEN_ERROR:
