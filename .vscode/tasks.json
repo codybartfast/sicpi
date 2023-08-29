@@ -20,6 +20,7 @@
 
                 "src/character-classes.c",
                 "src/lexer.c",
+                "src/obarray.c",
                 "src/object.c",
                 "src/parser.c",
                 "src/sicp.c",
@@ -95,6 +96,9 @@
 
                 "src/source.c",
                 "tests/test-source.c",
+
+                "src/obarray.c",
+                "tests/test-obarray.c",
 
                 "src/object.c",
                 "tests/test-object.c",

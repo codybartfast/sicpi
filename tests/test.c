@@ -9,12 +9,12 @@ void tearDown(void)
 }
 
 void test_lexer(void);
+void test_obarray(void);
 void test_object(void);
 void test_parser(void);
 void test_source(void);
 void test_string_builder(void);
 void test_token_table(void);
-
 
 int main(void)
 {
@@ -27,6 +27,7 @@ int main(void)
 	test_token_table();
 
 	test_parser();
+	test_obarray();
 
 	return UNITY_END();
 }
