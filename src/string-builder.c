@@ -10,6 +10,7 @@
 /*
  * Code here has been copied in:
  * 	token_table
+ * 	obarray
  * so any fixes/mods here might be wanted there too.
  */
 

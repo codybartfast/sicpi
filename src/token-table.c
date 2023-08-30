@@ -4,6 +4,11 @@
 
 const size_t growth_factor = 2;
 
+/*
+ * Code here has been copied from string_builder,
+ * so any fixes/mods here might be wanted there too.
+ */
+
 token_table token_table_new(size_t initial_capacity)
 {
 	initial_capacity = initial_capacity < 1 ?
