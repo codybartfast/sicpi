@@ -14,7 +14,7 @@ typedef struct obarray {
 void obarray_init(obarray obarray, size_t initial_capacity);
 obarray obarray_new(size_t initial_capacity);
 
-char *obarray_intern(char *name);
+char *obarray_intern(obarray obarray, char *name);
 
 void obarray_free_members(obarray obarray);
 void obarray_free(obarray obarray);

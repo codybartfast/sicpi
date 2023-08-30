@@ -1,6 +1,10 @@
+#include "sicp-error.h"
 #include "obarray.h"
-
 #include "sicp-std.h"
+
+#include <string.h>
+
+#define GROWTH_FACTOR 2
 
 /*
  * Code here has been copied from string_builder,
@@ -26,10 +30,49 @@ obarray obarray_new(size_t initial_capacity)
 	return oba;
 }
 
-char *obarray_intern(char *name)
+static void grow(obarray oba)
 {
-	unused(name);
-	return NULL;
+	static size_t element_size = sizeof(char **);
+	static size_t sizeLimit = __SIZE_MAX__;
+	static size_t fullGrowLimit = __SIZE_MAX__ / GROWTH_FACTOR;
+	size_t old_alloc = element_size * (oba->end - oba->start);
+
+	if (old_alloc == sizeLimit) {
+		alloc_error("obarray:grow (limit)");
+	}
+	size_t new_alloc = old_alloc > fullGrowLimit ?
+				   sizeLimit :
+				   old_alloc * GROWTH_FACTOR;
+	char **new_buff = realloc(oba->start, new_alloc);
+	if (!new_buff) {
+		alloc_error("obarray:grow realloc");
+	}
+	char **new_next_write = new_buff + (oba->next - oba->start);
+
+	oba->start = new_buff;
+	oba->next = new_next_write;
+	oba->end = new_buff + (new_alloc / element_size);
+}
+
+char *add(obarray oba, char *name)
+{
+	if (oba->next >= oba->end) {
+		grow(oba);
+	}
+	*oba->next = name;
+	++oba->next;
+	return name;
+}
+
+char *obarray_intern(obarray obarray, char *name)
+{
+	char **i;
+	for (i = obarray->start; i < obarray->next; i++) {
+		if (strcmp(name, *i) == 0) {
+			return *i;
+		}
+	}
+	return add(obarray, strdupx(name, "obarray_intern"));
 }
 
 void obarray_free_members(obarray obarray)

@@ -33,7 +33,7 @@ string_builder sb_new(size_t initial_capacity)
 	return sb;
 }
 
-void grow(string_builder sb)
+static void grow(string_builder sb)
 {
 	static size_t sizeLimit = __SIZE_MAX__;
 	static size_t fullGrowLimit =
