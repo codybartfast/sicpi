@@ -1,3 +1,4 @@
+#include "obarray.h"
 #include "sicp-error.h"
 #include "parser.h"
 
@@ -7,9 +8,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-void parser_init(parser parser)
+void parser_init(parser parser, token_source token_source, obarray obarray)
 {
-	parser->token_source = NULL;
+	parser->token_source = token_source;
+	parser->obarray = obarray;
 	parser->is_errored = false;
 	parser->error_message = NULL;
 }
@@ -77,7 +79,7 @@ object parse(parser parser)
 	token tkn = token_read(parser->token_source);
 	switch (token_type(tkn)) {
 	case TOKEN_IDENTIFIER:
-		return from_name(token_text(tkn), NO_META_DATA);
+		return obarray_intern(parser->obarray, token_text(tkn));
 	case TOKEN_NUMBER_INTEGER:
 		return number_integer(parser, tkn);
 	case TOKEN_NUMBER_DECIMAL:

@@ -1,3 +1,5 @@
+// https://www.sicp-book.com/book-Z-H-33.html#%_idx_5886
+
 #ifndef OBARRAY_H
 #define OBARRAY_H
 

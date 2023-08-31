@@ -3,14 +3,15 @@
 
 #include "../src/lexer.h"
 #include "../src/parser.h"
+#include "../src/obarray.h"
 
 #include <stdbool.h>
 
-void init(token_source tkn_src, lexer lxr, parser parser)
+void init(lexer lxr, token_source tkn_src, parser parser, obarray obarray)
 {
-	parser_init(parser);
-	parser->token_source = tkn_src;
 	lexer_set_token_source(lxr, tkn_src);
+	obarray_init(obarray, 0);
+	parser_init(parser, tkn_src, obarray);
 }
 
 void free_lexer(lexer lxr)
@@ -22,11 +23,11 @@ void free_lexer(lexer lxr)
 void test_parser_catch_errors(void)
 {
 	lexer lxr = lexer_new(source_string("1#1 1", ""));
-
 	struct token_source tkn_src;
 	struct parser parser;
+	struct obarray obarray;
+	init(lxr, &tkn_src, &parser, &obarray);
 	object rslt;
-	init(&tkn_src, lxr, &parser);
 
 	rslt = parse(&parser);
 	TEST_ASSERT_TRUE(is_error(rslt));
@@ -46,11 +47,11 @@ void test_parser_catch_errors(void)
 void test_parser_end_of_source(void)
 {
 	lexer lxr = lexer_new(source_string("123", ""));
-
 	struct token_source tkn_src;
 	struct parser parser;
+	struct obarray obarray;
+	init(lxr, &tkn_src, &parser, &obarray);
 	object rslt;
-	init(&tkn_src, lxr, &parser);
 
 	rslt = parse(&parser); // ignore number
 
@@ -67,11 +68,12 @@ void test_parser_end_of_source(void)
 void test_parser_integer(void)
 {
 	lexer lxr = lexer_new(source_string("123 +234 -345 04560 -08030", ""));
-
 	struct token_source tkn_src;
 	struct parser parser;
+	struct obarray obarray;
+	init(lxr, &tkn_src, &parser, &obarray);
 	object rslt;
-	init(&tkn_src, lxr, &parser);
+	;
 
 	rslt = parse(&parser);
 	TEST_ASSERT_TRUE(is_number(rslt));
@@ -100,11 +102,11 @@ void test_parser_decimal(void)
 {
 	lexer lxr =
 		lexer_new(source_string("12.3 +23.4 -34.5 0.4560 -.08030", ""));
-
 	struct token_source tkn_src;
 	struct parser parser;
+	struct obarray obarray;
+	init(lxr, &tkn_src, &parser, &obarray);
 	object rslt;
-	init(&tkn_src, lxr, &parser);
 
 	rslt = parse(&parser);
 	TEST_ASSERT_TRUE(is_number(rslt));
@@ -132,11 +134,11 @@ void test_parser_decimal(void)
 void test_parser_string(void)
 {
 	lexer lxr = lexer_new(source_string("\"Interested\" \"Fox\"", ""));
-
 	struct token_source tkn_src;
 	struct parser parser;
+	struct obarray obarray;
+	init(lxr, &tkn_src, &parser, &obarray);
 	object rslt;
-	init(&tkn_src, lxr, &parser);
 
 	rslt = parse(&parser);
 	TEST_ASSERT_TRUE(is_string(rslt));
@@ -151,16 +153,31 @@ void test_parser_string(void)
 
 void test_parser_identifiers(void)
 {
-	lexer lxr = lexer_new(source_string(" Leap? ", ""));
-
+	lexer lxr = lexer_new(source_string(" apple banana apple banana ", ""));
 	struct token_source tkn_src;
 	struct parser parser;
-	object rslt;
-	init(&tkn_src, lxr, &parser);
+	struct obarray obarray;
+	init(lxr, &tkn_src, &parser, &obarray);
 
-	rslt = parse(&parser);
-	TEST_ASSERT_TRUE(is_symbol(rslt));
-	TEST_ASSERT_EQUAL_STRING("Leap?", to_name(rslt));
+	object apple1 = parse(&parser);
+	TEST_ASSERT_TRUE(is_symbol(apple1));
+	TEST_ASSERT_EQUAL_STRING("apple", to_name(apple1));
+
+	object banana1 = parse(&parser);
+	TEST_ASSERT_TRUE(is_symbol(banana1));
+	TEST_ASSERT_EQUAL_STRING("banana", to_name(banana1));
+
+	object apple2 = parse(&parser);
+	TEST_ASSERT_TRUE(is_symbol(apple2));
+	TEST_ASSERT_EQUAL_STRING("apple", to_name(apple2));
+
+	object banana2 = parse(&parser);
+	TEST_ASSERT_TRUE(is_symbol(banana2));
+	TEST_ASSERT_EQUAL_STRING("banana", to_name(banana2));
+
+	TEST_ASSERT_EQUAL_PTR(apple1, apple2);
+	TEST_ASSERT_EQUAL_PTR(banana1, banana2);
+	TEST_ASSERT_FALSE(apple1 == banana1);
 
 	free_lexer(lxr);
 }
