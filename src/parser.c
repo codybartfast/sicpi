@@ -69,6 +69,17 @@ static object number_decimal(parser parser, token tkn)
 			    "Failed to convert string to decimal (overflow?).");
 }
 
+// define with dotted-tail notaion:
+// 	https://www.sicp-book.com/book-Z-H-15.html#%_idx_1650
+static object dot(parser parser, token tkn)
+{
+	unused(parser);
+	unused(tkn);
+	eprintfx(
+		"Sorry haven't implemented 'define with dotted-tail notaion' yet");
+	return NULL;
+}
+
 object parse(parser parser)
 {
 	if (parser_is_errored(parser)) {
@@ -88,6 +99,8 @@ object parse(parser parser)
 		return from_string(strdupx(token_text(tkn),
 					   "parser:TOKEN_STRING"),
 				   NO_META_DATA);
+	case TOKEN_DOT:
+		return dot(parser, tkn);
 	case TOKEN_EOS:
 		return Eos;
 	case TOKEN_ERROR:
