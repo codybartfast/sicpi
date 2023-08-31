@@ -1,6 +1,8 @@
 #include "../src/obarray.h"
 #include "../unity/src/unity.h"
 
+#include "../src/object.h"
+
 #include <stdbool.h>
 #include <stdio.h>
 
@@ -53,17 +55,17 @@ void test_obarray_intern(void)
 	char *apple2 = "apple";
 	char *banana = "banana";
 
-	char *apple_i = obarray_intern(&obarray, apple);
-	TEST_ASSERT_FALSE(apple == apple_i);
-	TEST_ASSERT_EQUAL_STRING(apple, apple_i);
+	object apple_i = obarray_intern(&obarray, apple);
+	TEST_ASSERT_FALSE(apple == to_name(apple_i));
+	TEST_ASSERT_EQUAL_STRING(apple, to_name(apple_i));
 
-	char *banana_i = obarray_intern(&obarray, banana);
-	TEST_ASSERT_FALSE(banana == banana_i);
-	TEST_ASSERT_EQUAL_STRING(banana, banana_i);
+	object banana_i = obarray_intern(&obarray, banana);
+	TEST_ASSERT_FALSE(banana == to_name(banana_i));
+	TEST_ASSERT_EQUAL_STRING(banana, to_name(banana_i));
 
-	char *apple2_i = obarray_intern(&obarray, apple2);
+	object apple2_i = obarray_intern(&obarray, apple2);
 	TEST_ASSERT_EQUAL_PTR(apple2_i, apple_i);
-	TEST_ASSERT_EQUAL_STRING(apple2, apple2_i);
+	TEST_ASSERT_EQUAL_STRING(apple2, to_name(apple2_i));
 }
 
 void test_obarray_grow(void)
@@ -74,18 +76,10 @@ void test_obarray_grow(void)
 	TEST_ASSERT_EQUAL(1, capacity(&oba));
 
 	char *zero = "0";
-	// char *zero_i = obarray_intern(&oba, zero);
 	char *one = "1";
-	// char *one_i = obarray_intern(&oba, one);
 	char *ten = "10";
-	// char *ten_i = obarray_intern(&oba, ten);
 	char *hundred = "100";
-	// char *hundred_i = obarray_intern(&oba, hundred);
 	char *thousand = "1000";
-	// char *thousand_i = obarray_intern(&oba, thousand);
-
-	// assumes growth factor of 2
-	// TEST_ASSERT_EQUAL(8, capacity(&oba));
 
 	char numstr[5];
 	for (int i = 0; i < 1050; i++) {
@@ -94,11 +88,11 @@ void test_obarray_grow(void)
 	}
 	TEST_ASSERT_EQUAL(2048, capacity(&oba));
 
-	TEST_ASSERT_EQUAL_STRING(zero, *oba.start);
-	TEST_ASSERT_EQUAL_STRING(one, *(oba.start + 1));
-	TEST_ASSERT_EQUAL_STRING(ten, *(oba.start + 10));
-	TEST_ASSERT_EQUAL_STRING(hundred, *(oba.start + 100));
-	TEST_ASSERT_EQUAL_STRING(thousand, *(oba.start + 1000));
+	TEST_ASSERT_EQUAL_STRING(zero, to_name(*oba.start));
+	TEST_ASSERT_EQUAL_STRING(one, to_name(*(oba.start + 1)));
+	TEST_ASSERT_EQUAL_STRING(ten, to_name(*(oba.start + 10)));
+	TEST_ASSERT_EQUAL_STRING(hundred, to_name(*(oba.start + 100)));
+	TEST_ASSERT_EQUAL_STRING(thousand, to_name(*(oba.start + 1000)));
 
 	TEST_ASSERT_EQUAL_PTR(*(oba.start + 100), obarray_intern(&oba, "100"));
 }
