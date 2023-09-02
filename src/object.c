@@ -14,8 +14,9 @@ enum value_kind {
 	VK_SINGLETON,
 	VK_INTEGER,
 	VK_FLOATING,
+	VK_STRING,
 	VK_SYMBOL,
-	VK_STRING
+	VK_PAIR
 };
 
 //
@@ -28,7 +29,8 @@ static inline int8_t object_value_kind(object obj)
 	return obj->value_kind;
 }
 
-void check_value_kind(object obj, enum value_kind kind, char *caller)
+static inline void check_value_kind(object obj, enum value_kind kind,
+				    char *caller)
 {
 	if (object_value_kind(obj) != kind) {
 		inyim("%s given wrong value kind. Expected %d, given %d.",
@@ -68,11 +70,16 @@ meta_data object_meta_data(object obj)
 
 void object_free(object obj)
 {
-	switch (object_value_kind(obj)) {
+	enum value_kind kind = object_value_kind(obj);
+	switch (kind) {
+	case VK_STRING:
+		free((char *)obj->value.string);
 	default:
 		break;
 	}
-	free(obj);
+	if (kind != VK_SYMBOL) {
+		free(obj);
+	}
 }
 
 inline bool eq_(object x, object y)
@@ -205,4 +212,32 @@ inline char const *to_name(object obj)
 {
 	check_value_kind(obj, VK_SYMBOL, "to_id");
 	return obj->value.string;
+}
+
+//
+// Pairs
+// =============================================================================
+//
+
+bool is_pair(const object obj)
+{
+	return object_value_kind(obj) == VK_PAIR;
+}
+
+object cons(const object a, const object b, meta_data meta_data)
+{
+	return object_new(VK_PAIR, meta_data,
+			  (object_value){ .pair = { a, b } });
+}
+
+object car(const object obj)
+{
+	check_value_kind(obj, VK_PAIR, "to_car");
+	return obj->value.pair.car;
+}
+
+object cdr(const object obj)
+{
+	check_value_kind(obj, VK_PAIR, "to_cdr");
+	return obj->value.pair.cdr;
 }

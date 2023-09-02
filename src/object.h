@@ -8,11 +8,22 @@
 
 enum error_kind { ERROR_UNSPECIFIED = 0, ERROR_LEXER, ERROR_PARSER };
 
+struct object;
+
+typedef struct pair {
+	struct object *car;
+	struct object *cdr;
+} *pair;
+
 typedef union object_value {
 	const floating floating;
 	const integer integer;
 	const enum error_kind error_kind;
 	const char *string;
+	// This is typically the largest type, 2 * 64b = 128b.
+	// Perhaps, if/when 'storage' is implemented it could be replaced
+	// by 2 * 32b addresses into the starage array?
+	const struct pair pair;
 } object_value;
 
 // Objects should be passed by reference?:
@@ -79,5 +90,15 @@ char const *to_string(const object obj);
 bool is_symbol(const object obj);
 object from_name(char *id, meta_data meta_data);
 char const *to_name(const object obj);
+
+//
+// Pairs
+// =============================================================================
+//
+
+bool is_pair(const object obj);
+object cons(const object a, const object b, meta_data meta_data);
+object car(const object obj);
+object cdr(const object obj);
 
 #endif
