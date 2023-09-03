@@ -10,10 +10,9 @@
 
 static object parse_token(parser parser, token tkn);
 
-void parser_init(parser parser, token_source token_source, obarray obarray)
+void parser_init(parser parser, token_source token_source)
 {
 	parser->token_source = token_source;
-	parser->obarray = obarray;
 	parser->is_errored = false;
 	parser->error_message = NULL;
 }
@@ -118,7 +117,7 @@ static object parse_token(parser parser, token tkn)
 {
 	switch (token_type(tkn)) {
 	case TOKEN_IDENTIFIER:
-		return obarray_intern(parser->obarray, token_text(tkn));
+		return from_name(token_text(tkn), NO_META_DATA);
 	case TOKEN_NUMBER_INTEGER:
 		return number_integer(parser, tkn);
 	case TOKEN_NUMBER_DECIMAL:

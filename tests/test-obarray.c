@@ -55,15 +55,15 @@ void test_obarray_intern(void)
 	char *apple2 = "apple";
 	char *banana = "banana";
 
-	object apple_i = obarray_intern(&obarray, apple);
+	object apple_i = obarray_intern(&obarray, apple, NO_META_DATA);
 	TEST_ASSERT_FALSE(apple == to_name(apple_i));
 	TEST_ASSERT_EQUAL_STRING(apple, to_name(apple_i));
 
-	object banana_i = obarray_intern(&obarray, banana);
+	object banana_i = obarray_intern(&obarray, banana, NO_META_DATA);
 	TEST_ASSERT_FALSE(banana == to_name(banana_i));
 	TEST_ASSERT_EQUAL_STRING(banana, to_name(banana_i));
 
-	object apple2_i = obarray_intern(&obarray, apple2);
+	object apple2_i = obarray_intern(&obarray, apple2, NO_META_DATA);
 	TEST_ASSERT_EQUAL_PTR(apple2_i, apple_i);
 	TEST_ASSERT_EQUAL_STRING(apple2, to_name(apple2_i));
 }
@@ -84,7 +84,7 @@ void test_obarray_grow(void)
 	char numstr[5];
 	for (int i = 0; i < 1050; i++) {
 		sprintf(numstr, "%d", i);
-		obarray_intern(&oba, numstr);
+		obarray_intern(&oba, numstr, NO_META_DATA);
 	}
 	TEST_ASSERT_EQUAL(2048, capacity(&oba));
 
@@ -94,7 +94,8 @@ void test_obarray_grow(void)
 	TEST_ASSERT_EQUAL_STRING(hundred, to_name(*(oba.start + 100)));
 	TEST_ASSERT_EQUAL_STRING(thousand, to_name(*(oba.start + 1000)));
 
-	TEST_ASSERT_EQUAL_PTR(*(oba.start + 100), obarray_intern(&oba, "100"));
+	TEST_ASSERT_EQUAL_PTR(*(oba.start + 100),
+			      obarray_intern(&oba, "100", NO_META_DATA));
 }
 
 void test_obarray()

@@ -105,6 +105,9 @@ object set_cdr(object pair, const object new_cdr);
 //
 
 bool is_symbol(const object obj);
+// This could be called 'create_symbol' but it should normally only be called
+// by obarray
+object create_obarray_entry(char *id, meta_data meta_data);
 object from_name(char *id, meta_data meta_data);
 char const *to_name(const object obj);
 

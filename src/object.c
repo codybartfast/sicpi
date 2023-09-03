@@ -1,5 +1,6 @@
 #include "object.h"
 
+#include "obarray.h"
 #include "sicp-error.h"
 #include "sicp-std.h"
 
@@ -241,18 +242,33 @@ object set_cdr(object pair, object new_cdr)
 // =============================================================================
 //
 
+obarray symbols = NULL;
+
 inline bool is_symbol(object obj)
 {
 	return object_value_kind(obj) == VK_SYMBOL;
 }
 
-inline object from_name(char *id, meta_data meta_data)
+object create_obarray_entry(char *name, meta_data meta_data)
 {
-	return object_new(VK_SYMBOL, meta_data, (object_value){ .string = id });
+	return object_new(VK_SYMBOL, meta_data,
+			  (object_value){ .string = name });
+}
+
+inline object from_name(char *name, meta_data meta_data)
+{
+	UNUSED(meta_data);
+	if (!symbols) {
+		symbols = obarray_new(0);
+	}
+
+	return obarray_intern(symbols, name, meta_data);
 }
 
 inline char const *to_name(object obj)
 {
-	check_value_kind(obj, VK_SYMBOL, "to_id");
+	check_value_kind(obj, VK_SYMBOL, "to_name");
 	return obj->value.string;
 }
+
+

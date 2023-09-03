@@ -112,7 +112,7 @@ void obj_symbol(void)
 	TEST_ASSERT_TRUE(has_one_type(obj));
 
 	TEST_ASSERT_EQUAL(meta_data, object_meta_data(obj));
-	TEST_ASSERT_EQUAL(id, to_name(obj));
+	TEST_ASSERT_EQUAL_STRING(id, to_name(obj));
 }
 
 int test_object(void)

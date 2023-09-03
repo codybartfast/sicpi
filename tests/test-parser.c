@@ -7,11 +7,10 @@
 
 #include <stdbool.h>
 
-void init(lexer lxr, token_source tkn_src, parser parser, obarray obarray)
+void init(lexer lxr, token_source tkn_src, parser parser)
 {
 	lexer_set_token_source(lxr, tkn_src);
-	obarray_init(obarray, 0);
-	parser_init(parser, tkn_src, obarray);
+	parser_init(parser, tkn_src);
 }
 
 void free_lexer(lexer lxr)
@@ -25,8 +24,7 @@ void test_parser_catch_errors(void)
 	lexer lxr = lexer_new(source_string("1#1 1", ""));
 	struct token_source tkn_src;
 	struct parser parser;
-	struct obarray obarray;
-	init(lxr, &tkn_src, &parser, &obarray);
+	init(lxr, &tkn_src, &parser);
 	object rslt;
 
 	rslt = parse(&parser);
@@ -49,8 +47,7 @@ void test_parser_end_of_source(void)
 	lexer lxr = lexer_new(source_string("123", ""));
 	struct token_source tkn_src;
 	struct parser parser;
-	struct obarray obarray;
-	init(lxr, &tkn_src, &parser, &obarray);
+	init(lxr, &tkn_src, &parser);
 	object rslt;
 
 	rslt = parse(&parser); // ignore number
@@ -70,8 +67,7 @@ void test_parser_integer(void)
 	lexer lxr = lexer_new(source_string("123 +234 -345 04560 -08030", ""));
 	struct token_source tkn_src;
 	struct parser parser;
-	struct obarray obarray;
-	init(lxr, &tkn_src, &parser, &obarray);
+	init(lxr, &tkn_src, &parser);
 	object rslt;
 	;
 
@@ -104,8 +100,7 @@ void test_parser_decimal(void)
 		lexer_new(source_string("12.3 +23.4 -34.5 0.4560 -.08030", ""));
 	struct token_source tkn_src;
 	struct parser parser;
-	struct obarray obarray;
-	init(lxr, &tkn_src, &parser, &obarray);
+	init(lxr, &tkn_src, &parser);
 	object rslt;
 
 	rslt = parse(&parser);
@@ -136,8 +131,7 @@ void test_parser_string(void)
 	lexer lxr = lexer_new(source_string("\"Interested\" \"Fox\"", ""));
 	struct token_source tkn_src;
 	struct parser parser;
-	struct obarray obarray;
-	init(lxr, &tkn_src, &parser, &obarray);
+	init(lxr, &tkn_src, &parser);
 	object rslt;
 
 	rslt = parse(&parser);
@@ -156,8 +150,7 @@ void test_parser_list(void)
 	lexer lxr = lexer_new(source_string("() (a) (b c) (d e f)", ""));
 	struct token_source tkn_src;
 	struct parser parser;
-	struct obarray obarray;
-	init(lxr, &tkn_src, &parser, &obarray);
+	init(lxr, &tkn_src, &parser);
 	object obj;
 
 	obj = parse(&parser);
@@ -184,7 +177,7 @@ void test_parser_list(void)
 	lexer_free_source(lxr);
 	lexer_free(lxr);
 	lxr = lexer_new(source_string("(a b c", ""));
-	init(lxr, &tkn_src, &parser, &obarray);
+	init(lxr, &tkn_src, &parser);
 	obj = parse(&parser);
 	TEST_ASSERT_TRUE(is_error(obj));
 	TEST_ASSERT_EQUAL_STRING("List was not closed before end of file.",
@@ -193,7 +186,7 @@ void test_parser_list(void)
 	lexer_free_source(lxr);
 	lexer_free(lxr);
 	lxr = lexer_new(source_string("(a b#B c)", ""));
-	init(lxr, &tkn_src, &parser, &obarray);
+	init(lxr, &tkn_src, &parser);
 	obj = parse(&parser);
 	TEST_ASSERT_TRUE(is_error(obj));
 	TEST_ASSERT_EQUAL_STRING("Lexer error.", parser_error_message(&parser));
@@ -201,7 +194,7 @@ void test_parser_list(void)
 	lexer_free_source(lxr);
 	lexer_free(lxr);
 	lxr = lexer_new(source_string("(a) )", ""));
-	init(lxr, &tkn_src, &parser, &obarray);
+	init(lxr, &tkn_src, &parser);
 	obj = parse(&parser);
 	obj = parse(&parser);
 	TEST_ASSERT_TRUE(is_error(obj));
@@ -214,8 +207,7 @@ void test_parser_identifiers(void)
 	lexer lxr = lexer_new(source_string(" apple banana apple banana ", ""));
 	struct token_source tkn_src;
 	struct parser parser;
-	struct obarray obarray;
-	init(lxr, &tkn_src, &parser, &obarray);
+	init(lxr, &tkn_src, &parser);
 
 	object apple1 = parse(&parser);
 	TEST_ASSERT_TRUE(is_symbol(apple1));

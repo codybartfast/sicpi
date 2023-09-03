@@ -54,18 +54,18 @@ static void grow(obarray oba)
 	oba->end = new_buff + (new_alloc / element_size);
 }
 
-object add(obarray oba, char *name)
+object add(obarray oba, char *name, meta_data meta_data)
 {
 	if (oba->next >= oba->end) {
 		grow(oba);
 	}
-	object symbol = from_name(name, NO_META_DATA);
+	object symbol = create_obarray_entry(name, meta_data);
 	*oba->next = symbol;
 	++oba->next;
 	return symbol;
 }
 
-object obarray_intern(obarray obarray, char *name)
+object obarray_intern(obarray obarray, char *name, meta_data meta_data)
 {
 	object *obj_ptr;
 	for (obj_ptr = obarray->start; obj_ptr < obarray->next; obj_ptr++) {
@@ -73,7 +73,7 @@ object obarray_intern(obarray obarray, char *name)
 			return *obj_ptr;
 		}
 	}
-	return add(obarray, strdupx(name, "obarray_intern"));
+	return add(obarray, strdupx(name, "obarray_intern"), meta_data);
 }
 
 void obarray_free_members(obarray obarray)

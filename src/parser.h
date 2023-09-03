@@ -9,12 +9,11 @@
 
 typedef struct parser {
 	token_source token_source;
-	obarray obarray;
 	bool is_errored;
 	char *error_message;
 } *parser;
 
-void parser_init(parser parser, token_source token_source, obarray obarray);
+void parser_init(parser parser, token_source token_source);
 bool parser_is_errored(const parser parser);
 char *parser_error_message(const parser parser);
 
