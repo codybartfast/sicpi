@@ -54,12 +54,11 @@ static void grow(obarray oba)
 	oba->end = new_buff + (new_alloc / element_size);
 }
 
-object add(obarray oba, char *name, meta_data meta_data)
+object add(obarray oba, object symbol)
 {
 	if (oba->next >= oba->end) {
 		grow(oba);
 	}
-	object symbol = create_obarray_entry(name, meta_data);
 	*oba->next = symbol;
 	++oba->next;
 	return symbol;
@@ -73,7 +72,25 @@ object obarray_intern(obarray obarray, char *name, meta_data meta_data)
 			return *obj_ptr;
 		}
 	}
-	return add(obarray, strdupx(name, "obarray_intern"), meta_data);
+	object symbol = create_obarray_entry(strdupx(name, "obarray_intern"),
+					     meta_data);
+	return add(obarray, symbol);
+}
+
+void obarray_add_symbol(obarray obarray, object symbol)
+{
+	const char *name = to_name(symbol);
+	object *obj_ptr;
+	for (obj_ptr = obarray->start; obj_ptr < obarray->next; obj_ptr++) {
+		if (strcmp(name, to_name(*obj_ptr)) == 0) {
+			if (symbol != *obj_ptr) {
+				inyim("Attempted to intern to symbols with same name %S",
+				      name);
+			}
+			return;
+		}
+	}
+	add(obarray, symbol);
 }
 
 void obarray_free_members(obarray obarray)
