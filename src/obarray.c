@@ -14,7 +14,7 @@
 void obarray_init(obarray obarray, size_t initial_capacity)
 {
 	initial_capacity = initial_capacity < 1 ?
-				   TOKEN_TABLE_DEFAULT_INITIAL_CAPACITY :
+				   OBARRAY_DEFAULT_INITIAL_CAPACITY :
 				   initial_capacity;
 	object *start =
 		mallocx(sizeof(object *) * initial_capacity, "obarray_init");

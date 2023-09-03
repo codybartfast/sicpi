@@ -7,7 +7,7 @@
 
 #include <stdlib.h>
 
-#define TOKEN_TABLE_DEFAULT_INITIAL_CAPACITY 1024
+#define OBARRAY_DEFAULT_INITIAL_CAPACITY 1024
 
 typedef struct obarray {
 	object *start;
