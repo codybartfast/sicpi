@@ -82,7 +82,7 @@ void object_free(object obj)
 	}
 }
 
-inline bool eq_(object x, object y)
+inline bool eq(object x, object y)
 {
 	return x == y;
 }
@@ -243,4 +243,16 @@ object cdr(const object obj)
 {
 	check_value_kind(obj, VK_PAIR, "to_cdr");
 	return obj->value.pair.cdr;
+}
+
+object set_car(object pair, object new_car)
+{
+	pair->value.pair.car = new_car;
+	return pair;
+}
+
+object set_cdr(object pair, object new_cdr)
+{
+	pair->value.pair.cdr = new_cdr;
+	return pair;
 }

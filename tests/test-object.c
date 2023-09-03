@@ -94,6 +94,9 @@ void obj_pair(void)
 	meta_data meta_data = 127;
 	object a = from_integer(39, NO_META_DATA);
 	object b = from_string("thrity nine", NO_META_DATA);
+	object a2 = from_string("forty", NO_META_DATA);
+	object b2 = from_integer(40, NO_META_DATA);
+
 	object obj = cons(a, b, meta_data);
 
 	TEST_ASSERT_TRUE(is_pair(obj));
@@ -102,6 +105,14 @@ void obj_pair(void)
 
 	TEST_ASSERT_EQUAL(car(obj), a);
 	TEST_ASSERT_EQUAL(cdr(obj), b);
+
+	set_car(obj, a2);
+	TEST_ASSERT_EQUAL(car(obj), a2);
+	TEST_ASSERT_EQUAL(cdr(obj), b);
+
+	set_cdr(obj, b2);
+	TEST_ASSERT_EQUAL(car(obj), a2);
+	TEST_ASSERT_EQUAL(cdr(obj), b2);
 }
 
 int test_object(void)

@@ -23,7 +23,7 @@ typedef union object_value {
 	// This is typically the largest type, 2 * 64b = 128b.
 	// Perhaps, if/when 'storage' is implemented it could be replaced
 	// by 2 * 32b addresses into the starage array?
-	const struct pair pair;
+	struct pair pair;
 } object_value;
 
 // Objects should be passed by reference?:
@@ -32,7 +32,7 @@ typedef union object_value {
 typedef struct object {
 	const int8_t value_kind;
 	const meta_data meta_data;
-	const object_value value;
+	object_value value;
 } *object;
 
 //
@@ -42,7 +42,7 @@ typedef struct object {
 
 meta_data object_meta_data(const object obj);
 void object_free(object obj);
-bool eq_(object x, object y);
+bool eq(object x, object y);
 
 //
 // Errors
@@ -105,5 +105,7 @@ bool is_pair(const object obj);
 object cons(const object a, const object b, meta_data meta_data);
 object car(const object obj);
 object cdr(const object obj);
+object set_car(object pair, const object new_car);
+object set_cdr(object pair, const object new_cdr);
 
 #endif
