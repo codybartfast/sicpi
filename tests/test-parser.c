@@ -151,37 +151,6 @@ void test_parser_string(void)
 	free_lexer(lxr);
 }
 
-void test_parser_identifiers(void)
-{
-	lexer lxr = lexer_new(source_string(" apple banana apple banana ", ""));
-	struct token_source tkn_src;
-	struct parser parser;
-	struct obarray obarray;
-	init(lxr, &tkn_src, &parser, &obarray);
-
-	object apple1 = parse(&parser);
-	TEST_ASSERT_TRUE(is_symbol(apple1));
-	TEST_ASSERT_EQUAL_STRING("apple", to_name(apple1));
-
-	object banana1 = parse(&parser);
-	TEST_ASSERT_TRUE(is_symbol(banana1));
-	TEST_ASSERT_EQUAL_STRING("banana", to_name(banana1));
-
-	object apple2 = parse(&parser);
-	TEST_ASSERT_TRUE(is_symbol(apple2));
-	TEST_ASSERT_EQUAL_STRING("apple", to_name(apple2));
-
-	object banana2 = parse(&parser);
-	TEST_ASSERT_TRUE(is_symbol(banana2));
-	TEST_ASSERT_EQUAL_STRING("banana", to_name(banana2));
-
-	TEST_ASSERT_EQUAL_PTR(apple1, apple2);
-	TEST_ASSERT_EQUAL_PTR(banana1, banana2);
-	TEST_ASSERT_FALSE(apple1 == banana1);
-
-	free_lexer(lxr);
-}
-
 void test_parser_list(void)
 {
 	lexer lxr = lexer_new(source_string("() (a) (b c) (d e f)", ""));
@@ -238,6 +207,37 @@ void test_parser_list(void)
 	TEST_ASSERT_TRUE(is_error(obj));
 	TEST_ASSERT_EQUAL_STRING("List close ')' was not expected.",
 				 parser_error_message(&parser));
+}
+
+void test_parser_identifiers(void)
+{
+	lexer lxr = lexer_new(source_string(" apple banana apple banana ", ""));
+	struct token_source tkn_src;
+	struct parser parser;
+	struct obarray obarray;
+	init(lxr, &tkn_src, &parser, &obarray);
+
+	object apple1 = parse(&parser);
+	TEST_ASSERT_TRUE(is_symbol(apple1));
+	TEST_ASSERT_EQUAL_STRING("apple", to_name(apple1));
+
+	object banana1 = parse(&parser);
+	TEST_ASSERT_TRUE(is_symbol(banana1));
+	TEST_ASSERT_EQUAL_STRING("banana", to_name(banana1));
+
+	object apple2 = parse(&parser);
+	TEST_ASSERT_TRUE(is_symbol(apple2));
+	TEST_ASSERT_EQUAL_STRING("apple", to_name(apple2));
+
+	object banana2 = parse(&parser);
+	TEST_ASSERT_TRUE(is_symbol(banana2));
+	TEST_ASSERT_EQUAL_STRING("banana", to_name(banana2));
+
+	TEST_ASSERT_EQUAL_PTR(apple1, apple2);
+	TEST_ASSERT_EQUAL_PTR(banana1, banana2);
+	TEST_ASSERT_FALSE(apple1 == banana1);
+
+	free_lexer(lxr);
 }
 
 int test_parser(void)

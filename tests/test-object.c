@@ -76,19 +76,6 @@ void obj_string(void)
 	TEST_ASSERT_EQUAL(string, to_string(obj));
 }
 
-void obj_symbol(void)
-{
-	meta_data meta_data = 126;
-	char *id = "Blue sky";
-	object obj = from_name(id, meta_data);
-
-	TEST_ASSERT_TRUE(is_symbol(obj));
-	TEST_ASSERT_TRUE(has_one_type(obj));
-
-	TEST_ASSERT_EQUAL(meta_data, object_meta_data(obj));
-	TEST_ASSERT_EQUAL(id, to_name(obj));
-}
-
 void obj_pair(void)
 {
 	meta_data meta_data = 127;
@@ -113,6 +100,19 @@ void obj_pair(void)
 	set_cdr(obj, b2);
 	TEST_ASSERT_EQUAL(car(obj), a2);
 	TEST_ASSERT_EQUAL(cdr(obj), b2);
+}
+
+void obj_symbol(void)
+{
+	meta_data meta_data = 126;
+	char *id = "Blue sky";
+	object obj = from_name(id, meta_data);
+
+	TEST_ASSERT_TRUE(is_symbol(obj));
+	TEST_ASSERT_TRUE(has_one_type(obj));
+
+	TEST_ASSERT_EQUAL(meta_data, object_meta_data(obj));
+	TEST_ASSERT_EQUAL(id, to_name(obj));
 }
 
 int test_object(void)

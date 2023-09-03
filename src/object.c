@@ -197,27 +197,6 @@ inline char const *to_string(object obj)
 }
 
 //
-// Symbols
-// =============================================================================
-//
-
-inline bool is_symbol(object obj)
-{
-	return object_value_kind(obj) == VK_SYMBOL;
-}
-
-inline object from_name(char *id, meta_data meta_data)
-{
-	return object_new(VK_SYMBOL, meta_data, (object_value){ .string = id });
-}
-
-inline char const *to_name(object obj)
-{
-	check_value_kind(obj, VK_SYMBOL, "to_id");
-	return obj->value.string;
-}
-
-//
 // Pairs
 // =============================================================================
 //
@@ -255,4 +234,25 @@ object set_cdr(object pair, object new_cdr)
 {
 	pair->value.pair.cdr = new_cdr;
 	return pair;
+}
+
+//
+// Symbols
+// =============================================================================
+//
+
+inline bool is_symbol(object obj)
+{
+	return object_value_kind(obj) == VK_SYMBOL;
+}
+
+inline object from_name(char *id, meta_data meta_data)
+{
+	return object_new(VK_SYMBOL, meta_data, (object_value){ .string = id });
+}
+
+inline char const *to_name(object obj)
+{
+	check_value_kind(obj, VK_SYMBOL, "to_id");
+	return obj->value.string;
 }

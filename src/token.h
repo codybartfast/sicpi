@@ -8,8 +8,8 @@ enum token_type {
 	TOKEN_EOS = -1,
 	TOKEN_UNSPECIFIED = 0,
 	TOKEN_IDENTIFIER, //////  1
-	TOKEN_LIST_OPEN, ///////  2 *
-	TOKEN_LIST_CLOSE, //////  3 *
+	TOKEN_LIST_OPEN, ///////  2
+	TOKEN_LIST_CLOSE, //////  3
 	TOKEN_NUMBER_INTEGER, //  4
 	TOKEN_NUMBER_DECIMAL, //  5
 	TOKEN_STRING, //////////  6

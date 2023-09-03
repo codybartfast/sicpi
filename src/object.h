@@ -88,15 +88,6 @@ object from_string(char *string, meta_data meta_data);
 char const *to_string(const object obj);
 
 //
-// Symbols
-// =============================================================================
-//
-
-bool is_symbol(const object obj);
-object from_name(char *id, meta_data meta_data);
-char const *to_name(const object obj);
-
-//
 // Pairs
 // =============================================================================
 //
@@ -107,5 +98,14 @@ object car(const object obj);
 object cdr(const object obj);
 object set_car(object pair, const object new_car);
 object set_cdr(object pair, const object new_cdr);
+
+//
+// Symbols
+// =============================================================================
+//
+
+bool is_symbol(const object obj);
+object from_name(char *id, meta_data meta_data);
+char const *to_name(const object obj);
 
 #endif
