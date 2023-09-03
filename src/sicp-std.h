@@ -20,6 +20,6 @@ typedef uint32_t meta_data;
 void *mallocx(const size_t size, const char *caller);
 char *strdupx(const char *s, const char *caller);
 
-#define unused(x) (void)(x)
+#define UNUSED(x) (void)(x)
 
 #endif

@@ -56,10 +56,10 @@ void test_parser_end_of_source(void)
 	rslt = parse(&parser); // ignore number
 
 	rslt = parse(&parser);
-	TEST_ASSERT_TRUE(eq_(Eos, rslt));
+	TEST_ASSERT_TRUE(eq(Eos, rslt));
 
 	rslt = parse(&parser);
-	TEST_ASSERT_TRUE(eq_(Eos, rslt));
+	TEST_ASSERT_TRUE(eq(Eos, rslt));
 
 	lexer_free_source(lxr);
 	lexer_free(lxr);
@@ -182,6 +182,64 @@ void test_parser_identifiers(void)
 	free_lexer(lxr);
 }
 
+void test_parser_list(void)
+{
+	lexer lxr = lexer_new(source_string("() (a) (b c) (d e f)", ""));
+	struct token_source tkn_src;
+	struct parser parser;
+	struct obarray obarray;
+	init(lxr, &tkn_src, &parser, &obarray);
+	object obj;
+
+	obj = parse(&parser);
+	TEST_ASSERT_EQUAL(Empty_List, obj);
+
+	obj = parse(&parser);
+	TEST_ASSERT_EQUAL_STRING("a", to_name(car(obj)));
+	TEST_ASSERT_EQUAL(Empty_List, cdr(obj));
+
+	obj = parse(&parser);
+	TEST_ASSERT_EQUAL_STRING("b", to_name(car(obj)));
+	TEST_ASSERT_EQUAL_STRING("c", to_name(car(cdr(obj))));
+	TEST_ASSERT_EQUAL(Empty_List, cdr(cdr(obj)));
+
+	obj = parse(&parser);
+	TEST_ASSERT_EQUAL_STRING("d", to_name(car(obj)));
+	TEST_ASSERT_EQUAL_STRING("e", to_name(car(cdr(obj))));
+	TEST_ASSERT_EQUAL_STRING("f", to_name(car(cdr(cdr(obj)))));
+	TEST_ASSERT_EQUAL(Empty_List, cdr(cdr(cdr(obj))));
+
+	obj = parse(&parser);
+	TEST_ASSERT_EQUAL(Eos, obj);
+
+	lexer_free_source(lxr);
+	lexer_free(lxr);
+	lxr = lexer_new(source_string("(a b c", ""));
+	init(lxr, &tkn_src, &parser, &obarray);
+	obj = parse(&parser);
+	TEST_ASSERT_TRUE(is_error(obj));
+	TEST_ASSERT_EQUAL_STRING("List was not closed before end of file.",
+				 parser_error_message(&parser));
+
+	lexer_free_source(lxr);
+	lexer_free(lxr);
+	lxr = lexer_new(source_string("(a b#B c)", ""));
+	init(lxr, &tkn_src, &parser, &obarray);
+	obj = parse(&parser);
+	TEST_ASSERT_TRUE(is_error(obj));
+	TEST_ASSERT_EQUAL_STRING("Lexer error.", parser_error_message(&parser));
+
+	lexer_free_source(lxr);
+	lexer_free(lxr);
+	lxr = lexer_new(source_string("(a) )", ""));
+	init(lxr, &tkn_src, &parser, &obarray);
+	obj = parse(&parser);
+	obj = parse(&parser);
+	TEST_ASSERT_TRUE(is_error(obj));
+	TEST_ASSERT_EQUAL_STRING("List close ')' was not expected.",
+				 parser_error_message(&parser));
+}
+
 int test_parser(void)
 {
 	RUN_TEST(test_parser_catch_errors);
@@ -190,5 +248,6 @@ int test_parser(void)
 	RUN_TEST(test_parser_decimal);
 	RUN_TEST(test_parser_string);
 	RUN_TEST(test_parser_identifiers);
+	RUN_TEST(test_parser_list);
 	return 0;
 }

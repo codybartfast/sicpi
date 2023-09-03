@@ -8,6 +8,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+static object parse_token(parser parser, token tkn);
+
 void parser_init(parser parser, token_source token_source, obarray obarray)
 {
 	parser->token_source = token_source;
@@ -29,6 +31,7 @@ inline char *parser_error_message(parser parser)
 static object lexer_error(parser parser)
 {
 	parser->is_errored = true;
+	parser->error_message = "Lexer error.";
 	return from_error_kind(ERROR_LEXER, NO_META_DATA);
 }
 
@@ -69,25 +72,50 @@ static object number_decimal(parser parser, token tkn)
 			    "Failed to convert string to decimal (overflow?).");
 }
 
+object reverse(object list)
+{
+	object rlist = Empty_List;
+	for (; list != Empty_List; list = cdr(list)) {
+		rlist = cons(car(list), rlist, object_meta_data(list));
+	}
+	return rlist;
+}
+
+static object list(parser parser)
+{
+	object lst = Empty_List;
+	token tkn;
+	object obj;
+	while (token_type((tkn = token_read(parser->token_source))) > 0) {
+		if (token_type(tkn) == TOKEN_LIST_CLOSE) {
+			return reverse(lst);
+		}
+		obj = parse_token(parser, tkn);
+		if (is_error(obj)) {
+			return obj;
+		}
+		lst = cons(obj, lst, NO_META_DATA);
+	}
+	if (token_type(tkn) == TOKEN_EOS) {
+		return parser_error(parser,
+				    "List was not closed before end of file.");
+	}
+	return lexer_error(parser);
+}
+
 // define with dotted-tail notaion:
 // 	https://www.sicp-book.com/book-Z-H-15.html#%_idx_1650
 static object dot(parser parser, token tkn)
 {
-	unused(parser);
-	unused(tkn);
+	UNUSED(parser);
+	UNUSED(tkn);
 	eprintfx(
 		"Sorry haven't implemented 'define with dotted-tail notaion' yet");
 	return NULL;
 }
 
-object parse(parser parser)
+static object parse_token(parser parser, token tkn)
 {
-	if (parser_is_errored(parser)) {
-		return parser_error(
-			parser, "Attempted to parse after an earlier error.");
-	}
-
-	token tkn = token_read(parser->token_source);
 	switch (token_type(tkn)) {
 	case TOKEN_IDENTIFIER:
 		return obarray_intern(parser->obarray, token_text(tkn));
@@ -95,6 +123,10 @@ object parse(parser parser)
 		return number_integer(parser, tkn);
 	case TOKEN_NUMBER_DECIMAL:
 		return number_decimal(parser, tkn);
+	case TOKEN_LIST_OPEN:
+		return list(parser);
+	case TOKEN_LIST_CLOSE:
+		return parser_error(parser, "List close ')' was not expected.");
 	case TOKEN_STRING:
 		return from_string(strdupx(token_text(tkn),
 					   "parser:TOKEN_STRING"),
@@ -111,4 +143,15 @@ object parse(parser parser)
 		      token_type(tkn));
 		exit(1); // keep compiler quiet
 	}
+}
+
+object parse(parser parser)
+{
+	if (parser_is_errored(parser)) {
+		return parser_error(
+			parser, "Attempted to parse after an earlier error.");
+	}
+
+	token tkn = token_read(parser->token_source);
+	return parse_token(parser, tkn);
 }
