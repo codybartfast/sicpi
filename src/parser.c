@@ -102,6 +102,15 @@ static object list(parser parser)
 	return lexer_error(parser);
 }
 
+static object abreviation(parser parser, char *name)
+{
+	object obj = parse(parser);
+	if (is_error(obj) || obj == Eos) {
+		return obj;
+	}
+	return cons(from_name(name, NO_META_DATA), obj, NO_META_DATA);
+}
+
 // define with dotted-tail notaion:
 // 	https://www.sicp-book.com/book-Z-H-15.html#%_idx_1650
 static object dot(parser parser, token tkn)
@@ -122,14 +131,20 @@ static object parse_token(parser parser, token tkn)
 		return number_integer(parser, tkn);
 	case TOKEN_NUMBER_DECIMAL:
 		return number_decimal(parser, tkn);
-	case TOKEN_LIST_OPEN:
-		return list(parser);
-	case TOKEN_LIST_CLOSE:
-		return parser_error(parser, "List close ')' was not expected.");
 	case TOKEN_STRING:
 		return from_string(strdupx(token_text(tkn),
 					   "parser:TOKEN_STRING"),
 				   NO_META_DATA);
+	case TOKEN_LIST_OPEN:
+		return list(parser);
+	case TOKEN_LIST_CLOSE:
+		return parser_error(parser, "List close ')' was not expected.");
+	case TOKEN_QUASIQUOTE:
+		return abreviation(parser, "quasiquote");
+	case TOKEN_QUOTE:
+		return abreviation(parser, "quote");
+	case TOKEN_UNQUOTE:
+		return abreviation(parser, "unquote");
 	case TOKEN_DOT:
 		return dot(parser, tkn);
 	case TOKEN_EOS:

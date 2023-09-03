@@ -232,6 +232,51 @@ void test_parser_identifiers(void)
 	free_lexer(lxr);
 }
 
+void test_parser_keywords(void)
+{
+	lexer lxr = lexer_new(source_string("quote unquote", ""));
+	struct token_source tkn_src;
+	struct parser parser;
+	init(lxr, &tkn_src, &parser);
+	object obj;
+
+	obj = parse(&parser);
+	TEST_ASSERT_EQUAL(Quote, obj);
+
+	obj = parse(&parser);
+	TEST_ASSERT_EQUAL(obj, Unquote);
+}
+
+void test_parser_quotation(void)
+{
+	lexer lxr = lexer_new(source_string("'pear `2 ,() '(a b) 'a#a", ""));
+	struct token_source tkn_src;
+	struct parser parser;
+	init(lxr, &tkn_src, &parser);
+	object obj;
+
+	obj = parse(&parser);
+	TEST_ASSERT_EQUAL(Quote, car(obj));
+	TEST_ASSERT_EQUAL(from_name("pear", NO_META_DATA), cdr(obj));
+
+	obj = parse(&parser);
+	TEST_ASSERT_EQUAL(Quasiquote, car(obj));
+	TEST_ASSERT_EQUAL(2, to_integer(cdr(obj)));
+
+	obj = parse(&parser);
+	TEST_ASSERT_EQUAL(Unquote, car(obj));
+	TEST_ASSERT_EQUAL(Empty_List, cdr(obj));
+
+	obj = parse(&parser);
+	TEST_ASSERT_EQUAL(Quote, car(obj));
+	TEST_ASSERT_EQUAL(from_name("a", NO_META_DATA), car(cdr(obj)));
+	TEST_ASSERT_EQUAL(from_name("b", NO_META_DATA), car(cdr(cdr(obj))));
+	TEST_ASSERT_EQUAL(Empty_List, cdr(cdr(cdr(obj))));
+
+	obj = parse(&parser);
+	TEST_ASSERT_TRUE(is_error(obj));
+}
+
 int test_parser(void)
 {
 	RUN_TEST(test_parser_catch_errors);
@@ -239,7 +284,9 @@ int test_parser(void)
 	RUN_TEST(test_parser_integer);
 	RUN_TEST(test_parser_decimal);
 	RUN_TEST(test_parser_string);
-	RUN_TEST(test_parser_identifiers);
 	RUN_TEST(test_parser_list);
+	RUN_TEST(test_parser_identifiers);
+	RUN_TEST(test_parser_keywords);
+	RUN_TEST(test_parser_quotation);
 	return 0;
 }

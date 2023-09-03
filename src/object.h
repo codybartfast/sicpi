@@ -111,4 +111,8 @@ object create_obarray_entry(char *id, meta_data meta_data);
 object from_name(char *id, meta_data meta_data);
 char const *to_name(const object obj);
 
+extern const object Quasiquote;
+extern const object Quote;
+extern const object Unquote;
+
 #endif

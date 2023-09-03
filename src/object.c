@@ -12,12 +12,12 @@
 enum value_kind {
 	VK_ERROR = -1,
 	VK_UNDEFINED = 0,
-	VK_SINGLETON,
-	VK_INTEGER,
-	VK_FLOATING,
-	VK_STRING,
-	VK_SYMBOL,
-	VK_PAIR
+	VK_SINGLETON, // 1
+	VK_INTEGER, //// 2
+	VK_FLOATING, /// 3
+	VK_STRING, ///// 4
+	VK_SYMBOL, ///// 5
+	VK_PAIR //////// 6
 };
 
 //
@@ -35,7 +35,7 @@ static inline void check_value_kind(object obj, enum value_kind kind,
 {
 	if (object_value_kind(obj) != kind) {
 		inyim("%s given wrong value kind. Expected %d, given %d.",
-		      caller, object_value_kind(obj), kind);
+		      caller, kind, object_value_kind(obj));
 	}
 }
 
@@ -242,6 +242,14 @@ object set_cdr(object pair, object new_cdr)
 // =============================================================================
 //
 
+#define SYMBOL(TEXT)                                                           \
+	{                                                                      \
+		VK_SYMBOL, NO_META_DATA,                                       \
+		{                                                              \
+			.string = TEXT                                         \
+		}                                                              \
+	}
+
 obarray symbols = NULL;
 
 inline bool is_symbol(object obj)
@@ -255,13 +263,13 @@ object create_obarray_entry(char *name, meta_data meta_data)
 			  (object_value){ .string = name });
 }
 
+void init_symbols(void);
+
 inline object from_name(char *name, meta_data meta_data)
 {
-	UNUSED(meta_data);
 	if (!symbols) {
-		symbols = obarray_new(0);
+		init_symbols();
 	}
-
 	return obarray_intern(symbols, name, meta_data);
 }
 
@@ -271,4 +279,22 @@ inline char const *to_name(object obj)
 	return obj->value.string;
 }
 
+static struct object _Quasiquote = SYMBOL("quasiquote");
+const object Quasiquote = &_Quasiquote;
 
+static struct object _Quote = SYMBOL("quote");
+const object Quote = &_Quote;
+
+static struct object _Unquote = SYMBOL("unquote");
+const object Unquote = &_Unquote;
+
+// Above symbols need to be included function below
+
+void init_symbols(void)
+{
+	symbols = obarray_new(0);
+
+	obarray_add_symbol(symbols, Quasiquote);
+	obarray_add_symbol(symbols, Quote);
+	obarray_add_symbol(symbols, Unquote);
+}
