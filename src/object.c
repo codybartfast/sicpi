@@ -127,11 +127,14 @@ bool is_singleton(const object obj)
 	return object_value_kind(obj) == VK_SINGLETON;
 }
 
-const char *to_singleton_string(const object obj)
+const char *to_singleton_text(const object obj)
 {
 	check_value_kind(obj, VK_SINGLETON, "to_singleton");
 	return obj->value.string;
 }
+
+static struct object _Empty_List = SINGLETON("'()");
+const object Empty_List = &_Empty_List;
 
 static struct object _Eos = SINGLETON("end_of_source");
 const object Eos = &_Eos;

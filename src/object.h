@@ -59,7 +59,12 @@ enum error_kind to_error_kind(const object obj);
 //
 
 bool is_singleton(const object obj);
-const char *to_singleton_string(const object obj);
+const char *to_singleton_text(const object obj);
+
+// '() is not a symbol:
+//	https://standards.scheme.org/official/r4rs.pdf
+//	6.4 Symbols
+extern const object Empty_List;
 extern const object Eos;
 
 //

@@ -31,7 +31,10 @@ void obj_singletons(void)
 {
 	is_singleton(Eos);
 	has_one_type(Eos);
-	// when adding more probably need to check singletons are distinct.
+
+	is_singleton(Empty_List);
+	has_one_type(Empty_List);
+	TEST_ASSERT_NOT_EQUAL(Eos, Empty_List);
 }
 
 void obj_integer(void)
