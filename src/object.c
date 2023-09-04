@@ -279,6 +279,9 @@ inline char const *to_name(object obj)
 	return obj->value.string;
 }
 
+static struct object _Dot = SYMBOL(".");
+const object Dot = &_Dot;
+
 static struct object _Quasiquote = SYMBOL("quasiquote");
 const object Quasiquote = &_Quasiquote;
 
@@ -294,6 +297,7 @@ void init_symbols(void)
 {
 	symbols = obarray_new(0);
 
+	obarray_add_symbol(symbols, Dot);
 	obarray_add_symbol(symbols, Quasiquote);
 	obarray_add_symbol(symbols, Quote);
 	obarray_add_symbol(symbols, Unquote);
