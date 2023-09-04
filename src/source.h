@@ -11,13 +11,9 @@
  * Provides a source of characters that can orignate from a file, a stream such
  * StdIn or a string.
 */
-union underlying { // TODO need structs??
-	struct {
-		FILE * const stream;
-	} stream;
-	struct {
-		char const * string;
-	} string;
+union underlying {
+	FILE *const stream;
+	char const *string;
 };
 
 typedef struct source {
@@ -35,7 +31,7 @@ typedef struct source {
  * Returns a pointer to new source providing characters from the given stream.
  * Returns NULL if the stream is NULL.
  */
-source source_stream(FILE * const stream, char const *name);
+source source_stream(FILE *const stream, char const *name);
 
 /*
  * Attempts to open the given file and return and new source providing

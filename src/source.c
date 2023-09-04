@@ -13,18 +13,18 @@
 
 enum type { TYPE_FILE = 1, TYPE_STREAM, TYPE_STRING };
 
-source source_part_init(char const *name, enum type type, union underlying underlying)
+source source_part_init(char const *name, enum type type,
+			union underlying underlying)
 {
 	if (!name) {
 		name = "";
 	}
 
 	size_t size = sizeof(struct source);
-	struct source temp = {
-		.name = strdupx(name, "source init - duplicate name"),
-		.type = type,
-		.underlying = underlying
-	};
+	struct source temp = { .name = strdupx(name,
+					       "source init - duplicate name"),
+			       .type = type,
+			       .underlying = underlying };
 	source src = malloc(size);
 	if (!src) {
 		alloc_error("source init");
@@ -40,13 +40,14 @@ source source_part_init(char const *name, enum type type, union underlying under
 	return src;
 }
 
-source source_stream(FILE * const stream, char const *name)
+source source_stream(FILE *const stream, char const *name)
 {
 	if (!stream) {
 		eprintf("Source given null stream.");
 		return NULL;
 	}
-	source src = source_part_init(name, TYPE_STREAM, (union underlying){.stream = {stream}});
+	source src = source_part_init(name, TYPE_STREAM,
+				      (union underlying){ .stream = stream });
 	return src;
 }
 
@@ -58,7 +59,8 @@ source source_file(const char *filepath)
 		perror("Error");
 		return NULL;
 	}
-	source src = source_part_init(filepath, TYPE_FILE, (union underlying){.stream = {stream}});
+	source src = source_part_init(filepath, TYPE_FILE,
+				      (union underlying){ .stream = stream });
 	return src;
 }
 
@@ -68,11 +70,12 @@ source source_string(char const *text, char const *name)
 		eprintf("Source given null string");
 		return NULL;
 	}
-	source src = source_part_init(name, TYPE_STRING, (union underlying){.string = {text}});
+	source src = source_part_init(name, TYPE_STRING,
+				      (union underlying){ .string = text });
 	return src;
 }
 
-char const * source_name(const source src)
+char const *source_name(const source src)
 {
 	return (char const *)src->name;
 }
@@ -83,13 +86,13 @@ char readc(source src)
 	switch (src->type) {
 	case TYPE_FILE:
 	case TYPE_STREAM:
-		c = getc(src->underlying.stream.stream);
+		c = getc(src->underlying.stream);
 		c = c == EOF ? SOURCE_EOS : c;
 		break;
 	case TYPE_STRING:
-		c = *src->underlying.string.string;
+		c = *src->underlying.string;
 		if (c) {
-			src->underlying.string.string++;
+			src->underlying.string++;
 		}
 		break;
 	default:
@@ -156,7 +159,7 @@ void source_close(source src)
 	if (src) {
 		switch (src->type) {
 		case TYPE_FILE:
-			fclose(src->underlying.stream.stream);
+			fclose(src->underlying.stream);
 		case TYPE_STREAM:
 			break;
 		case TYPE_STRING:
