@@ -277,6 +277,63 @@ void test_parser_quotation(void)
 	TEST_ASSERT_TRUE(is_error(obj));
 }
 
+void test_parser_dot(void)
+{
+	lexer lxr = lexer_new(source_string("(proc arg1 arg2 . rest)", ""));
+	struct token_source tkn_src;
+	struct parser parser;
+	init(lxr, &tkn_src, &parser);
+	object obj;
+
+	obj = parse(&parser);
+	TEST_ASSERT_EQUAL_STRING("proc", to_name(car(obj)));
+
+	obj = cdr(obj);
+	TEST_ASSERT_EQUAL_STRING("arg1", to_name(car(obj)));
+
+	obj = cdr(obj);
+	TEST_ASSERT_EQUAL_STRING("arg2", to_name(car(obj)));
+
+	obj = cdr(obj);
+	TEST_ASSERT_EQUAL(Dot, car(obj));
+
+	obj = cdr(obj);
+	TEST_ASSERT_EQUAL_STRING("rest", to_name(car(obj)));
+
+	obj = cdr(obj);
+	TEST_ASSERT_EQUAL(Empty_List, obj);
+
+	lexer_free_source(lxr);
+	lexer_free(lxr);
+	lxr = lexer_new(source_string("(. rest)", ""));
+	init(lxr, &tkn_src, &parser);
+	obj = parse(&parser);
+	TEST_ASSERT_TRUE(is_error(obj));
+	TEST_ASSERT_EQUAL_STRING(
+		"Dot '.' can only be used for dotted-tail definitions",
+		parser_error_message(&parser));
+
+	lexer_free_source(lxr);
+	lexer_free(lxr);
+	lxr = lexer_new(source_string("(proc . )", ""));
+	init(lxr, &tkn_src, &parser);
+	obj = parse(&parser);
+	TEST_ASSERT_TRUE(is_error(obj));
+	TEST_ASSERT_EQUAL_STRING(
+		"Dot '.' can only be used for dotted-tail definitions",
+		parser_error_message(&parser));
+
+	lexer_free_source(lxr);
+	lexer_free(lxr);
+	lxr = lexer_new(source_string("(proc . rest more)", ""));
+	init(lxr, &tkn_src, &parser);
+	obj = parse(&parser);
+	TEST_ASSERT_TRUE(is_error(obj));
+	TEST_ASSERT_EQUAL_STRING(
+		"Dot '.' can only be used for dotted-tail definitions",
+		parser_error_message(&parser));
+}
+
 int test_parser(void)
 {
 	RUN_TEST(test_parser_catch_errors);
@@ -288,5 +345,6 @@ int test_parser(void)
 	RUN_TEST(test_parser_identifiers);
 	RUN_TEST(test_parser_keywords);
 	RUN_TEST(test_parser_quotation);
+	RUN_TEST(test_parser_dot);
 	return 0;
 }

@@ -10,6 +10,9 @@
 
 static object parse_token(parser parser, token tkn);
 
+static char *const dot_err_msg =
+	"Dot '.' can only be used for dotted-tail definitions";
+
 void parser_init(parser parser, token_source token_source)
 {
 	parser->token_source = token_source;
@@ -34,7 +37,7 @@ static object lexer_error(parser parser)
 	return from_error_kind(ERROR_LEXER, NO_META_DATA);
 }
 
-static object parser_error(parser parser, char *error_message)
+static object parser_error(parser parser, char *const error_message)
 {
 	parser->is_errored = true;
 	parser->error_message = error_message;
@@ -52,8 +55,9 @@ static object number_integer(parser parser, token tkn)
 	    conv_int <= integer_max) {
 		return from_integer(conv_int, NO_META_DATA);
 	}
-	return parser_error(parser,
-			    "Failed to convert string to integer (overflow?).");
+	return parser_error(
+		parser,
+		"Failed to convert string to integer (digit overflow?).");
 }
 
 static object number_decimal(parser parser, token tkn)
@@ -71,7 +75,7 @@ static object number_decimal(parser parser, token tkn)
 			    "Failed to convert string to decimal (overflow?).");
 }
 
-object reverse(object list)
+static object reverse(object list)
 {
 	object rlist = Empty_List;
 	for (; list != Empty_List; list = cdr(list)) {
@@ -80,14 +84,35 @@ object reverse(object list)
 	return rlist;
 }
 
+inline static object dot(parser parser, object lst)
+{
+	if (is_null(lst)) {
+		return parser_error(parser, dot_err_msg);
+	}
+	object tail = parse(parser);
+	if (!is_symbol(tail)) {
+		return parser_error(parser, dot_err_msg);
+	}
+	if (token_type(token_read(parser->token_source)) != TOKEN_LIST_CLOSE) {
+		return parser_error(parser, dot_err_msg);
+	}
+	lst = cons(tail, cons(Dot, lst, NO_META_DATA), NO_META_DATA);
+	return reverse(lst);
+}
+
 static object list(parser parser)
 {
 	object lst = Empty_List;
 	token tkn;
 	object obj;
-	while (token_type((tkn = token_read(parser->token_source))) > 0) {
-		if (token_type(tkn) == TOKEN_LIST_CLOSE) {
+	enum token_type tkn_typ;
+	while ((tkn_typ = token_type(
+			(tkn = token_read(parser->token_source)))) > 0) {
+		if (tkn_typ == TOKEN_LIST_CLOSE) {
 			return reverse(lst);
+		}
+		if (tkn_typ == TOKEN_DOT) {
+			return dot(parser, lst);
 		}
 		obj = parse_token(parser, tkn);
 		if (is_error(obj)) {
@@ -109,17 +134,6 @@ static object abreviation(parser parser, char *name)
 		return obj;
 	}
 	return cons(from_name(name, NO_META_DATA), obj, NO_META_DATA);
-}
-
-// define with dotted-tail notaion:
-// 	https://www.sicp-book.com/book-Z-H-15.html#%_idx_1650
-static object dot(parser parser, token tkn)
-{
-	UNUSED(parser);
-	UNUSED(tkn);
-	eprintfx(
-		"Sorry haven't implemented 'define with dotted-tail notaion' yet");
-	return NULL;
 }
 
 static object parse_token(parser parser, token tkn)
@@ -146,7 +160,7 @@ static object parse_token(parser parser, token tkn)
 	case TOKEN_UNQUOTE:
 		return abreviation(parser, "unquote");
 	case TOKEN_DOT:
-		return dot(parser, tkn);
+		return parser_error(parser, dot_err_msg);
 	case TOKEN_EOS:
 		return Eos;
 	case TOKEN_ERROR:

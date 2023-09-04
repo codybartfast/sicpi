@@ -86,6 +86,10 @@ void obj_pair(void)
 
 	object obj = cons(a, b, meta_data);
 
+	TEST_ASSERT_FALSE(is_pair(Empty_List));
+	TEST_ASSERT_TRUE(is_null(Empty_List));
+
+	TEST_ASSERT_FALSE(is_null(obj));
 	TEST_ASSERT_TRUE(is_pair(obj));
 	TEST_ASSERT_TRUE(has_one_type(obj));
 	TEST_ASSERT_EQUAL(meta_data, object_meta_data(obj));

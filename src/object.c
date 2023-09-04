@@ -202,6 +202,11 @@ inline char const *to_string(object obj)
 // =============================================================================
 //
 
+bool is_null(const object obj)
+{
+	return obj == Empty_List;
+}
+
 bool is_pair(const object obj)
 {
 	return object_value_kind(obj) == VK_PAIR;
