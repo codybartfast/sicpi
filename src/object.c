@@ -25,17 +25,43 @@ enum value_kind {
 // =============================================================================
 //
 
+static char *value_kind_name(enum value_kind value_kind)
+{
+	switch (value_kind) {
+	case VK_ERROR:
+		return "Error";
+	case VK_UNDEFINED:
+		return "Undefined";
+	case VK_SINGLETON:
+		return "Global Constant";
+	case VK_INTEGER:
+		return "Integer";
+	case VK_FLOATING:
+		return "Floating Point Number";
+	case VK_STRING:
+		return "String";
+	case VK_SYMBOL:
+		return "Symbol";
+	case VK_PAIR:
+		return "Pair";
+	default:
+		inyim("Don't know name of value kind: %d", value_kind);
+		exit(1); // keep compiler happy
+	}
+}
+
 static inline int8_t object_value_kind(object obj)
 {
 	return obj->value_kind;
 }
 
-static inline void check_value_kind(object obj, enum value_kind kind,
+static inline void check_value_kind(object obj, enum value_kind expected,
 				    char *caller)
 {
-	if (object_value_kind(obj) != kind) {
-		inyim("%s given wrong value kind. Expected %d, given %d.",
-		      caller, kind, object_value_kind(obj));
+	enum value_kind actual = object_value_kind(obj);
+	if (actual != expected) {
+		inyim("'%s' given a %s, but expected a %s.", caller,
+		      value_kind_name(actual), value_kind_name(expected));
 	}
 }
 
@@ -220,13 +246,13 @@ object cons(const object a, const object b, meta_data meta_data)
 
 object car(const object obj)
 {
-	check_value_kind(obj, VK_PAIR, "to_car");
+	check_value_kind(obj, VK_PAIR, "car");
 	return obj->value.pair.car;
 }
 
 object cdr(const object obj)
 {
-	check_value_kind(obj, VK_PAIR, "to_cdr");
+	check_value_kind(obj, VK_PAIR, "cdr");
 	return obj->value.pair.cdr;
 }
 

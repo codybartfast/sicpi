@@ -54,7 +54,7 @@ object from_error_kind(enum error_kind error_kind, meta_data meta_data);
 enum error_kind to_error_kind(const object obj);
 
 //
-// Singletons
+// Singletons (Global Constants)
 // =============================================================================
 //
 
