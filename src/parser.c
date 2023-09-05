@@ -78,8 +78,11 @@ static object number_decimal(parser parser, token tkn)
 static object reverse(object list)
 {
 	object rlist = Empty_List;
-	for (; list != Empty_List; list = cdr(list)) {
+	while (list != Empty_List) {
 		rlist = cons(car(list), rlist, object_meta_data(list));
+		object pair = list;
+		list = cdr(list);
+		object_free(pair);
 	}
 	return rlist;
 }
