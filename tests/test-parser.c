@@ -58,8 +58,7 @@ void test_parser_end_of_source(void)
 	rslt = parse(&parser);
 	TEST_ASSERT_TRUE(eq(Eos, rslt));
 
-	lexer_free_source(lxr);
-	lexer_free(lxr);
+	free_lexer(lxr);
 }
 
 void test_parser_integer(void)
@@ -200,6 +199,8 @@ void test_parser_list(void)
 	TEST_ASSERT_TRUE(is_error(obj));
 	TEST_ASSERT_EQUAL_STRING("List close ')' was not expected.",
 				 parser_error_message(&parser));
+
+	free_lexer(lxr);
 }
 
 void test_parser_identifiers(void)
@@ -245,6 +246,8 @@ void test_parser_keywords(void)
 
 	obj = parse(&parser);
 	TEST_ASSERT_EQUAL(obj, Unquote);
+
+	free_lexer(lxr);
 }
 
 void test_parser_quotation(void)
@@ -275,6 +278,8 @@ void test_parser_quotation(void)
 
 	obj = parse(&parser);
 	TEST_ASSERT_TRUE(is_error(obj));
+
+	free_lexer(lxr);
 }
 
 void test_parser_dot(void)
@@ -332,6 +337,45 @@ void test_parser_dot(void)
 	TEST_ASSERT_EQUAL_STRING(
 		"Dot '.' can only be used for dotted-tail definitions",
 		parser_error_message(&parser));
+
+	free_lexer(lxr);
+}
+
+void test_parser_parse_all(void)
+{
+	lexer lxr = lexer_new(source_string(
+		"1 2.0 \"three\" (four (five six) . seven) 8", ""));
+	struct token_source tkn_src;
+	struct parser parser;
+	init(lxr, &tkn_src, &parser);
+	object obj;
+
+	obj = parse_all(&parser);
+	TEST_ASSERT_EQUAL(1, to_integer(car(obj)));
+
+	obj = cdr(obj);
+	TEST_ASSERT_EQUAL(2.0, to_floating(car(obj)));
+
+	obj = cdr(obj);
+	TEST_ASSERT_EQUAL_STRING("three", to_string(car(obj)));
+
+	obj = cdr(obj);
+	object lst = car(obj);
+	TEST_ASSERT_EQUAL_STRING("four", to_name(car(lst)));
+	lst = cdr(lst);
+	TEST_ASSERT_EQUAL_STRING("five", to_name(car(car(lst))));
+	TEST_ASSERT_EQUAL_STRING("six", to_name(car(cdr(car(lst)))));
+	TEST_ASSERT_EQUAL(Empty_List, cdr(cdr(car(lst))));
+	lst = cdr(lst);
+	TEST_ASSERT_EQUAL(Dot, car(lst));
+	lst = cdr(lst);
+	TEST_ASSERT_EQUAL_STRING("seven", to_name(car(lst)));
+
+	obj = cdr(obj);
+	TEST_ASSERT_EQUAL(8, to_integer(car(obj)));
+	TEST_ASSERT_EQUAL(Empty_List, cdr(obj));
+
+	free_lexer(lxr);
 }
 
 int test_parser(void)
@@ -346,5 +390,6 @@ int test_parser(void)
 	RUN_TEST(test_parser_keywords);
 	RUN_TEST(test_parser_quotation);
 	RUN_TEST(test_parser_dot);
+	RUN_TEST(test_parser_parse_all);
 	return 0;
 }

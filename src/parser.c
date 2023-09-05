@@ -186,3 +186,16 @@ object parse(parser parser)
 	token tkn = token_read(parser->token_source);
 	return parse_token(parser, tkn);
 }
+
+object parse_all(parser parser)
+{
+	object rslt = Empty_List;
+	object obj;
+	while ((obj = parse(parser)) != Eos) {
+		if (is_error(obj)) {
+			return obj;
+		}
+		rslt = cons(obj, rslt, NO_META_DATA);
+	}
+	return reverse(rslt);
+}

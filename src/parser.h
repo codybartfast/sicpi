@@ -18,5 +18,6 @@ bool parser_is_errored(const parser parser);
 char *parser_error_message(const parser parser);
 
 object parse(parser parser);
+object parse_all(parser parser);
 
 #endif
