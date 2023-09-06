@@ -109,11 +109,6 @@ void object_free(object obj)
 	}
 }
 
-inline bool eq(object x, object y)
-{
-	return x == y;
-}
-
 //
 // Errors
 // =============================================================================
@@ -149,22 +144,19 @@ inline enum error_kind to_error_kind(object obj)
 		}                                                              \
 	}
 
-bool is_singleton(const object obj)
-{
-	return object_value_kind(obj) == VK_SINGLETON;
-}
-
-const char *to_singleton_text(const object obj)
-{
-	check_value_kind(obj, VK_SINGLETON, "to_singleton");
-	return obj->value.string;
-}
-
 static struct object _EMPTY_LIST = SINGLETON("'()");
 const object EMPTY_LIST = &_EMPTY_LIST;
+inline bool is_empty_list(object obj)
+{
+	return obj == EMPTY_LIST;
+}
 
-static struct object _EOS = SINGLETON("end_of_source");
+static struct object _EOS = SINGLETON("END_OF_SOURCE");
 const object EOS = &_EOS;
+inline bool is_eos(object obj)
+{
+	return obj == EOS;
+}
 
 //
 // Numbers
@@ -228,41 +220,41 @@ inline char const *to_string(object obj)
 // =============================================================================
 //
 
-bool is_null(const object obj)
+inline bool is_null(const object obj)
 {
 	return obj == EMPTY_LIST;
 }
 
-bool is_pair(const object obj)
+inline bool is_pair(const object obj)
 {
 	return object_value_kind(obj) == VK_PAIR;
 }
 
-object cons(const object a, const object b, meta_data meta_data)
+inline object cons(const object a, const object b, meta_data meta_data)
 {
 	return object_new(VK_PAIR, meta_data,
 			  (object_value){ .pair = { a, b } });
 }
 
-object car(const object obj)
+inline object car(const object obj)
 {
 	check_value_kind(obj, VK_PAIR, "car");
 	return obj->value.pair.car;
 }
 
-object cdr(const object obj)
+inline object cdr(const object obj)
 {
 	check_value_kind(obj, VK_PAIR, "cdr");
 	return obj->value.pair.cdr;
 }
 
-object set_car(object pair, object new_car)
+inline object set_car(object pair, object new_car)
 {
 	pair->value.pair.car = new_car;
 	return pair;
 }
 
-object set_cdr(object pair, object new_cdr)
+inline object set_cdr(object pair, object new_cdr)
 {
 	pair->value.pair.cdr = new_cdr;
 	return pair;

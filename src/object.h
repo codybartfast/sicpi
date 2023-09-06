@@ -42,7 +42,6 @@ typedef struct object {
 
 meta_data object_meta_data(const object obj);
 void object_free(object obj);
-bool eq(object x, object y);
 
 //
 // Errors
@@ -58,14 +57,11 @@ enum error_kind to_error_kind(const object obj);
 // =============================================================================
 //
 
-bool is_singleton(const object obj);
-const char *to_singleton_text(const object obj);
-
-// '() is not a symbol:
-//	https://standards.scheme.org/official/r4rs.pdf
-//	6.4 Symbols
 extern const object EMPTY_LIST;
+bool is_empty_list(object obj);
+
 extern const object EOS;
+bool is_eos(object obj);
 
 //
 // Numbers

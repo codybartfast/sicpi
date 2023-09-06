@@ -3,10 +3,14 @@
 
 #include <stdbool.h>
 
-bool has_one_type(object obj)
+void has_one_type(object obj)
 {
-	return is_error(obj) + is_symbol(obj) + is_number(obj) +
-	       is_string(obj) + is_pair(obj);
+	int common_count = is_error(obj) + is_number(obj) + is_pair(obj) +
+			   is_string(obj) + is_symbol(obj);
+
+	int singleton_count = is_empty_list(obj) + is_eos(obj);
+
+	TEST_ASSERT_EQUAL(1, common_count + singleton_count);
 }
 
 void obj_free(void)
@@ -21,7 +25,7 @@ void obj_error(void)
 	object obj = from_error_kind(error_kind, meta_data);
 
 	TEST_ASSERT_TRUE(is_error(obj));
-	TEST_ASSERT_TRUE(has_one_type(obj));
+	has_one_type(obj);
 
 	TEST_ASSERT_EQUAL(meta_data, object_meta_data(obj));
 	TEST_ASSERT_EQUAL(error_kind, to_error_kind(obj));
@@ -29,12 +33,11 @@ void obj_error(void)
 
 void obj_singletons(void)
 {
-	is_singleton(EOS);
+	TEST_ASSERT_TRUE(is_eos(EOS));
 	has_one_type(EOS);
 
-	is_singleton(EMPTY_LIST);
+	TEST_ASSERT_TRUE(is_empty_list(EMPTY_LIST));
 	has_one_type(EMPTY_LIST);
-	TEST_ASSERT_NOT_EQUAL(EOS, EMPTY_LIST);
 }
 
 void obj_integer(void)
@@ -44,7 +47,7 @@ void obj_integer(void)
 	object obj = from_integer(integer, meta_data);
 
 	TEST_ASSERT_TRUE(is_number(obj));
-	TEST_ASSERT_TRUE(has_one_type(obj));
+	has_one_type(obj);
 
 	TEST_ASSERT_EQUAL(meta_data, object_meta_data(obj));
 	TEST_ASSERT_EQUAL(integer, to_integer(obj));
@@ -57,7 +60,7 @@ void obj_floating(void)
 	object obj = from_floating(floating, meta_data);
 
 	TEST_ASSERT_TRUE(is_number(obj));
-	TEST_ASSERT_TRUE(has_one_type(obj));
+	has_one_type(obj);
 
 	TEST_ASSERT_EQUAL(meta_data, object_meta_data(obj));
 	TEST_ASSERT_EQUAL(floating, to_floating(obj));
@@ -70,7 +73,7 @@ void obj_string(void)
 	object obj = from_string(string, meta_data);
 
 	TEST_ASSERT_TRUE(is_string(obj));
-	TEST_ASSERT_TRUE(has_one_type(obj));
+	has_one_type(obj);
 
 	TEST_ASSERT_EQUAL(meta_data, object_meta_data(obj));
 	TEST_ASSERT_EQUAL(string, to_string(obj));
@@ -91,7 +94,7 @@ void obj_pair(void)
 
 	TEST_ASSERT_FALSE(is_null(obj));
 	TEST_ASSERT_TRUE(is_pair(obj));
-	TEST_ASSERT_TRUE(has_one_type(obj));
+	has_one_type(obj);
 	TEST_ASSERT_EQUAL(meta_data, object_meta_data(obj));
 
 	TEST_ASSERT_EQUAL(car(obj), a);
@@ -113,7 +116,7 @@ void obj_symbol(void)
 	object obj = from_name(id, meta_data);
 
 	TEST_ASSERT_TRUE(is_symbol(obj));
-	TEST_ASSERT_TRUE(has_one_type(obj));
+	has_one_type(obj);
 
 	TEST_ASSERT_EQUAL(meta_data, object_meta_data(obj));
 	TEST_ASSERT_EQUAL_STRING(id, to_name(obj));
