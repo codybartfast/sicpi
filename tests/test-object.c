@@ -29,12 +29,12 @@ void obj_error(void)
 
 void obj_singletons(void)
 {
-	is_singleton(Eos);
-	has_one_type(Eos);
+	is_singleton(EOS);
+	has_one_type(EOS);
 
-	is_singleton(Empty_List);
-	has_one_type(Empty_List);
-	TEST_ASSERT_NOT_EQUAL(Eos, Empty_List);
+	is_singleton(EMPTY_LIST);
+	has_one_type(EMPTY_LIST);
+	TEST_ASSERT_NOT_EQUAL(EOS, EMPTY_LIST);
 }
 
 void obj_integer(void)
@@ -86,8 +86,8 @@ void obj_pair(void)
 
 	object obj = cons(a, b, meta_data);
 
-	TEST_ASSERT_FALSE(is_pair(Empty_List));
-	TEST_ASSERT_TRUE(is_null(Empty_List));
+	TEST_ASSERT_FALSE(is_pair(EMPTY_LIST));
+	TEST_ASSERT_TRUE(is_null(EMPTY_LIST));
 
 	TEST_ASSERT_FALSE(is_null(obj));
 	TEST_ASSERT_TRUE(is_pair(obj));
@@ -118,10 +118,10 @@ void obj_symbol(void)
 	TEST_ASSERT_EQUAL(meta_data, object_meta_data(obj));
 	TEST_ASSERT_EQUAL_STRING(id, to_name(obj));
 
-	TEST_ASSERT_EQUAL(Dot, from_name(".", NO_META_DATA));
-	TEST_ASSERT_EQUAL(Quasiquote, from_name("quasiquote", NO_META_DATA));
-	TEST_ASSERT_EQUAL(Quote, from_name("quote", NO_META_DATA));
-	TEST_ASSERT_EQUAL(Unquote, from_name("unquote", NO_META_DATA));
+	TEST_ASSERT_EQUAL(DOT, from_name(".", NO_META_DATA));
+	TEST_ASSERT_EQUAL(QUASIQUOTE, from_name("quasiquote", NO_META_DATA));
+	TEST_ASSERT_EQUAL(QUOTE, from_name("quote", NO_META_DATA));
+	TEST_ASSERT_EQUAL(UNQUOTE, from_name("unquote", NO_META_DATA));
 }
 
 int test_object(void)

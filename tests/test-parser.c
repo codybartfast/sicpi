@@ -53,10 +53,10 @@ void test_parser_end_of_source(void)
 	rslt = parse(&parser); // ignore number
 
 	rslt = parse(&parser);
-	TEST_ASSERT_TRUE(eq(Eos, rslt));
+	TEST_ASSERT_TRUE(eq(EOS, rslt));
 
 	rslt = parse(&parser);
-	TEST_ASSERT_TRUE(eq(Eos, rslt));
+	TEST_ASSERT_TRUE(eq(EOS, rslt));
 
 	free_lexer(lxr);
 }
@@ -153,25 +153,25 @@ void test_parser_list(void)
 	object obj;
 
 	obj = parse(&parser);
-	TEST_ASSERT_EQUAL(Empty_List, obj);
+	TEST_ASSERT_EQUAL(EMPTY_LIST, obj);
 
 	obj = parse(&parser);
 	TEST_ASSERT_EQUAL_STRING("a", to_name(car(obj)));
-	TEST_ASSERT_EQUAL(Empty_List, cdr(obj));
+	TEST_ASSERT_EQUAL(EMPTY_LIST, cdr(obj));
 
 	obj = parse(&parser);
 	TEST_ASSERT_EQUAL_STRING("b", to_name(car(obj)));
 	TEST_ASSERT_EQUAL_STRING("c", to_name(car(cdr(obj))));
-	TEST_ASSERT_EQUAL(Empty_List, cdr(cdr(obj)));
+	TEST_ASSERT_EQUAL(EMPTY_LIST, cdr(cdr(obj)));
 
 	obj = parse(&parser);
 	TEST_ASSERT_EQUAL_STRING("d", to_name(car(obj)));
 	TEST_ASSERT_EQUAL_STRING("e", to_name(car(cdr(obj))));
 	TEST_ASSERT_EQUAL_STRING("f", to_name(car(cdr(cdr(obj)))));
-	TEST_ASSERT_EQUAL(Empty_List, cdr(cdr(cdr(obj))));
+	TEST_ASSERT_EQUAL(EMPTY_LIST, cdr(cdr(cdr(obj))));
 
 	obj = parse(&parser);
-	TEST_ASSERT_EQUAL(Eos, obj);
+	TEST_ASSERT_EQUAL(EOS, obj);
 
 	lexer_free_source(lxr);
 	lexer_free(lxr);
@@ -242,10 +242,10 @@ void test_parser_keywords(void)
 	object obj;
 
 	obj = parse(&parser);
-	TEST_ASSERT_EQUAL(Quote, obj);
+	TEST_ASSERT_EQUAL(QUOTE, obj);
 
 	obj = parse(&parser);
-	TEST_ASSERT_EQUAL(obj, Unquote);
+	TEST_ASSERT_EQUAL(obj, UNQUOTE);
 
 	free_lexer(lxr);
 }
@@ -259,22 +259,22 @@ void test_parser_quotation(void)
 	object obj;
 
 	obj = parse(&parser);
-	TEST_ASSERT_EQUAL(Quote, car(obj));
+	TEST_ASSERT_EQUAL(QUOTE, car(obj));
 	TEST_ASSERT_EQUAL(from_name("pear", NO_META_DATA), cdr(obj));
 
 	obj = parse(&parser);
-	TEST_ASSERT_EQUAL(Quasiquote, car(obj));
+	TEST_ASSERT_EQUAL(QUASIQUOTE, car(obj));
 	TEST_ASSERT_EQUAL(2, to_integer(cdr(obj)));
 
 	obj = parse(&parser);
-	TEST_ASSERT_EQUAL(Unquote, car(obj));
-	TEST_ASSERT_EQUAL(Empty_List, cdr(obj));
+	TEST_ASSERT_EQUAL(UNQUOTE, car(obj));
+	TEST_ASSERT_EQUAL(EMPTY_LIST, cdr(obj));
 
 	obj = parse(&parser);
-	TEST_ASSERT_EQUAL(Quote, car(obj));
+	TEST_ASSERT_EQUAL(QUOTE, car(obj));
 	TEST_ASSERT_EQUAL(from_name("a", NO_META_DATA), car(cdr(obj)));
 	TEST_ASSERT_EQUAL(from_name("b", NO_META_DATA), car(cdr(cdr(obj))));
-	TEST_ASSERT_EQUAL(Empty_List, cdr(cdr(cdr(obj))));
+	TEST_ASSERT_EQUAL(EMPTY_LIST, cdr(cdr(cdr(obj))));
 
 	obj = parse(&parser);
 	TEST_ASSERT_TRUE(is_error(obj));
@@ -300,13 +300,13 @@ void test_parser_dot(void)
 	TEST_ASSERT_EQUAL_STRING("arg2", to_name(car(obj)));
 
 	obj = cdr(obj);
-	TEST_ASSERT_EQUAL(Dot, car(obj));
+	TEST_ASSERT_EQUAL(DOT, car(obj));
 
 	obj = cdr(obj);
 	TEST_ASSERT_EQUAL_STRING("rest", to_name(car(obj)));
 
 	obj = cdr(obj);
-	TEST_ASSERT_EQUAL(Empty_List, obj);
+	TEST_ASSERT_EQUAL(EMPTY_LIST, obj);
 
 	lexer_free_source(lxr);
 	lexer_free(lxr);
@@ -365,15 +365,15 @@ void test_parser_parse_all(void)
 	lst = cdr(lst);
 	TEST_ASSERT_EQUAL_STRING("five", to_name(car(car(lst))));
 	TEST_ASSERT_EQUAL_STRING("six", to_name(car(cdr(car(lst)))));
-	TEST_ASSERT_EQUAL(Empty_List, cdr(cdr(car(lst))));
+	TEST_ASSERT_EQUAL(EMPTY_LIST, cdr(cdr(car(lst))));
 	lst = cdr(lst);
-	TEST_ASSERT_EQUAL(Dot, car(lst));
+	TEST_ASSERT_EQUAL(DOT, car(lst));
 	lst = cdr(lst);
 	TEST_ASSERT_EQUAL_STRING("seven", to_name(car(lst)));
 
 	obj = cdr(obj);
 	TEST_ASSERT_EQUAL(8, to_integer(car(obj)));
-	TEST_ASSERT_EQUAL(Empty_List, cdr(obj));
+	TEST_ASSERT_EQUAL(EMPTY_LIST, cdr(obj));
 
 	free_lexer(lxr);
 }

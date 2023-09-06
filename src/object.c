@@ -160,11 +160,11 @@ const char *to_singleton_text(const object obj)
 	return obj->value.string;
 }
 
-static struct object _Empty_List = SINGLETON("'()");
-const object Empty_List = &_Empty_List;
+static struct object _EMPTY_LIST = SINGLETON("'()");
+const object EMPTY_LIST = &_EMPTY_LIST;
 
-static struct object _Eos = SINGLETON("end_of_source");
-const object Eos = &_Eos;
+static struct object _EOS = SINGLETON("end_of_source");
+const object EOS = &_EOS;
 
 //
 // Numbers
@@ -230,7 +230,7 @@ inline char const *to_string(object obj)
 
 bool is_null(const object obj)
 {
-	return obj == Empty_List;
+	return obj == EMPTY_LIST;
 }
 
 bool is_pair(const object obj)
@@ -294,12 +294,12 @@ object create_obarray_entry(char *name, meta_data meta_data)
 			  (object_value){ .string = name });
 }
 
-void init_symbols(void);
+void init_keywords(void);
 
 inline object from_name(char *name, meta_data meta_data)
 {
 	if (!symbols) {
-		init_symbols();
+		init_keywords();
 	}
 	return obarray_intern(symbols, name, meta_data);
 }
@@ -310,26 +310,31 @@ inline char const *to_name(object obj)
 	return obj->value.string;
 }
 
-static struct object _Dot = SYMBOL(".");
-const object Dot = &_Dot;
+//
+// Symbols - Keywords
+// =============================================================================
+//
 
-static struct object _Quasiquote = SYMBOL("quasiquote");
-const object Quasiquote = &_Quasiquote;
+static struct object _DOT = SYMBOL(".");
+const object DOT = &_DOT;
 
-static struct object _Quote = SYMBOL("quote");
-const object Quote = &_Quote;
+static struct object _QUASIQUOTE = SYMBOL("quasiquote");
+const object QUASIQUOTE = &_QUASIQUOTE;
 
-static struct object _Unquote = SYMBOL("unquote");
-const object Unquote = &_Unquote;
+static struct object _QUOTE = SYMBOL("quote");
+const object QUOTE = &_QUOTE;
 
-// Above symbols need to be included function below
+static struct object _UNQUOTE = SYMBOL("unquote");
+const object UNQUOTE = &_UNQUOTE;
 
-void init_symbols(void)
+// Above keywords need to be included function below
+
+void init_keywords(void)
 {
 	symbols = obarray_new(0);
 
-	obarray_add_symbol(symbols, Dot);
-	obarray_add_symbol(symbols, Quasiquote);
-	obarray_add_symbol(symbols, Quote);
-	obarray_add_symbol(symbols, Unquote);
+	obarray_add_symbol(symbols, DOT);
+	obarray_add_symbol(symbols, QUASIQUOTE);
+	obarray_add_symbol(symbols, QUOTE);
+	obarray_add_symbol(symbols, UNQUOTE);
 }

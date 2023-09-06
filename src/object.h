@@ -64,8 +64,8 @@ const char *to_singleton_text(const object obj);
 // '() is not a symbol:
 //	https://standards.scheme.org/official/r4rs.pdf
 //	6.4 Symbols
-extern const object Empty_List;
-extern const object Eos;
+extern const object EMPTY_LIST;
+extern const object EOS;
 
 //
 // Numbers
@@ -112,9 +112,14 @@ object create_obarray_entry(char *id, meta_data meta_data);
 object from_name(char *id, meta_data meta_data);
 char const *to_name(const object obj);
 
-extern const object Dot;
-extern const object Quasiquote;
-extern const object Quote;
-extern const object Unquote;
+//
+// Symbols - Keywords
+// =============================================================================
+//
+
+extern const object DOT;
+extern const object QUASIQUOTE;
+extern const object QUOTE;
+extern const object UNQUOTE;
 
 #endif

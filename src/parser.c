@@ -77,8 +77,8 @@ static object number_decimal(parser parser, token tkn)
 
 static object reverse(object list)
 {
-	object rlist = Empty_List;
-	while (list != Empty_List) {
+	object rlist = EMPTY_LIST;
+	while (list != EMPTY_LIST) {
 		rlist = cons(car(list), rlist, object_meta_data(list));
 		object pair = list;
 		list = cdr(list);
@@ -99,13 +99,13 @@ inline static object dot(parser parser, object lst)
 	if (token_type(token_read(parser->token_source)) != TOKEN_LIST_CLOSE) {
 		return parser_error(parser, dot_err_msg);
 	}
-	lst = cons(tail, cons(Dot, lst, NO_META_DATA), NO_META_DATA);
+	lst = cons(tail, cons(DOT, lst, NO_META_DATA), NO_META_DATA);
 	return reverse(lst);
 }
 
 static object list(parser parser)
 {
-	object lst = Empty_List;
+	object lst = EMPTY_LIST;
 	token tkn;
 	object obj;
 	enum token_type tkn_typ;
@@ -133,7 +133,7 @@ static object list(parser parser)
 static object abreviation(parser parser, char *name)
 {
 	object obj = parse(parser);
-	if (is_error(obj) || obj == Eos) {
+	if (is_error(obj) || obj == EOS) {
 		return obj;
 	}
 	return cons(from_name(name, NO_META_DATA), obj, NO_META_DATA);
@@ -165,7 +165,7 @@ static object parse_token(parser parser, token tkn)
 	case TOKEN_DOT:
 		return parser_error(parser, dot_err_msg);
 	case TOKEN_EOS:
-		return Eos;
+		return EOS;
 	case TOKEN_ERROR:
 		return lexer_error(parser);
 	case TOKEN_UNSPECIFIED:
@@ -189,9 +189,9 @@ object parse(parser parser)
 
 object parse_all(parser parser)
 {
-	object rslt = Empty_List;
+	object rslt = EMPTY_LIST;
 	object obj;
-	while ((obj = parse(parser)) != Eos) {
+	while ((obj = parse(parser)) != EOS) {
 		if (is_error(obj)) {
 			return obj;
 		}
