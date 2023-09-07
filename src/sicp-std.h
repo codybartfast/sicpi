@@ -13,6 +13,7 @@ typedef int64_t integer;
 typedef double floating;
 #define floating_max DBL_MAX
 #define floating_min (-floating_max)
+#define LG_PRECISION ".15"
 
 typedef uint32_t meta_data;
 #define NO_META_DATA 0

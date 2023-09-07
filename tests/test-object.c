@@ -127,6 +127,51 @@ void obj_symbol(void)
 	TEST_ASSERT_EQUAL(UNQUOTE, from_name("unquote", NO_META_DATA));
 }
 
+void obj_to_text(void)
+{
+	TEST_ASSERT_EQUAL_STRING("'()", to_text(EMPTY_LIST));
+	TEST_ASSERT_EQUAL_STRING("END-OF-SOURCE", to_text(EOS));
+
+	TEST_ASSERT_EQUAL_STRING("1", to_text(from_integer(1, NO_META_DATA)));
+	TEST_ASSERT_EQUAL_STRING(
+		"9223372036854775807",
+		to_text(from_integer(integer_max, NO_META_DATA)));
+	TEST_ASSERT_EQUAL_STRING(
+		"-9223372036854775808",
+		to_text(from_integer(integer_min, NO_META_DATA)));
+
+	TEST_ASSERT_EQUAL_STRING(
+		"1000.0001", to_text(from_floating(1000.0001, NO_META_DATA)));
+	TEST_ASSERT_EQUAL_STRING(
+		"1.79769313486232e+308",
+		to_text(from_floating(floating_max, NO_META_DATA)));
+	TEST_ASSERT_EQUAL_STRING(
+		"-1.79769313486232e+308",
+		to_text(from_floating(floating_min, NO_META_DATA)));
+
+	TEST_ASSERT_EQUAL_STRING(
+		"I just ran into him.",
+		to_text(from_string("I just ran into him.", NO_META_DATA)));
+
+	TEST_ASSERT_EQUAL_STRING("eval",
+				 to_text(from_name("eval", NO_META_DATA)));
+
+	TEST_ASSERT_EQUAL_STRING(
+		"(1 2 3)", to_text(cons(from_integer(1, NO_META_DATA),
+					cons(from_integer(2, NO_META_DATA),
+					     cons(from_integer(3, NO_META_DATA),
+						  EMPTY_LIST, NO_META_DATA),
+					     NO_META_DATA),
+					NO_META_DATA)));
+
+	TEST_ASSERT_EQUAL_STRING(
+		"(1 2 . 3)",
+		to_text(cons(from_integer(1, NO_META_DATA),
+			     cons(from_integer(2, NO_META_DATA),
+				  from_integer(3, NO_META_DATA), NO_META_DATA),
+			     NO_META_DATA)));
+}
+
 int test_object(void)
 {
 	RUN_TEST(obj_free);
@@ -137,5 +182,6 @@ int test_object(void)
 	RUN_TEST(obj_string);
 	RUN_TEST(obj_symbol);
 	RUN_TEST(obj_pair);
+	RUN_TEST(obj_to_text);
 	return 0;
 }

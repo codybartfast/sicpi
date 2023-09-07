@@ -3,10 +3,12 @@
 #include "obarray.h"
 #include "sicp-error.h"
 #include "sicp-std.h"
+#include "string-builder.h"
 
 #include <inttypes.h>
 #include <string.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 enum value_kind {
@@ -53,6 +55,11 @@ static char *value_kind_name(enum value_kind value_kind)
 static inline int8_t object_value_kind(object obj)
 {
 	return obj->value_kind;
+}
+
+static char *object_value_kind_name(object obj)
+{
+	return value_kind_name(object_value_kind(obj));
 }
 
 static inline void check_value_kind(object obj, enum value_kind expected,
@@ -109,6 +116,68 @@ void object_free(object obj)
 	}
 }
 
+#define TO_TEXT_BUFFER_LEN 1024
+static char to_text_buffer[TO_TEXT_BUFFER_LEN];
+// Returns a new string for the external representaion of an object.
+char *to_text(object obj)
+{
+	switch (object_value_kind(obj)) {
+	case VK_SINGLETON:
+		return strdupx(obj->value.string, "object:to_text");
+	case VK_INTEGER:
+		if (snprintf(to_text_buffer, TO_TEXT_BUFFER_LEN, "%lld",
+			     (long long)to_integer(obj)) >=
+		    TO_TEXT_BUFFER_LEN) {
+			inyim("Buffer overflow converting integer to text: %lld",
+			      to_integer(obj));
+			exit(1);
+		}
+		return strdupx(to_text_buffer, "object:to_text");
+	case VK_FLOATING:
+		if (snprintf(to_text_buffer, TO_TEXT_BUFFER_LEN,
+			     "%" LG_PRECISION "Lg",
+			     (long double)to_floating(obj)) >=
+		    TO_TEXT_BUFFER_LEN) {
+			inyim("Buffer overflow converting floating point number to text: %lf",
+			      to_floating(obj));
+			exit(1);
+		}
+		return strdupx(to_text_buffer, "object:to_text");
+	case VK_STRING:
+		return strdupx(to_string(obj), "object:to_text");
+	case VK_SYMBOL:
+		return strdupx(to_name(obj), "object:to_text");
+	case VK_PAIR:
+		bool done_first = false;
+		string_builder sb = sb_new(0);
+		sb_addc(sb, '(');
+
+		while (is_pair(obj)) {
+			if (done_first) {
+				sb_addc(sb, ' ');
+			} else {
+				done_first = true;
+			}
+			sb_adds(sb, to_text(car(obj)));
+			obj = cdr(obj);
+		}
+
+		if (!is_empty_list(obj)) {
+			sb_adds(sb, " . ");
+			sb_adds(sb, to_text(obj));
+		}
+
+		sb_addc(sb, ')');
+		char *rslt = sb_copy(sb);
+		sb_free(sb);
+		return rslt;
+	default:
+		inyim("'to_text' got unexpected value_kind: %s.",
+		      object_value_kind_name(obj));
+		exit(1); // keep compiler happy
+	}
+}
+
 //
 // Errors
 // =============================================================================
@@ -151,7 +220,7 @@ inline bool is_empty_list(object obj)
 	return obj == EMPTY_LIST;
 }
 
-static struct object _EOS = SINGLETON("END_OF_SOURCE");
+static struct object _EOS = SINGLETON("END-OF-SOURCE");
 const object EOS = &_EOS;
 inline bool is_eos(object obj)
 {
@@ -209,6 +278,7 @@ inline object from_string(char *string, meta_data meta_data)
 			  (object_value){ .string = string });
 }
 
+// Returns the underlying char * pointer of a string object (no duplication).
 inline char const *to_string(object obj)
 {
 	check_value_kind(obj, VK_STRING, "to_string");

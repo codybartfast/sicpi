@@ -20,14 +20,14 @@ int main(void)
 {
 	UNITY_BEGIN();
 
+	test_string_builder();
+	test_source();
+	test_token_table();
 	test_lexer();
 	test_obarray();
-	test_object();
-	test_source();
-	test_string_builder();
-	test_token_table();
-
 	test_parser();
+
+	test_object();
 
 	return UNITY_END();
 }

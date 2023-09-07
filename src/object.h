@@ -42,6 +42,7 @@ typedef struct object {
 
 meta_data object_meta_data(const object obj);
 void object_free(object obj);
+char *to_text(object obj);
 
 //
 // Errors
