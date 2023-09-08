@@ -34,14 +34,14 @@ static object lexer_error(parser parser)
 {
 	parser->is_errored = true;
 	parser->error_message = "Lexer error.";
-	return from_error_kind(ERROR_LEXER, NO_META_DATA);
+	return of_error_kind(ERROR_LEXER, NO_META_DATA);
 }
 
 static object parser_error(parser parser, char *const error_message)
 {
 	parser->is_errored = true;
 	parser->error_message = error_message;
-	return from_error_kind(ERROR_PARSER, NO_META_DATA);
+	return of_error_kind(ERROR_PARSER, NO_META_DATA);
 }
 
 static object number_integer(parser parser, token tkn)
@@ -53,7 +53,7 @@ static object number_integer(parser parser, token tkn)
 	conv_int = strtoll(s, &end, 10);
 	if (end && !*end && errno != ERANGE && integer_min <= conv_int &&
 	    conv_int <= integer_max) {
-		return from_integer(conv_int, NO_META_DATA);
+		return of_integer(conv_int, NO_META_DATA);
 	}
 	return parser_error(
 		parser,
@@ -69,7 +69,7 @@ static object number_decimal(parser parser, token tkn)
 	conv_flt = strtold(s, &end);
 	if (end && !*end && errno != ERANGE && floating_min <= conv_flt &&
 	    conv_flt <= floating_max) {
-		return from_floating(conv_flt, NO_META_DATA);
+		return of_floating(conv_flt, NO_META_DATA);
 	}
 	return parser_error(parser,
 			    "Failed to convert string to decimal (overflow?).");
@@ -136,20 +136,20 @@ static object abreviation(parser parser, char *name)
 	if (is_error(obj) || obj == EOS) {
 		return obj;
 	}
-	return cons(from_name(name, NO_META_DATA), obj, NO_META_DATA);
+	return cons(of_name(name, NO_META_DATA), obj, NO_META_DATA);
 }
 
 static object parse_token(parser parser, token tkn)
 {
 	switch (token_type(tkn)) {
 	case TOKEN_IDENTIFIER:
-		return from_name(token_text(tkn), NO_META_DATA);
+		return of_name(token_text(tkn), NO_META_DATA);
 	case TOKEN_NUMBER_INTEGER:
 		return number_integer(parser, tkn);
 	case TOKEN_NUMBER_DECIMAL:
 		return number_decimal(parser, tkn);
 	case TOKEN_STRING:
-		return from_string(strdupx(token_text(tkn),
+		return of_string(strdupx(token_text(tkn),
 					   "parser:TOKEN_STRING"),
 				   NO_META_DATA);
 	case TOKEN_LIST_OPEN:

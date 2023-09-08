@@ -50,7 +50,7 @@ char *to_text(object obj);
 //
 
 bool is_error(const object obj);
-object from_error_kind(enum error_kind error_kind, meta_data meta_data);
+object of_error_kind(enum error_kind error_kind, meta_data meta_data);
 enum error_kind to_error_kind(const object obj);
 
 //
@@ -76,9 +76,9 @@ bool is_eos(object obj);
 //
 
 bool is_number(const object obj);
-object from_integer(integer integer, meta_data meta_data);
+object of_integer(integer integer, meta_data meta_data);
 integer to_integer(const object obj);
-object from_floating(floating floating, meta_data meta_data);
+object of_floating(floating floating, meta_data meta_data);
 floating to_floating(const object obj);
 
 //
@@ -87,7 +87,7 @@ floating to_floating(const object obj);
 //
 
 bool is_string(const object obj);
-object from_string(char *string, meta_data meta_data);
+object of_string(char *string, meta_data meta_data);
 char const *to_string(const object obj);
 
 //
@@ -112,7 +112,7 @@ bool is_symbol(const object obj);
 // This could be called 'create_symbol' but it should normally only be called
 // by obarray
 object create_obarray_entry(char *id, meta_data meta_data);
-object from_name(char *id, meta_data meta_data);
+object of_name(char *id, meta_data meta_data);
 char const *to_name(const object obj);
 
 //

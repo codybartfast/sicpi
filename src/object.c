@@ -191,7 +191,7 @@ inline bool is_error(object obj)
 	return object_value_kind(obj) == VK_ERROR;
 }
 
-inline object from_error_kind(enum error_kind error_kind, meta_data meta_data)
+inline object of_error_kind(enum error_kind error_kind, meta_data meta_data)
 {
 	return object_new(VK_ERROR, meta_data,
 			  (object_value){ .error_kind = error_kind });
@@ -255,7 +255,7 @@ inline bool is_number(object obj)
 	return vk == VK_INTEGER || vk == VK_FLOATING;
 }
 
-inline object from_integer(integer integer, meta_data meta_data)
+inline object of_integer(integer integer, meta_data meta_data)
 {
 	return object_new(VK_INTEGER, meta_data,
 			  (object_value){ .integer = integer });
@@ -267,7 +267,7 @@ inline integer to_integer(object obj)
 	return obj->value.integer;
 }
 
-inline object from_floating(floating floating, meta_data meta_data)
+inline object of_floating(floating floating, meta_data meta_data)
 {
 	return object_new(VK_FLOATING, meta_data,
 			  (object_value){ .floating = floating });
@@ -289,7 +289,7 @@ inline bool is_string(object obj)
 	return object_value_kind(obj) == VK_STRING;
 }
 
-inline object from_string(char *string, meta_data meta_data)
+inline object of_string(char *string, meta_data meta_data)
 {
 	return object_new(VK_STRING, meta_data,
 			  (object_value){ .string = string });
@@ -375,7 +375,7 @@ object create_obarray_entry(char *name, meta_data meta_data)
 
 void init_keywords(void);
 
-inline object from_name(char *name, meta_data meta_data)
+inline object of_name(char *name, meta_data meta_data)
 {
 	if (!symbols) {
 		init_keywords();

@@ -16,14 +16,14 @@ void has_one_type(object obj)
 
 void obj_free(void)
 {
-	object_free(from_integer(0, NO_META_DATA));
+	object_free(of_integer(0, NO_META_DATA));
 }
 
 void obj_error(void)
 {
 	meta_data meta_data = 125;
 	enum error_kind error_kind = ERROR_LEXER;
-	object obj = from_error_kind(error_kind, meta_data);
+	object obj = of_error_kind(error_kind, meta_data);
 
 	TEST_ASSERT_TRUE(is_error(obj));
 	has_one_type(obj);
@@ -53,7 +53,7 @@ void obj_integer(void)
 {
 	meta_data meta_data = 124;
 	integer integer = 486;
-	object obj = from_integer(integer, meta_data);
+	object obj = of_integer(integer, meta_data);
 
 	TEST_ASSERT_TRUE(is_number(obj));
 	has_one_type(obj);
@@ -66,7 +66,7 @@ void obj_floating(void)
 {
 	meta_data meta_data = 124;
 	floating floating = 48.6;
-	object obj = from_floating(floating, meta_data);
+	object obj = of_floating(floating, meta_data);
 
 	TEST_ASSERT_TRUE(is_number(obj));
 	has_one_type(obj);
@@ -79,7 +79,7 @@ void obj_string(void)
 {
 	meta_data meta_data = 125;
 	char *string = "Blue dog";
-	object obj = from_string(string, meta_data);
+	object obj = of_string(string, meta_data);
 
 	TEST_ASSERT_TRUE(is_string(obj));
 	has_one_type(obj);
@@ -91,10 +91,10 @@ void obj_string(void)
 void obj_pair(void)
 {
 	meta_data meta_data = 127;
-	object a = from_integer(39, NO_META_DATA);
-	object b = from_string("thrity nine", NO_META_DATA);
-	object a2 = from_string("forty", NO_META_DATA);
-	object b2 = from_integer(40, NO_META_DATA);
+	object a = of_integer(39, NO_META_DATA);
+	object b = of_string("thrity nine", NO_META_DATA);
+	object a2 = of_string("forty", NO_META_DATA);
+	object b2 = of_integer(40, NO_META_DATA);
 
 	object obj = cons(a, b, meta_data);
 
@@ -122,7 +122,7 @@ void obj_symbol(void)
 {
 	meta_data meta_data = 126;
 	char *id = "Blue sky";
-	object obj = from_name(id, meta_data);
+	object obj = of_name(id, meta_data);
 
 	TEST_ASSERT_TRUE(is_symbol(obj));
 	has_one_type(obj);
@@ -130,10 +130,10 @@ void obj_symbol(void)
 	TEST_ASSERT_EQUAL(meta_data, object_meta_data(obj));
 	TEST_ASSERT_EQUAL_STRING(id, to_name(obj));
 
-	TEST_ASSERT_EQUAL(DOT, from_name(".", NO_META_DATA));
-	TEST_ASSERT_EQUAL(QUASIQUOTE, from_name("quasiquote", NO_META_DATA));
-	TEST_ASSERT_EQUAL(QUOTE, from_name("quote", NO_META_DATA));
-	TEST_ASSERT_EQUAL(UNQUOTE, from_name("unquote", NO_META_DATA));
+	TEST_ASSERT_EQUAL(DOT, of_name(".", NO_META_DATA));
+	TEST_ASSERT_EQUAL(QUASIQUOTE, of_name("quasiquote", NO_META_DATA));
+	TEST_ASSERT_EQUAL(QUOTE, of_name("quote", NO_META_DATA));
+	TEST_ASSERT_EQUAL(UNQUOTE, of_name("unquote", NO_META_DATA));
 }
 
 void obj_to_text(void)
@@ -141,43 +141,43 @@ void obj_to_text(void)
 	TEST_ASSERT_EQUAL_STRING("'()", to_text(EMPTY_LIST));
 	TEST_ASSERT_EQUAL_STRING("END-OF-SOURCE", to_text(EOS));
 
-	TEST_ASSERT_EQUAL_STRING("1", to_text(from_integer(1, NO_META_DATA)));
+	TEST_ASSERT_EQUAL_STRING("1", to_text(of_integer(1, NO_META_DATA)));
 	TEST_ASSERT_EQUAL_STRING(
 		"9223372036854775807",
-		to_text(from_integer(integer_max, NO_META_DATA)));
+		to_text(of_integer(integer_max, NO_META_DATA)));
 	TEST_ASSERT_EQUAL_STRING(
 		"-9223372036854775808",
-		to_text(from_integer(integer_min, NO_META_DATA)));
+		to_text(of_integer(integer_min, NO_META_DATA)));
 
 	TEST_ASSERT_EQUAL_STRING(
-		"1000.0001", to_text(from_floating(1000.0001, NO_META_DATA)));
+		"1000.0001", to_text(of_floating(1000.0001, NO_META_DATA)));
 	TEST_ASSERT_EQUAL_STRING(
 		"1.79769313486232e+308",
-		to_text(from_floating(floating_max, NO_META_DATA)));
+		to_text(of_floating(floating_max, NO_META_DATA)));
 	TEST_ASSERT_EQUAL_STRING(
 		"-1.79769313486232e+308",
-		to_text(from_floating(floating_min, NO_META_DATA)));
+		to_text(of_floating(floating_min, NO_META_DATA)));
 
 	TEST_ASSERT_EQUAL_STRING(
 		"I just ran into him.",
-		to_text(from_string("I just ran into him.", NO_META_DATA)));
+		to_text(of_string("I just ran into him.", NO_META_DATA)));
 
 	TEST_ASSERT_EQUAL_STRING("eval",
-				 to_text(from_name("eval", NO_META_DATA)));
+				 to_text(of_name("eval", NO_META_DATA)));
 
 	TEST_ASSERT_EQUAL_STRING(
-		"(1 2 3)", to_text(cons(from_integer(1, NO_META_DATA),
-					cons(from_integer(2, NO_META_DATA),
-					     cons(from_integer(3, NO_META_DATA),
+		"(1 2 3)", to_text(cons(of_integer(1, NO_META_DATA),
+					cons(of_integer(2, NO_META_DATA),
+					     cons(of_integer(3, NO_META_DATA),
 						  EMPTY_LIST, NO_META_DATA),
 					     NO_META_DATA),
 					NO_META_DATA)));
 
 	TEST_ASSERT_EQUAL_STRING(
 		"(1 2 . 3)",
-		to_text(cons(from_integer(1, NO_META_DATA),
-			     cons(from_integer(2, NO_META_DATA),
-				  from_integer(3, NO_META_DATA), NO_META_DATA),
+		to_text(cons(of_integer(1, NO_META_DATA),
+			     cons(of_integer(2, NO_META_DATA),
+				  of_integer(3, NO_META_DATA), NO_META_DATA),
 			     NO_META_DATA)));
 }
 

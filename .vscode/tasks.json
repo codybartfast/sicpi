@@ -23,6 +23,7 @@
                 "src/obarray.c",
                 "src/object.c",
                 "src/parser.c",
+                "src/run.c",
                 "src/sicp.c",
                 "src/sicp-error.c",
                 "src/sicp-std.c",
