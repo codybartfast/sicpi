@@ -125,6 +125,9 @@ static char to_text_buffer[TO_TEXT_BUFFER_LEN];
 char *to_text(object obj)
 {
 	switch (object_value_kind(obj)) {
+	case VK_ERROR:
+		return strdupx(error_kind_name(to_error_kind(obj)),
+			       "object:to_text");
 	case VK_SINGLETON:
 		return strdupx(obj->value.string, "object:to_text");
 	case VK_INTEGER:
@@ -203,6 +206,19 @@ inline enum error_kind to_error_kind(object obj)
 	return obj->value.error_kind;
 }
 
+char *error_kind_name(enum error_kind error_kind)
+{
+	switch (error_kind) {
+	case ERROR_LEXER:
+		return "<LEXER-ERROR>";
+	case ERROR_PARSER:
+		return "<PARSER-ERROR>";
+	default:
+		inyim("Don't know name of error kind: %d", error_kind);
+		exit(1); // keep compiler happy
+	}
+}
+
 //
 // Singletons
 // =============================================================================
@@ -237,7 +253,7 @@ inline bool is_empty_list(object obj)
 	return obj == EMPTY_LIST;
 }
 
-static struct object _EOS = SINGLETON("END-OF-SOURCE");
+static struct object _EOS = SINGLETON("<END-OF-SOURCE>");
 const object EOS = &_EOS;
 inline bool is_eos(object obj)
 {
