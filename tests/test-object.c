@@ -138,8 +138,12 @@ void obj_symbol(void)
 
 void obj_to_text(void)
 {
+	TEST_ASSERT_EQUAL_STRING(
+		"<LEXER-ERROR>",
+		to_text(of_error_kind(ERROR_LEXER, NO_META_DATA)));
+
 	TEST_ASSERT_EQUAL_STRING("'()", to_text(EMPTY_LIST));
-	TEST_ASSERT_EQUAL_STRING("END-OF-SOURCE", to_text(EOS));
+	TEST_ASSERT_EQUAL_STRING("<END-OF-SOURCE>", to_text(EOS));
 
 	TEST_ASSERT_EQUAL_STRING("1", to_text(of_integer(1, NO_META_DATA)));
 	TEST_ASSERT_EQUAL_STRING(
@@ -149,8 +153,8 @@ void obj_to_text(void)
 		"-9223372036854775808",
 		to_text(of_integer(integer_min, NO_META_DATA)));
 
-	TEST_ASSERT_EQUAL_STRING(
-		"1000.0001", to_text(of_floating(1000.0001, NO_META_DATA)));
+	TEST_ASSERT_EQUAL_STRING("1000.0001",
+				 to_text(of_floating(1000.0001, NO_META_DATA)));
 	TEST_ASSERT_EQUAL_STRING(
 		"1.79769313486232e+308",
 		to_text(of_floating(floating_max, NO_META_DATA)));

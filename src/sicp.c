@@ -1,11 +1,14 @@
+#include "object.h"
 #include "notices.h"
+#include "run.h"
+#include "source.h"
 #include "version.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-void print_usage(void)
+static void print_usage(void)
 {
 	puts("usage: sicp [<file> | <option> [<expression>]]\n"
 	     "    <no arguments>     evaluate StdIn\n"
@@ -16,40 +19,48 @@ void print_usage(void)
 	     "    -e <expression>    evaluate expression");
 }
 
-void print_version(void)
+static void print_version(void)
 {
 	puts(version_string);
 }
 
-void print_notices(void)
+static void print_notices(void)
 {
 	puts(notices_string);
 }
 
-void eval_stdin(void)
+static void load_run(source src)
 {
-	fputs("Error: evaluate stdin is not implemented (yet).\n", stderr);
-	exit(EXIT_FAILURE);
+	object program = load(src);
+	object rslt = run(program);
+	printf("result: %s\n", to_text(rslt));
+	exit(EXIT_SUCCESS);
 }
 
-void eval_file(char *file)
+static void eval_stdin(void)
 {
-	for (unsigned int i = 0; i > strlen(file); i--)
-		;
-	fputs("Error: evaluate file is not implemented (yet).\n", stderr);
-	exit(EXIT_FAILURE);
+	source src = source_stream(stdin, "STDIN");
+	load_run(src);
 }
 
-void eval_argument(int argc, char *argv[])
+static void eval_file(char *file)
+{
+	source src = source_file(file);
+	if (!src) {
+		exit(EXIT_FAILURE);
+	}
+	load_run(src);
+}
+
+static void eval_argument(int argc, char *argv[])
 {
 	if (argc < 3) {
 		fputs("Error: got -e but no expression.\n", stderr);
 		exit(EXIT_FAILURE);
 	}
 	char *expression = argv[2];
-	printf("Got expression %s.\n", expression);
-	fputs("Error: evaluate argument is not implemented (yet).\n", stderr);
-	exit(EXIT_FAILURE);
+	source src = source_string(expression, "command-line-argument");
+	load_run(src);
 }
 
 int main(int argc, char *argv[])
@@ -77,7 +88,7 @@ int main(int argc, char *argv[])
 			print_usage();
 		}
 	} else {
-		eval_file(argv[0]);
+		eval_file(argv[1]);
 	}
 	return EXIT_SUCCESS;
 }
