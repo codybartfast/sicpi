@@ -20,7 +20,7 @@ typedef union object_value {
 	const integer integer;
 	const enum error_kind error_kind;
 	const char *string;
-	// This is typically the largest type, 2 * 64b = 128b.
+	// This is the largest type, 2 * 64b = 128b.
 	// Perhaps, if/when 'storage' is implemented it could be replaced
 	// by 2 * 32b addresses into the starage array?
 	struct pair pair;
@@ -57,6 +57,12 @@ enum error_kind to_error_kind(const object obj);
 // Singletons (Global Constants)
 // =============================================================================
 //
+
+extern const object FALSE;
+bool is_false(object obj);
+
+extern const object TRUE;
+bool is_true(object obj);
 
 extern const object EMPTY_LIST;
 bool is_empty_list(object obj);

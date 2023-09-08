@@ -11,6 +11,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/* value_kind is stored in a int_8, so max value is 127.
+ * Values below 64 are used for self-
+ */
 enum value_kind {
 	VK_ERROR = -1,
 	VK_UNDEFINED = 0,
@@ -212,6 +215,20 @@ inline enum error_kind to_error_kind(object obj)
 			.string = TEXT                                         \
 		}                                                              \
 	}
+
+static struct object _FALSE = SINGLETON("false");
+const object FALSE = &_FALSE;
+inline bool is_false(object obj)
+{
+	return obj == FALSE;
+}
+
+static struct object _TRUE = SINGLETON("true");
+const object TRUE = &_TRUE;
+inline bool is_true(object obj)
+{
+	return obj == TRUE;
+}
 
 static struct object _EMPTY_LIST = SINGLETON("'()");
 const object EMPTY_LIST = &_EMPTY_LIST;

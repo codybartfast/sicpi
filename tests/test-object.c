@@ -8,7 +8,8 @@ void has_one_type(object obj)
 	int common_count = is_error(obj) + is_number(obj) + is_pair(obj) +
 			   is_string(obj) + is_symbol(obj);
 
-	int singleton_count = is_empty_list(obj) + is_eos(obj);
+	int singleton_count =
+		is_false(obj) + is_true(obj) + is_empty_list(obj) + is_eos(obj);
 
 	TEST_ASSERT_EQUAL(1, common_count + singleton_count);
 }
@@ -33,6 +34,14 @@ void obj_error(void)
 
 void obj_singletons(void)
 {
+	TEST_ASSERT_TRUE(is_false(FALSE));
+	has_one_type(FALSE);
+	TEST_ASSERT_EQUAL_STRING("false", to_text(FALSE));
+
+	TEST_ASSERT_TRUE(is_true(TRUE));
+	has_one_type(TRUE);
+	TEST_ASSERT_EQUAL_STRING("true", to_text(TRUE));
+
 	TEST_ASSERT_TRUE(is_eos(EOS));
 	has_one_type(EOS);
 
