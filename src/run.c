@@ -11,16 +11,17 @@ object load(source src)
 	lexer lxr = lexer_new(src);
 	lexer_set_token_source(lxr, &tkn_src);
 	parser_init(&parser, &tkn_src);
-	object rslt = parse_all(&parser);
-	if (is_error(rslt)) {
-		eprintfx(to_text(rslt));
+
+	object program = parse_all(&parser);
+	if (is_error(program)) {
+		eprintfx(to_text(program));
 	}
+	
 	lexer_free(lxr);
-	return rslt;
+	return program;
 }
 
 object run(object program)
 {
-	UNUSED(program);
 	return of_string(to_text(program), NO_META_DATA);
 }
