@@ -17,12 +17,15 @@
 enum value_kind {
 	VK_ERROR = -1,
 	VK_UNDEFINED = 0,
-	VK_SINGLETON, // 1
-	VK_INTEGER, //// 2
-	VK_FLOATING, /// 3
-	VK_STRING, ///// 4
-	VK_SYMBOL, ///// 5
-	VK_PAIR //////// 6
+
+	// Do Not change value without also updating GOTO_LABEL_VALUE_KIND
+	VK_GOTO_LABEL = 1,
+	VK_SINGLETON, // 2
+	VK_INTEGER, //// 3
+	VK_FLOATING, /// 4
+	VK_STRING, ///// 5
+	VK_SYMBOL, ///// 6
+	VK_PAIR, /////// 7
 };
 
 //
@@ -49,6 +52,8 @@ static char *value_kind_name(enum value_kind value_kind)
 		return "Symbol";
 	case VK_PAIR:
 		return "Pair";
+	case VK_GOTO_LABEL:
+		return "Goto Label";
 	default:
 		inyim("Don't know name of value kind: %d", value_kind);
 		exit(1); // keep compiler happy
@@ -422,7 +427,7 @@ const object QUOTE = &_QUOTE;
 static struct object _UNQUOTE = SYMBOL("unquote");
 const object UNQUOTE = &_UNQUOTE;
 
-// Above keywords need to be included function below
+// Above keywords need to be included in function below
 
 void init_keywords(void)
 {
@@ -432,4 +437,15 @@ void init_keywords(void)
 	obarray_add_symbol(symbols, QUASIQUOTE);
 	obarray_add_symbol(symbols, QUOTE);
 	obarray_add_symbol(symbols, UNQUOTE);
+}
+
+//
+// Goto Labels
+// =============================================================================
+//
+
+inline integer to_goto_label(object obj)
+{
+	check_value_kind(obj, VK_GOTO_LABEL, "to_goto_label");
+	return obj->value.integer;
 }

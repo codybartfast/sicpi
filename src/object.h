@@ -126,4 +126,13 @@ extern const object QUASIQUOTE;
 extern const object QUOTE;
 extern const object UNQUOTE;
 
+//
+// Goto Labels
+// =============================================================================
+//
+
+#define GOTO_LABEL_VALUE_KIND 1
+
+integer to_goto_label(object obj);
+
 #endif

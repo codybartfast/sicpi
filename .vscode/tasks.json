@@ -20,6 +20,7 @@
 
                 "src/character-classes.c",
                 "src/explicit-control-evaluator.c",
+                "src/hardware.c",
                 "src/lexer.c",
                 "src/obarray.c",
                 "src/object.c",
@@ -88,6 +89,7 @@
                 "src/sicp-std.c",
                 "tests/test.c",
 
+                "src/hardware.c",
                 "src/explicit-control-evaluator.c",
                 "tests/test-eceval.c",
 
@@ -110,7 +112,6 @@
 
                 "src/string-builder.c",
                 "tests/test-string-builder.c",
-
 
                 "src/token-table.c",
                 "tests/test-token-table.c",

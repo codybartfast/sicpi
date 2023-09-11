@@ -3,6 +3,6 @@
 
 #include "object.h"
 
-object ec_eval(object obj);
+object EC_Eval(object obj);
 
 #endif

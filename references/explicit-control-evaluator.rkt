@@ -1,11 +1,18 @@
 ;; This a version of the explicit-control evaluator from Sicp Section 5.4.
-;; 	https://www.sicp-book.com/book-Z-H-34.html#%_sec_5.4
-;; Exercise 5.51 says to implement this in C.
-;;	https://www.sicp-book.com/book-Z-H-35.html#%_thm_5.51
+;; 	 https://www.sicp-book.com/book-Z-H-34.html#%_sec_5.4
 
-;; =========================================================================
+;; The C implementation of eval (explicit-control-evaluator.c) is based on this
+;; code, many of the C functions have line numbers referring to procedures here.
+
+
+;;                     *** DON'T DELETE EMPTY LINES ***
+;;      (they keep the lines nos. consistent with the previous project)
+
+
+
+;; =============================================================================
 ;; Primitive Operations
-;; =========================================================================
+;; =============================================================================
 
 ;; 4.1.2  Representing Expressions
 
