@@ -19,6 +19,7 @@
                 "${workspaceFolder}/bin/sicp",
 
                 "src/character-classes.c",
+                "src/explicit_control_evaluator.c",
                 "src/lexer.c",
                 "src/obarray.c",
                 "src/object.c",
