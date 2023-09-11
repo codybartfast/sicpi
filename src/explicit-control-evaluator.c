@@ -65,20 +65,15 @@ eval_dispatch:
 
 ev_self_eval:
 	core->val = core->expr;
-	goto goto_continue;
+	label = to_label(core->cont);
+	goto goto_label;
 
-	// As we're not running a repl we can't goto 'read-eval-print-loop' so
-	// we instead just return to the caller (i.e. stop the machine)
+	// As we're not running a REPL we can't goto 'read-eval-print-loop' when
+	// finished so we instead return the current value to the calling C
+	// function
 
 return_caller:
 	return core->val;
-
-	// Goto
-	//	https://www.sicp-book.com/book-Z-H-31.html#%_idx_5514
-
-goto_continue:
-	label = to_goto_label(core->cont);
-	goto goto_label;
 
 goto_label:
 	switch (label) {

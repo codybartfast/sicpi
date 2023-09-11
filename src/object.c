@@ -444,7 +444,7 @@ void init_keywords(void)
 // =============================================================================
 //
 
-inline integer to_goto_label(object obj)
+inline integer to_label(object obj)
 {
 	check_value_kind(obj, VK_GOTO_LABEL, "to_goto_label");
 	return obj->value.integer;

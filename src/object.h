@@ -133,6 +133,6 @@ extern const object UNQUOTE;
 
 #define GOTO_LABEL_VALUE_KIND 1
 
-integer to_goto_label(object obj);
+integer to_label(object obj);
 
 #endif

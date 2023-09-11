@@ -4,6 +4,10 @@
 
 #include "../src/run.c"
 
+object to_expr(char *source){
+	return car(load(source_string(source, 0)));
+}
+
 void test_eceval_self_evaluating(void)
 {
 	object expr;
@@ -18,9 +22,18 @@ void test_eceval_self_evaluating(void)
 	TEST_ASSERT_EQUAL_STRING("Smelly pants wee!", to_text(EC_Eval(expr)));
 }
 
+void test_eceval_initial_environment(void)
+{
+	// object expr;
+
+	// expr = to_expr("true");
+	// TEST_ASSERT_EQUAL_STRING("true", to_text(EC_Eval(expr)));
+}
+
 int test_eceval(void)
 {
 	RUN_TEST(test_eceval_self_evaluating);
+	RUN_TEST(test_eceval_initial_environment);
 
 	return 0;
 }
