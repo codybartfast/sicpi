@@ -54,12 +54,27 @@ void test_listn(void)
 	TEST_ASSERT_EQUAL(EMPTY_LIST, end(lst));
 }
 
+object mult_by_two(object n)
+{
+	return of_integer(to_integer(n) * 2, NO_META_DATA);
+}
+
+void test_list_map(void)
+{
+	TEST_ASSERT_EQUAL(EMPTY_LIST, map(mult_by_two, EMPTY_LIST));
+
+	object lst = list4(one, two, three, four);
+	object mapped = map(mult_by_two, lst);
+	TEST_ASSERT_EQUAL_STRING("(2 4 6 8)", to_text(mapped));
+	TEST_ASSERT_EQUAL(EMPTY_LIST, end(lst));
+}
 
 int test_list(void)
 {
 	set_items();
 	RUN_TEST(test_listv);
 	RUN_TEST(test_listn);
+	RUN_TEST(test_list_map);
 
 	return 0;
 }

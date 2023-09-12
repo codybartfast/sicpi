@@ -10,4 +10,6 @@ object list3(const object item1, const object item2, const object item3);
 object list4(const object item1, const object item2, const object item3,
 	     const object item4);
 
+object map(object (*mapper)(object item), object lst);
+
 #endif

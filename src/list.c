@@ -1,5 +1,7 @@
 #include "list.h"
 
+#include "sicp-error.h"
+
 #include <stdarg.h>
 
 // variadic list constructor.  Last argument must be EMPTY_LIST
@@ -44,4 +46,21 @@ object list4(const object item1, const object item2, const object item3,
 	     const object item4)
 {
 	return listv(item1, item2, item3, item4, EMPTY_LIST);
+}
+
+object map(object (*mapper)(object item), object lst)
+{
+	if (lst == EMPTY_LIST) {
+		return lst;
+	}
+
+	object end;
+	object mapped = end = cons(mapper(car(lst)), EMPTY_LIST, NO_META_DATA);
+
+	for (lst = cdr(lst); lst != EMPTY_LIST; lst = cdr(lst)) {
+		object pair = cons(mapper(car(lst)), EMPTY_LIST, NO_META_DATA);
+		set_cdr(end, pair);
+		end = pair;
+	}
+	return mapped;
 }
