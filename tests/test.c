@@ -15,6 +15,7 @@ void test_lexer(void);
 void test_obarray(void);
 void test_object(void);
 void test_parser(void);
+void test_list(void);
 void test_eceval(void);
 
 int main(void)
@@ -30,6 +31,7 @@ int main(void)
 	test_parser();
 
 	test_eceval();
+	test_list();
 
 	return UNITY_END();
 }

@@ -22,6 +22,7 @@
                 "src/explicit-control-evaluator.c",
                 "src/hardware.c",
                 "src/lexer.c",
+                "src/list.c",
                 "src/metacircular-procedures.c",
                 "src/obarray.c",
                 "src/object.c",
@@ -99,6 +100,9 @@
                 "src/character-classes.c",
                 "src/lexer.c",
                 "tests/test-lexer.c",
+
+                "src/list.c",
+                "tests/test-list.c",
 
                 "src/obarray.c",
                 "tests/test-obarray.c",
