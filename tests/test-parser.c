@@ -2,6 +2,7 @@
 #include "../unity/src/unity.h"
 
 #include "../src/lexer.h"
+#include "../src/list.h"
 #include "../src/parser.h"
 #include "../src/obarray.h"
 
@@ -161,14 +162,14 @@ void test_parser_list(void)
 
 	obj = parse(&parser);
 	TEST_ASSERT_EQUAL_STRING("b", to_name(car(obj)));
-	TEST_ASSERT_EQUAL_STRING("c", to_name(car(cdr(obj))));
-	TEST_ASSERT_EQUAL(EMPTY_LIST, cdr(cdr(obj)));
+	TEST_ASSERT_EQUAL_STRING("c", to_name(cadr(obj)));
+	TEST_ASSERT_EQUAL(EMPTY_LIST, cddr(obj));
 
 	obj = parse(&parser);
 	TEST_ASSERT_EQUAL_STRING("d", to_name(car(obj)));
-	TEST_ASSERT_EQUAL_STRING("e", to_name(car(cdr(obj))));
-	TEST_ASSERT_EQUAL_STRING("f", to_name(car(cdr(cdr(obj)))));
-	TEST_ASSERT_EQUAL(EMPTY_LIST, cdr(cdr(cdr(obj))));
+	TEST_ASSERT_EQUAL_STRING("e", to_name(cadr(obj)));
+	TEST_ASSERT_EQUAL_STRING("f", to_name(caddr(obj)));
+	TEST_ASSERT_EQUAL(EMPTY_LIST, cdr(cddr(obj)));
 
 	obj = parse(&parser);
 	TEST_ASSERT_EQUAL(EOS, obj);
@@ -260,21 +261,21 @@ void test_parser_quotation(void)
 
 	obj = parse(&parser);
 	TEST_ASSERT_EQUAL(QUOTE, car(obj));
-	TEST_ASSERT_EQUAL(of_name("pear", NO_META_DATA), car(cdr(obj)));
+	TEST_ASSERT_EQUAL(of_name("pear", NO_META_DATA), cadr(obj));
 
 	obj = parse(&parser);
 	TEST_ASSERT_EQUAL(QUASIQUOTE, car(obj));
-	TEST_ASSERT_EQUAL(2, to_integer(car(cdr(obj))));
+	TEST_ASSERT_EQUAL(2, to_integer(cadr(obj)));
 
 	obj = parse(&parser);
 	TEST_ASSERT_EQUAL(UNQUOTE, car(obj));
-	TEST_ASSERT_EQUAL(EMPTY_LIST, car(cdr(obj)));
+	TEST_ASSERT_EQUAL(EMPTY_LIST, cadr(obj));
 
 	obj = parse(&parser);
 	TEST_ASSERT_EQUAL(QUOTE, car(obj));
-	TEST_ASSERT_EQUAL(of_name("a", NO_META_DATA), car(car(cdr(obj))));
-	TEST_ASSERT_EQUAL(of_name("b", NO_META_DATA), car(cdr(car(cdr(obj)))));
-	TEST_ASSERT_EQUAL(EMPTY_LIST, cdr(cdr(car(cdr(obj)))));
+	TEST_ASSERT_EQUAL(of_name("a", NO_META_DATA), caadr(obj));
+	TEST_ASSERT_EQUAL(of_name("b", NO_META_DATA), cadadr(obj));
+	TEST_ASSERT_EQUAL(EMPTY_LIST, cddadr(obj));
 
 	obj = parse(&parser);
 	TEST_ASSERT_TRUE(is_error(obj));
@@ -363,9 +364,9 @@ void test_parser_parse_all(void)
 	object lst = car(obj);
 	TEST_ASSERT_EQUAL_STRING("four", to_name(car(lst)));
 	lst = cdr(lst);
-	TEST_ASSERT_EQUAL_STRING("five", to_name(car(car(lst))));
-	TEST_ASSERT_EQUAL_STRING("six", to_name(car(cdr(car(lst)))));
-	TEST_ASSERT_EQUAL(EMPTY_LIST, cdr(cdr(car(lst))));
+	TEST_ASSERT_EQUAL_STRING("five", to_name(caar(lst)));
+	TEST_ASSERT_EQUAL_STRING("six", to_name(cadar(lst)));
+	TEST_ASSERT_EQUAL(EMPTY_LIST, cddar(lst));
 	lst = cdr(lst);
 	TEST_ASSERT_EQUAL(DOT, car(lst));
 	lst = cdr(lst);
