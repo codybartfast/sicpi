@@ -23,19 +23,29 @@ void test_eceval_self_evaluating(void)
 	TEST_ASSERT_EQUAL_STRING("Smelly pants wee!", to_text(EC_Eval(expr)));
 }
 
-void test_eceval_symbol(void)
+void test_eceval_variable(void)
 {
-	object expr;
-
-	expr = to_expr("true");
+	object expr = to_expr("true");
 	TEST_ASSERT_NOT_EQUAL(TRUE, expr);
 	TEST_ASSERT_EQUAL(TRUE, EC_Eval(expr));
+}
+
+void test_eceval_quoted(void)
+{
+	object expr, symb;
+
+	expr = to_expr("'apple");
+	symb = of_name("apple", NO_META_DATA);
+
+	TEST_ASSERT_NOT_EQUAL(symb, expr);
+	TEST_ASSERT_EQUAL(symb, EC_Eval(expr));
 }
 
 int test_eceval(void)
 {
 	RUN_TEST(test_eceval_self_evaluating);
-	RUN_TEST(test_eceval_symbol);
+	RUN_TEST(test_eceval_variable);
+	RUN_TEST(test_eceval_quoted);
 
 	return 0;
 }

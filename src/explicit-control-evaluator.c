@@ -59,22 +59,32 @@ eval_dispatch:
 		goto ev_self_eval;
 	if (is_variable(disp_expr))
 		goto ev_variable;
-	else {
-		return of_error_kind(ERROR_UNKNOWN_EXPRESSION_TYPE,
-				     NO_META_DATA);
+	if (is_pair(disp_expr)) {
+		object head = car(disp_expr);
+		if (is_symbol(head)) {
+			if (head == QUOTE) {
+				goto ev_quoted;
+			}
+		}
 	}
+	return of_error_kind(ERROR_UNKNOWN_EXPRESSION_TYPE, NO_META_DATA);
 
 	//
 	// Evaluating simple expressions
 
 ev_self_eval:
-	core->val = core->expr;
+	core->val = core->expr; // Todo: disp_expr?
 	label = to_label(core->cont);
 	goto goto_label;
 
 ev_variable:
 	core->val = lookup_variable_value(core->expr, core->env);
 	RETURN_IF_ERROR(core->val);
+	label = to_label(core->cont);
+	goto goto_label;
+
+ev_quoted:
+	core->val = car(cdr(core->expr));
 	label = to_label(core->cont);
 	goto goto_label;
 
