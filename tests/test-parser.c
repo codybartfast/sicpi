@@ -260,21 +260,21 @@ void test_parser_quotation(void)
 
 	obj = parse(&parser);
 	TEST_ASSERT_EQUAL(QUOTE, car(obj));
-	TEST_ASSERT_EQUAL(of_name("pear", NO_META_DATA), cdr(obj));
+	TEST_ASSERT_EQUAL(of_name("pear", NO_META_DATA), car(cdr(obj)));
 
 	obj = parse(&parser);
 	TEST_ASSERT_EQUAL(QUASIQUOTE, car(obj));
-	TEST_ASSERT_EQUAL(2, to_integer(cdr(obj)));
+	TEST_ASSERT_EQUAL(2, to_integer(car(cdr(obj))));
 
 	obj = parse(&parser);
 	TEST_ASSERT_EQUAL(UNQUOTE, car(obj));
-	TEST_ASSERT_EQUAL(EMPTY_LIST, cdr(obj));
+	TEST_ASSERT_EQUAL(EMPTY_LIST, car(cdr(obj)));
 
 	obj = parse(&parser);
 	TEST_ASSERT_EQUAL(QUOTE, car(obj));
-	TEST_ASSERT_EQUAL(of_name("a", NO_META_DATA), car(cdr(obj)));
-	TEST_ASSERT_EQUAL(of_name("b", NO_META_DATA), car(cdr(cdr(obj))));
-	TEST_ASSERT_EQUAL(EMPTY_LIST, cdr(cdr(cdr(obj))));
+	TEST_ASSERT_EQUAL(of_name("a", NO_META_DATA), car(car(cdr(obj))));
+	TEST_ASSERT_EQUAL(of_name("b", NO_META_DATA), car(cdr(car(cdr(obj)))));
+	TEST_ASSERT_EQUAL(EMPTY_LIST, cdr(cdr(car(cdr(obj)))));
 
 	obj = parse(&parser);
 	TEST_ASSERT_TRUE(is_error(obj));

@@ -1,3 +1,4 @@
+#include "list.h"
 #include "obarray.h"
 #include "sicp-error.h"
 #include "parser.h"
@@ -130,13 +131,13 @@ static object list(parser parser)
 	return lexer_error(parser);
 }
 
-static object abreviation(parser parser, char *name)
+static object abbreviation(parser parser, char *name)
 {
 	object obj = parse(parser);
 	if (is_error(obj) || obj == EOS) {
 		return obj;
 	}
-	return cons(of_name(name, NO_META_DATA), obj, NO_META_DATA);
+	return list2(of_name(name, NO_META_DATA), obj);
 }
 
 static object parse_token(parser parser, token tkn)
@@ -150,18 +151,18 @@ static object parse_token(parser parser, token tkn)
 		return number_decimal(parser, tkn);
 	case TOKEN_STRING:
 		return of_string(strdupx(token_text(tkn),
-					   "parser:TOKEN_STRING"),
-				   NO_META_DATA);
+					 "parser:TOKEN_STRING"),
+				 NO_META_DATA);
 	case TOKEN_LIST_OPEN:
 		return list(parser);
 	case TOKEN_LIST_CLOSE:
 		return parser_error(parser, "List close ')' was not expected.");
 	case TOKEN_QUASIQUOTE:
-		return abreviation(parser, "quasiquote");
+		return abbreviation(parser, "quasiquote");
 	case TOKEN_QUOTE:
-		return abreviation(parser, "quote");
+		return abbreviation(parser, "quote");
 	case TOKEN_UNQUOTE:
-		return abreviation(parser, "unquote");
+		return abbreviation(parser, "unquote");
 	case TOKEN_DOT:
 		return parser_error(parser, dot_err_msg);
 	case TOKEN_EOS:
