@@ -7,7 +7,11 @@
 
 #include <stdbool.h>
 
-// Integers to represent goto destinations
+#define CHECK_FOR_ERROR(VAL)                                                   \
+	if (is_error(VAL))                                                     \
+	return VAL
+
+// Integers we can switch on to select goto destination
 enum label { LABEL_EVAL_DISPATCH, LABEL_RETURN_CALLER };
 
 #define GOTO_LABEL(number)                                                     \
@@ -26,8 +30,9 @@ const object RETURN_CALLER = &_RETURN_CALLER;
 static struct object _EVAL_DISPATCH = GOTO_LABEL(LABEL_EVAL_DISPATCH);
 const object EVAL_DISPATCH = &_EVAL_DISPATCH;
 
-// save and restore
-// 	https://www.sicp-book.com/book-Z-H-31.html#%_idx_5574
+//
+// §5.1.4  Using a Stack to Implement Recursion
+// 	https://www.sicp-book.com/book-Z-H-31.html#%_sec_5.1.4
 
 inline void save(core core, object obj)
 {
@@ -41,15 +46,12 @@ inline object restore(core core)
 	return rtn;
 }
 
-// explicit-control-evaluator
-// 	https://www.sicp-book.com/book-Z-H-4.html#%_toc_%_sec_5.4
+// §5.4.1  The Core of the Explicit-Control Evaluator
+// 	https://www.sicp-book.com/book-Z-H-34.html#%_sec_5.4
 
 static object eval(core core)
 {
 	enum label label;
-
-	// 5.4.1  The Core of the Explicit-Control Evaluator
-	//	https://www.sicp-book.com/book-Z-H-34.html#%_sec_5.4.1
 
 eval_dispatch:
 	object disp_expr = core->expr;
@@ -63,9 +65,8 @@ eval_dispatch:
 		//TODO: scheme error
 	}
 
-	// TODO: update comments to sections only
+	//
 	// Evaluating simple expressions
-	//	https://www.sicp-book.com/book-Z-H-34.html#%_sec_Temp_768
 
 ev_self_eval:
 	core->val = core->expr;
@@ -74,10 +75,11 @@ ev_self_eval:
 
 ev_variable:
 	core->val = lookup_variable_value(core->expr, core->env);
-	// TODO: check for error
+	CHECK_FOR_ERROR(core->val);
 	label = to_label(core->cont);
 	goto goto_label;
 
+	// Not from the book:
 	//
 	// As we're not running a REPL we can't goto 'read-eval-print-loop' when
 	// finished so we instead return the current value to the calling C

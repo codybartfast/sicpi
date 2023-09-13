@@ -23,7 +23,7 @@ void test_eceval_self_evaluating(void)
 	TEST_ASSERT_EQUAL_STRING("Smelly pants wee!", to_text(EC_Eval(expr)));
 }
 
-void test_eceval_initial_environment(void)
+void test_eceval_symbol(void)
 {
 	object expr;
 
@@ -35,7 +35,7 @@ void test_eceval_initial_environment(void)
 int test_eceval(void)
 {
 	RUN_TEST(test_eceval_self_evaluating);
-	RUN_TEST(test_eceval_initial_environment);
+	RUN_TEST(test_eceval_symbol);
 
 	return 0;
 }
