@@ -7,9 +7,9 @@
 
 #include <stdbool.h>
 
-#define CHECK_FOR_ERROR(VAL)                                                   \
-	if (is_error(VAL))                                                     \
-	return VAL
+#define RETURN_IF_ERROR(OBJ)                                                   \
+	if (is_error(OBJ))                                                     \
+	return OBJ
 
 // Integers we can switch on to select goto destination
 enum label { LABEL_EVAL_DISPATCH, LABEL_RETURN_CALLER };
@@ -60,9 +60,8 @@ eval_dispatch:
 	if (is_variable(disp_expr))
 		goto ev_variable;
 	else {
-		inyim("Unexpected expression for ec eval_dispatch, obj: '%s'",
-		      to_text(disp_expr));
-		//TODO: scheme error
+		return of_error_kind(ERROR_UNKNOWN_EXPRESSION_TYPE,
+				     NO_META_DATA);
 	}
 
 	//
@@ -75,7 +74,7 @@ ev_self_eval:
 
 ev_variable:
 	core->val = lookup_variable_value(core->expr, core->env);
-	CHECK_FOR_ERROR(core->val);
+	RETURN_IF_ERROR(core->val);
 	label = to_label(core->cont);
 	goto goto_label;
 

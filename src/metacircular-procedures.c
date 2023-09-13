@@ -66,9 +66,9 @@ object extend_environment(object vars, object vals, object base_env)
 	if (length(vars) == length(vals)) {
 		return cons(make_frame(vars, vals), base_env, NO_META_DATA);
 	} else {
-		inyim("extend_environame (placeholder)");
+		inyim("extend_environment was given mismatched lists of vars: %d, and vals: %d.",
+		      length(vars), length(vals));
 		exit(1);
-		//TODO: scheme error
 	}
 }
 
@@ -87,29 +87,7 @@ object lookup_variable_value(const object var, object env)
 		}
 		env = cdr(env);
 	}
-	inyim("lookup_variable_value (placeholder)");
-	exit(1);
-	// TODO: scheme error
-}
-
-void set_variable_value(object var, object val, object env)
-{
-	while (env != the_empty_environment()) {
-		object frame = first_frame(env);
-		object vars = frame_variables(frame);
-		object vals = frame_values(frame);
-		while (!is_null(vars)) {
-			if (is_eq(var, car(vars))) {
-				set_car(vals, val);
-				return;
-			}
-			vars = cdr(vars);
-			vals = cdr(vals);
-		}
-		env = cdr(env);
-	}
-	inyim("set_variable_value (placeholder)");
-	// TODO: scheme error
+	return of_error_kind(ERROR_UNBOUND_VARIABLE, object_meta_data(var));
 }
 
 void define_variable(object var, object val, object env)

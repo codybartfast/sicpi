@@ -6,7 +6,13 @@
 #include <stdbool.h>
 #include <inttypes.h>
 
-enum error_kind { ERROR_UNSPECIFIED = 0, ERROR_LEXER, ERROR_PARSER };
+enum error_kind {
+	ERROR_UNSPECIFIED = 0,
+	ERROR_LEXER,
+	ERROR_PARSER,
+	ERROR_UNBOUND_VARIABLE,
+	ERROR_UNKNOWN_EXPRESSION_TYPE
+};
 
 struct object;
 
