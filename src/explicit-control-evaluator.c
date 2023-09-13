@@ -55,11 +55,15 @@ eval_dispatch:
 	object disp_expr = core->expr;
 	if (is_self_evaluating(disp_expr))
 		goto ev_self_eval;
+	if (is_variable(disp_expr))
+		goto ev_variable;
 	else {
 		inyim("Unexpected expression for ec eval_dispatch, obj: '%s'",
 		      to_text(disp_expr));
+		//TODO: scheme error
 	}
 
+	// TODO: update comments to sections only
 	// Evaluating simple expressions
 	//	https://www.sicp-book.com/book-Z-H-34.html#%_sec_Temp_768
 
@@ -68,6 +72,13 @@ ev_self_eval:
 	label = to_label(core->cont);
 	goto goto_label;
 
+ev_variable:
+	core->val = lookup_variable_value(core->expr, core->env);
+	// TODO: check for error
+	label = to_label(core->cont);
+	goto goto_label;
+
+	//
 	// As we're not running a REPL we can't goto 'read-eval-print-loop' when
 	// finished so we instead return the current value to the calling C
 	// function
@@ -94,7 +105,7 @@ object EC_Eval(object expr)
 	core_init(core);
 
 	core->expr = expr;
-	core->env = EMPTY_LIST;
+	core->env = the_global_environment();
 	core->cont = RETURN_CALLER;
 	return eval(core);
 }

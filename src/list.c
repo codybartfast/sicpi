@@ -48,6 +48,14 @@ object list4(const object item1, const object item2, const object item3,
 	return listv(item1, item2, item3, item4, EMPTY_LIST);
 }
 
+int length(object lst)
+{
+	int len = 0;
+	for (; lst != EMPTY_LIST; lst = cdr(lst), len++)
+		;
+	return len;
+}
+
 object map(object (*mapper)(object item), object lst)
 {
 	if (lst == EMPTY_LIST) {

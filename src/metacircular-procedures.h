@@ -14,6 +14,16 @@
 
 #include <stdbool.h>
 
-bool is_self_evaluating(object obj);
+// §4.1.2 Representing Expressions
+
+bool is_self_evaluating(const object obj);
+bool is_variable(const object obj);
+
+object lookup_variable_value(const object var, object env);
+
+//
+// §4.1.4 Running the Evaluator as a Program
+
+object the_global_environment(void);
 
 #endif

@@ -185,6 +185,15 @@ void obj_to_text(void)
 			     NO_META_DATA)));
 }
 
+void obj_equality(void)
+{
+	TEST_ASSERT_TRUE(is_eq(of_name("apple", NO_META_DATA),
+			       of_name("apple", NO_META_DATA)));
+	TEST_ASSERT_FALSE(is_eq(of_name("apple", NO_META_DATA),
+				of_name("Apple", NO_META_DATA)));
+	TEST_ASSERT_TRUE(is_eq(DOT, of_name(".", NO_META_DATA)));
+}
+
 int test_object(void)
 {
 	RUN_TEST(obj_free);
@@ -196,5 +205,6 @@ int test_object(void)
 	RUN_TEST(obj_symbol);
 	RUN_TEST(obj_pair);
 	RUN_TEST(obj_to_text);
+	RUN_TEST(obj_equality);
 	return 0;
 }

@@ -54,6 +54,13 @@ void test_listn(void)
 	TEST_ASSERT_EQUAL(EMPTY_LIST, end(lst));
 }
 
+void test_list_length(void)
+{
+	TEST_ASSERT_EQUAL_INT(0, length(EMPTY_LIST));
+	TEST_ASSERT_EQUAL_INT(1, length(list1(one)));
+	TEST_ASSERT_EQUAL_INT(3, length(list3(one, two, three)));
+}
+
 object mult_by_two(object n)
 {
 	return of_integer(to_integer(n) * 2, NO_META_DATA);
@@ -74,6 +81,7 @@ int test_list(void)
 	set_items();
 	RUN_TEST(test_listv);
 	RUN_TEST(test_listn);
+	RUN_TEST(test_list_length);
 	RUN_TEST(test_list_map);
 
 	return 0;

@@ -4,7 +4,8 @@
 
 #include "../src/run.c"
 
-object to_expr(char *source){
+object to_expr(char *source)
+{
 	return car(load(source_string(source, 0)));
 }
 
@@ -24,10 +25,11 @@ void test_eceval_self_evaluating(void)
 
 void test_eceval_initial_environment(void)
 {
-	// object expr;
+	object expr;
 
-	// expr = to_expr("true");
-	// TEST_ASSERT_EQUAL_STRING("true", to_text(EC_Eval(expr)));
+	expr = to_expr("true");
+	TEST_ASSERT_NOT_EQUAL(TRUE, expr);
+	TEST_ASSERT_EQUAL(TRUE, EC_Eval(expr));
 }
 
 int test_eceval(void)

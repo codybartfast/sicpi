@@ -127,6 +127,13 @@ extern const object QUOTE;
 extern const object UNQUOTE;
 
 //
+// Equality
+// =============================================================================
+//
+
+bool is_eq(const object a, const object b);
+
+//
 // Goto Labels
 // =============================================================================
 //
