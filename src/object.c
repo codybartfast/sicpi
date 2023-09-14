@@ -174,7 +174,7 @@ char *to_text(object obj)
 			obj = cdr(obj);
 		}
 
-		if (!is_empty_list(obj)) {
+		if (!is_null(obj)) {
 			sb_adds(sb, " . ");
 			sb_adds(sb, to_text(obj));
 		}
@@ -264,7 +264,7 @@ inline bool is_true(object obj)
 
 static struct object _EMPTY_LIST = SINGLETON("'()");
 const object EMPTY_LIST = &_EMPTY_LIST;
-inline bool is_empty_list(object obj)
+inline bool is_null(const object obj)
 {
 	return obj == EMPTY_LIST;
 }
@@ -338,11 +338,6 @@ inline char const *to_string(object obj)
 // Pairs
 // =============================================================================
 //
-
-inline bool is_null(const object obj)
-{
-	return obj == EMPTY_LIST;
-}
 
 inline bool is_pair(const object obj)
 {

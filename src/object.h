@@ -78,7 +78,7 @@ extern const object TRUE;
 bool is_true(object obj);
 
 extern const object EMPTY_LIST;
-bool is_empty_list(object obj);
+bool is_null(const object obj);
 
 extern const object EOS;
 bool is_eos(object obj);
@@ -108,7 +108,6 @@ char const *to_string(const object obj);
 // =============================================================================
 //
 
-bool is_null(const object obj);
 bool is_pair(const object obj);
 object cons(const object a, const object b, meta_data meta_data);
 object car(const object obj);
