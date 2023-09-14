@@ -26,14 +26,13 @@ typedef union object_value {
 	const integer integer;
 	const enum error_kind error_kind;
 	const char *string;
+	struct object *(*primitive_procedure)(struct object *);
+
 	// This is the largest type, 2 * 64b = 128b.
 	// Perhaps, if/when 'storage' is implemented it could be replaced
 	// by 2 * 32b addresses into the starage array?
 	struct pair pair;
 } object_value;
-
-// Objects should be passed by reference?:
-// 	https://www.sicp-book.com/book-Z-H-22.html#%_idx_3188
 
 typedef struct object {
 	const int8_t value_kind;
@@ -46,9 +45,16 @@ typedef struct object {
 // =============================================================================
 //
 
-meta_data object_meta_data(const object obj);
 void object_free(object obj);
+meta_data object_meta_data(const object obj);
 char *to_text(object obj);
+
+//
+// Equality
+// =============================================================================
+//
+
+bool is_eq(const object a, const object b);
 
 //
 // Errors
@@ -111,6 +117,15 @@ object set_car(object pair, const object new_car);
 object set_cdr(object pair, const object new_cdr);
 
 //
+// Primitive Procedures
+// =============================================================================
+//
+
+bool is_primitive_procedure(const object obj);
+object of_func(object (*prim_proc)(object obj), meta_data meta_data);
+object (*to_func(object obj))(object args);
+
+//
 // Symbols
 // =============================================================================
 //
@@ -131,13 +146,6 @@ extern const object DOT;
 extern const object QUASIQUOTE;
 extern const object QUOTE;
 extern const object UNQUOTE;
-
-//
-// Equality
-// =============================================================================
-//
-
-bool is_eq(const object a, const object b);
 
 //
 // Goto Labels

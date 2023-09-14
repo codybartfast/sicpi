@@ -20,12 +20,13 @@ enum value_kind {
 
 	// Do Not change value without also updating GOTO_LABEL_VALUE_KIND
 	VK_GOTO_LABEL = 1,
-	VK_SINGLETON, // 2
-	VK_INTEGER, //// 3
-	VK_FLOATING, /// 4
-	VK_STRING, ///// 5
-	VK_SYMBOL, ///// 6
-	VK_PAIR, /////// 7
+	VK_SINGLETON, //////////// 2
+	VK_INTEGER, ////////////// 3
+	VK_FLOATING, ///////////// 4
+	VK_STRING, /////////////// 5
+	VK_SYMBOL, /////////////// 6
+	VK_PAIR, ///////////////// 7
+	VK_PRIMITIVE_PROCEDURE /// 8
 };
 
 //
@@ -100,16 +101,6 @@ static object object_new(int8_t value_kind, meta_data meta_data,
 	return obj;
 }
 
-//
-// General
-// =============================================================================
-//
-
-meta_data object_meta_data(object obj)
-{
-	return obj->meta_data;
-}
-
 void object_free(object obj)
 {
 	enum value_kind kind = object_value_kind(obj);
@@ -122,6 +113,16 @@ void object_free(object obj)
 	if (kind != VK_SYMBOL) {
 		free(obj);
 	}
+}
+
+//
+// General
+// =============================================================================
+//
+
+meta_data object_meta_data(object obj)
+{
+	return obj->meta_data;
 }
 
 #define TO_TEXT_BUFFER_LEN 1024
@@ -187,6 +188,16 @@ char *to_text(object obj)
 		      object_value_kind_name(obj));
 		exit(1); // keep compiler happy
 	}
+}
+
+//
+// Equality
+// =============================================================================
+//
+
+bool is_eq(const object a, const object b)
+{
+	return a == b;
 }
 
 //
@@ -369,6 +380,28 @@ inline object set_cdr(object pair, object new_cdr)
 }
 
 //
+// Primitive Procedures
+// =============================================================================
+//
+
+bool is_primitive_procedure(const object obj)
+{
+	return object_value_kind(obj) == VK_PRIMITIVE_PROCEDURE;
+}
+
+object of_func(object (*prim_proc)(object obj), meta_data meta_data)
+{
+	return object_new(VK_PRIMITIVE_PROCEDURE, meta_data,
+			  (object_value){ .primitive_procedure = prim_proc });
+}
+
+object (*to_func(object obj))(object args)
+{
+	check_value_kind(obj, VK_PRIMITIVE_PROCEDURE, "to_func");
+	return obj->value.primitive_procedure;
+}
+
+//
 // Symbols
 // =============================================================================
 //
@@ -437,16 +470,6 @@ void init_keywords(void)
 	obarray_add_symbol(symbols, QUASIQUOTE);
 	obarray_add_symbol(symbols, QUOTE);
 	obarray_add_symbol(symbols, UNQUOTE);
-}
-
-//
-// Equality
-// =============================================================================
-//
-
-bool is_eq(const object a, const object b)
-{
-	return a == b;
 }
 
 //

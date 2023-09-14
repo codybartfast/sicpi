@@ -194,6 +194,24 @@ void obj_equality(void)
 	TEST_ASSERT_TRUE(is_eq(DOT, of_name(".", NO_META_DATA)));
 }
 
+object add_prim_proc(object args)
+{
+	return (of_integer(to_integer(car(args)) + to_integer(car(cdr(args))),
+			   NO_META_DATA));
+}
+
+void obj_prim_proc(void)
+{
+	object args = cons(of_integer(5, NO_META_DATA),
+			   cons(of_integer(7, NO_META_DATA), EMPTY_LIST,
+				NO_META_DATA),
+			   NO_META_DATA);
+
+	object prim_proc = of_func(add_prim_proc, NO_META_DATA);
+	object (*func)(object) = to_func(prim_proc);
+	TEST_ASSERT_EQUAL(12, to_integer(func(args)));
+}
+
 int test_object(void)
 {
 	RUN_TEST(obj_free);
@@ -206,5 +224,6 @@ int test_object(void)
 	RUN_TEST(obj_pair);
 	RUN_TEST(obj_to_text);
 	RUN_TEST(obj_equality);
+	RUN_TEST(obj_prim_proc);
 	return 0;
 }
