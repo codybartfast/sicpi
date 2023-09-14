@@ -27,6 +27,7 @@
                 "src/obarray.c",
                 "src/object.c",
                 "src/parser.c",
+                "src/primitive-procedures.c",
                 "src/run.c",
                 "src/sicp.c",
                 "src/sicp-error.c",
@@ -112,6 +113,9 @@
 
                 "src/parser.c",
                 "tests/test-parser.c",
+
+                "src/primitive-procedures.c",
+                "tests/test-primitive-procedures.c",
 
                 "src/source.c",
                 "tests/test-source.c",

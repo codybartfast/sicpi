@@ -16,6 +16,7 @@ void test_obarray(void);
 void test_object(void);
 void test_parser(void);
 void test_list(void);
+void test_primitive_procedures(void);
 void test_eceval(void);
 
 int main(void)
@@ -29,9 +30,10 @@ int main(void)
 	test_obarray();
 	test_object();
 	test_parser();
+	test_list();
 
 	test_eceval();
-	test_list();
+	test_primitive_procedures();
 
 	return UNITY_END();
 }

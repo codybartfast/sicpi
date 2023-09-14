@@ -2,11 +2,11 @@
 #include "../unity/src/unity.h"
 #include "../src/list.h"
 
-object one;
-object two;
-object three;
-object four;
-object five;
+static object one;
+static object two;
+static object three;
+static object four;
+static object five;
 
 object end(object lst)
 {
@@ -15,7 +15,7 @@ object end(object lst)
 	return lst;
 }
 
-void set_items(void)
+static void set_items(void)
 {
 	one = of_integer(1, NO_META_DATA);
 	two = of_integer(2, NO_META_DATA);
