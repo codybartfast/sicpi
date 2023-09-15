@@ -6,6 +6,23 @@
 #include <stdbool.h>
 #include <inttypes.h>
 
+/*
+ *value_kind is stored in a int_8, so max value is 127.
+ */
+
+enum value_kind {
+	VK_ERROR = -1,
+	VK_UNDEFINED = 0,
+	VK_SINGLETON, //////////// 1
+	VK_INTEGER, ////////////// 2
+	VK_FLOATING, ///////////// 3
+	VK_STRING, /////////////// 4
+	VK_SYMBOL, /////////////// 5
+	VK_PAIR, ///////////////// 6
+	VK_PRIMITIVE_PROCEDURE, // 7
+	VK_GOTO_LABEL //////////// 8
+};
+
 enum error_kind {
 	ERROR_UNSPECIFIED = 0,
 	ERROR_LEXER,
@@ -39,6 +56,13 @@ typedef struct object {
 	const meta_data meta_data;
 	object_value value;
 } *object;
+
+//
+// Helpers
+// =============================================================================
+//
+
+int8_t object_value_kind(object obj);
 
 //
 // General
@@ -150,8 +174,6 @@ extern const object UNQUOTE;
 // Goto Labels
 // =============================================================================
 //
-
-#define GOTO_LABEL_VALUE_KIND 1
 
 integer to_label(object obj);
 

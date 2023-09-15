@@ -16,7 +16,7 @@ enum label { LABEL_EVAL_DISPATCH, LABEL_RETURN_CALLER };
 
 #define GOTO_LABEL(number)                                                     \
 	{                                                                      \
-		GOTO_LABEL_VALUE_KIND, NO_META_DATA,                           \
+		VK_GOTO_LABEL, NO_META_DATA,                           \
 		{                                                              \
 			.integer = number                                      \
 		}                                                              \

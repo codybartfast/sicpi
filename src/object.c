@@ -11,28 +11,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/* value_kind is stored in a int_8, so max value is 127.
- * Values below 64 are used for self-
- */
-enum value_kind {
-	VK_ERROR = -1,
-	VK_UNDEFINED = 0,
-
-	// Do Not change value without also updating GOTO_LABEL_VALUE_KIND
-	VK_GOTO_LABEL = 1,
-	VK_SINGLETON, //////////// 2
-	VK_INTEGER, ////////////// 3
-	VK_FLOATING, ///////////// 4
-	VK_STRING, /////////////// 5
-	VK_SYMBOL, /////////////// 6
-	VK_PAIR, ///////////////// 7
-	VK_PRIMITIVE_PROCEDURE /// 8
-};
-
 //
 // Helpers
 // =============================================================================
 //
+
+inline int8_t object_value_kind(object obj)
+{
+	return obj->value_kind;
+}
 
 static char *value_kind_name(enum value_kind value_kind)
 {
@@ -59,11 +46,6 @@ static char *value_kind_name(enum value_kind value_kind)
 		inyim("Don't know name of value kind: %d", value_kind);
 		exit(1); // keep compiler happy
 	}
-}
-
-static inline int8_t object_value_kind(object obj)
-{
-	return obj->value_kind;
 }
 
 static char *object_value_kind_name(object obj)
