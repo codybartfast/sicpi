@@ -7,10 +7,6 @@
 
 #include <stdbool.h>
 
-#define RETURN_IF_ERROR(OBJ)                                                   \
-	if (is_error(OBJ))                                                     \
-	return OBJ
-
 // Integers we can switch on to select goto destination
 enum label { LABEL_EVAL_DISPATCH, LABEL_RETURN_CALLER };
 

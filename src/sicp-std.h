@@ -21,6 +21,11 @@ typedef uint32_t meta_data;
 void *mallocx(const size_t size, const char *caller);
 char *strdupx(const char *s, const char *caller);
 
+
+#define RETURN_IF_ERROR(OBJ)                                                   \
+	if (is_error(OBJ))                                                     \
+	return OBJ
+
 #define UNUSED(x) (void)(x)
 
 #endif

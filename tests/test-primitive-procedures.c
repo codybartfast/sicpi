@@ -4,12 +4,17 @@
 
 #include "../src/list.h"
 
-
 static object one;
 static object two;
 static object three;
 static object five;
 static object seven;
+
+static object one_f;
+static object two_f;
+static object three_f;
+static object five_f;
+static object seven_f;
 
 static void set_items(void)
 {
@@ -18,11 +23,27 @@ static void set_items(void)
 	three = of_integer(3, NO_META_DATA);
 	five = of_integer(5, NO_META_DATA);
 	seven = of_integer(7, NO_META_DATA);
+
+	one_f = of_floating(1.0, NO_META_DATA);
+	two_f = of_floating(2.0, NO_META_DATA);
+	three_f = of_floating(3.0, NO_META_DATA);
+	five_f = of_floating(5.0, NO_META_DATA);
+	seven_f = of_floating(7.0, NO_META_DATA);
 }
 
 void test_pp_add(void)
 {
+	TEST_ASSERT_EQUAL(0, to_integer(Add(EMPTY_LIST)));
+	TEST_ASSERT_EQUAL(7, to_integer(Add(list1(seven))));
 	TEST_ASSERT_EQUAL(9, to_integer(Add(list2(two, seven))));
+	TEST_ASSERT_EQUAL(14, to_integer(Add(list3(two, five, seven))));
+
+	TEST_ASSERT_EQUAL(7.0, to_floating(Add(list1(seven_f))));
+	TEST_ASSERT_EQUAL(9.0, to_floating(Add(list2(two_f, seven_f))));
+	TEST_ASSERT_EQUAL(14.0,
+			  to_floating(Add(list3(two_f, five_f, seven_f))));
+	TEST_ASSERT_EQUAL(14.0,
+			  to_floating(Add(list3(two, five_f, seven))));
 }
 
 int test_primitive_procedures(void)
