@@ -13,9 +13,6 @@ void test_eceval_self_evaluating(void)
 {
 	object expr;
 
-	expr = of_integer(486, NO_META_DATA);
-	TEST_ASSERT_EQUAL_STRING("486", to_text(EC_Eval(expr)));
-
 	expr = of_floating(48.11, NO_META_DATA);
 	TEST_ASSERT_EQUAL_STRING("48.11", to_text(EC_Eval(expr)));
 
@@ -41,9 +38,14 @@ void test_eceval_quoted(void)
 	TEST_ASSERT_EQUAL(symb, EC_Eval(expr));
 }
 
-void test_eceval_primitive_procedures(void)
+void test_eceval_section_1_1_1(void)
 {
-	object expr = to_expr("(+ 137 349)");
+	object expr;
+
+	expr = of_integer(486, NO_META_DATA);
+	TEST_ASSERT_EQUAL_STRING("486", to_text(EC_Eval(expr)));
+
+	expr = to_expr("(+ 137 349)");
 	TEST_ASSERT_EQUAL(486, to_integer(EC_Eval(expr)));
 }
 
@@ -52,7 +54,7 @@ int test_eceval(void)
 	RUN_TEST(test_eceval_self_evaluating);
 	RUN_TEST(test_eceval_variable);
 	RUN_TEST(test_eceval_quoted);
-	RUN_TEST(test_eceval_primitive_procedures);
+	RUN_TEST(test_eceval_section_1_1_1);
 
 	return 0;
 }

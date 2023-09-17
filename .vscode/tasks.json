@@ -95,7 +95,7 @@
                 "src/hardware.c",
                 "src/metacircular-procedures.c",
                 "src/explicit-control-evaluator.c",
-                "tests/test-eceval.c",
+                "tests/test-explicit-control-evaluator.c",
 
                 "src/token.c",
                 "src/character-classes.c",
