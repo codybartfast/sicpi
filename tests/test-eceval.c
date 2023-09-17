@@ -41,11 +41,18 @@ void test_eceval_quoted(void)
 	TEST_ASSERT_EQUAL(symb, EC_Eval(expr));
 }
 
+void test_eceval_primitive_procedures(void)
+{
+	object expr = to_expr("(+ 137 349)");
+	TEST_ASSERT_EQUAL(486, to_integer(EC_Eval(expr)));
+}
+
 int test_eceval(void)
 {
 	RUN_TEST(test_eceval_self_evaluating);
 	RUN_TEST(test_eceval_variable);
 	RUN_TEST(test_eceval_quoted);
+	RUN_TEST(test_eceval_primitive_procedures);
 
 	return 0;
 }

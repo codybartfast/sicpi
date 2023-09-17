@@ -18,8 +18,7 @@ inline bool is_variable(const object exp)
 	return is_symbol(exp);
 }
 
-inline object text_of_quotation(const object exp)
-{
+inline object text_of_quotation(const object exp){
 	return cadr(exp);
 }
 
@@ -141,11 +140,19 @@ void define_variable(object var, object val, object env)
 // §4.1.4 Running the Evaluator as a Program
 //	https://www.sicp-book.com/book-Z-H-26.html#%_sec_4.1.4
 
+object make_primitive_procedures_list(void)
+{
+	meta_data NMD = NO_META_DATA;
+	return listv(list2(of_name("+", NMD), of_func(Add, NMD)), EMPTY_LIST);
+}
+
 object _primitive_procedures = NULL;
 object primitive_procedures(void)
 {
-	return _primitive_procedures ? _primitive_procedures :
-				       (_primitive_procedures = EMPTY_LIST);
+	return _primitive_procedures ?
+		       _primitive_procedures :
+		       (_primitive_procedures =
+				make_primitive_procedures_list());
 }
 
 object primitive_procedure_names(void)
