@@ -1,20 +1,51 @@
 #include "metacircular-procedures.h"
 
 #include "list.h"
+#include "primitive-procedures.h"
 #include "sicp-error.h"
 
 //
 // §4.1.2 Representing Expressions
 // 	https://www.sicp-book.com/book-Z-H-26.html#%_sec_4.1.2
 
-inline bool is_self_evaluating(const object obj)
+inline bool is_self_evaluating(const object exp)
 {
-	return is_number(obj) || is_string(obj);
+	return is_number(exp) || is_string(exp);
 }
 
-inline bool is_variable(const object obj)
+inline bool is_variable(const object exp)
 {
-	return is_symbol(obj);
+	return is_symbol(exp);
+}
+
+inline object text_of_quotation(const object exp)
+{
+	return cadr(exp);
+}
+
+inline object operator(const object exp)
+{
+	return car(exp);
+}
+
+inline object operands(const object exp)
+{
+	return cdr(exp);
+}
+
+inline bool is_no_operands(const object ops)
+{
+	return is_null(ops);
+}
+
+inline object first_operand(const object ops)
+{
+	return car(ops);
+}
+
+inline object rest_operands(const object ops)
+{
+	return cdr(ops);
 }
 
 //
@@ -110,10 +141,27 @@ void define_variable(object var, object val, object env)
 // §4.1.4 Running the Evaluator as a Program
 //	https://www.sicp-book.com/book-Z-H-26.html#%_sec_4.1.4
 
+object _primitive_procedures = NULL;
+object primitive_procedures(void)
+{
+	return _primitive_procedures ? _primitive_procedures :
+				       (_primitive_procedures = EMPTY_LIST);
+}
+
+object primitive_procedure_names(void)
+{
+	return map(car, primitive_procedures());
+}
+
+object primitive_procedure_objects(void)
+{
+	return map(cadr, primitive_procedures());
+}
+
 object setup_environment(void)
 {
-	// TODO: add primitive procedures
-	object initial_env = extend_environment(EMPTY_LIST, EMPTY_LIST,
+	object initial_env = extend_environment(primitive_procedure_names(),
+						primitive_procedure_objects(),
 						the_empty_environment());
 	define_variable(of_name("true", NO_META_DATA), TRUE, initial_env);
 	define_variable(of_name("false", NO_META_DATA), FALSE, initial_env);
@@ -126,4 +174,9 @@ object the_global_environment(void)
 	return _the_global_environment ?
 		       _the_global_environment :
 		       (_the_global_environment = setup_environment());
+}
+
+object apply_primitive_procedure(object proc, object args)
+{
+	return (*to_func(proc))(args);
 }

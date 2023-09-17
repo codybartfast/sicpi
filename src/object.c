@@ -211,6 +211,15 @@ char *error_kind_name(enum error_kind error_kind)
 		return "<LEXER-ERROR>";
 	case ERROR_PARSER:
 		return "<PARSER-ERROR>";
+	case ERROR_UNBOUND_VARIABLE:
+		return "<UNBOUND-VARIABLE-ERROR>";
+	case ERROR_UNEXPECTED_TYPE:
+		return "<UNEXPECTED-TYPE-ERROR>";
+	case ERROR_UNKNOWN_EXPRESSION_TYPE:
+		return "<UNKNOWN-EXPRESSION-TYPE-ERROR>";
+	case ERROR_UNKNOWN_PROCEDURE_TYPE:
+		return "<UNKNOWN-PROCEDURE-TYPE-ERROR>";
+
 	default:
 		inyim("Don't know name of error kind: %d", error_kind);
 		exit(1); // keep compiler happy
