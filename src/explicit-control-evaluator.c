@@ -74,7 +74,7 @@ static object adjoin_arg(object arg, object arg_list)
 
 	object old_end;
 	for (old_end = arg_list; cdr(old_end) != EMPTY_LIST;
-	     arg_list = cdr(old_end))
+	     old_end = cdr(old_end))
 		;
 	set_cdr(old_end, new_end);
 	return arg_list;

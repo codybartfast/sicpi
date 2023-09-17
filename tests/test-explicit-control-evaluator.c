@@ -57,8 +57,8 @@ void test_eceval_section_1_1_1(void)
 	expr = to_expr("(+ 2.7 10)");
 	TEST_ASSERT_EQUAL(12.7, to_floating(EC_Eval(expr)));
 
-	// expr = to_expr("(+ 21 35 12 7)");
-	// TEST_ASSERT_EQUAL(75, to_integer(EC_Eval(expr)));
+	expr = to_expr("(+ 21 35 12 7)");
+	TEST_ASSERT_EQUAL(75, to_integer(EC_Eval(expr)));
 
 	// expr = to_expr("(* 25 4 12)");
 	// TEST_ASSERT_EQUAL(1200, to_integer(EC_Eval(expr)));

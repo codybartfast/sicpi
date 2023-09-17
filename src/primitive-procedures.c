@@ -2,6 +2,8 @@
 
 #include "sicp-error.h"
 
+#include <stdio.h> // todo
+
 static object check_args(object args, int *arg_count, bool *have_floating)
 {
 	for (; args != EMPTY_LIST; args = cdr(args)) {
