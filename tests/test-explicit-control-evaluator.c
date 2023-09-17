@@ -47,6 +47,27 @@ void test_eceval_section_1_1_1(void)
 
 	expr = to_expr("(+ 137 349)");
 	TEST_ASSERT_EQUAL(486, to_integer(EC_Eval(expr)));
+
+	// expr = to_expr("(- 1000 334)");
+	// TEST_ASSERT_EQUAL(666, to_integer(EC_Eval(expr)));
+
+	// expr = to_expr("(/ 10 5)");
+	// TEST_ASSERT_EQUAL(2, to_integer(EC_Eval(expr)));
+
+	expr = to_expr("(+ 2.7 10)");
+	TEST_ASSERT_EQUAL(12.7, to_floating(EC_Eval(expr)));
+
+	// expr = to_expr("(+ 21 35 12 7)");
+	// TEST_ASSERT_EQUAL(75, to_integer(EC_Eval(expr)));
+
+	// expr = to_expr("(* 25 4 12)");
+	// TEST_ASSERT_EQUAL(1200, to_integer(EC_Eval(expr)));
+
+	// expr = to_expr("((+ (* 3 5) (- 10 6))");
+	// TEST_ASSERT_EQUAL(19, to_integer(EC_Eval(expr)));
+
+	// expr = to_expr("(+ (* 3 (+ (* 2 4) (+ 3 5))) (+ (- 10 7) 6))");
+	// TEST_ASSERT_EQUAL(0, to_integer(EC_Eval(expr)));
 }
 
 int test_eceval(void)
