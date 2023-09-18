@@ -2,7 +2,19 @@
 
 #include "sicp-error.h"
 
-#include <stdio.h> // todo
+#define TO_NUMBER(OBJ)                                                         \
+	(object_value_kind(OBJ) == VK_INTEGER ? to_integer(OBJ) :              \
+						to_floating(OBJ))
+
+static inline bool is_floating(object obj)
+{
+	return object_value_kind(obj) == VK_FLOATING;
+}
+
+static inline object zero(void)
+{
+	return of_integer(0, NO_META_DATA);
+}
 
 static object check_args(object args, int *arg_count, bool *have_floating)
 {
@@ -30,15 +42,45 @@ object Add(object args)
 		floating acc = 0;
 		for (; args != EMPTY_LIST; args = cdr(args)) {
 			object arg = car(args);
-			acc += object_value_kind(arg) == VK_INTEGER ?
-				       to_integer(arg) :
-				       to_floating(arg);
+			acc += TO_NUMBER(arg);
 		}
 		return of_floating(acc, NO_META_DATA);
 	} else {
 		integer acc = 0;
 		for (; args != EMPTY_LIST; args = cdr(args)) {
 			acc += to_integer(car(args));
+		}
+		return of_integer(acc, NO_META_DATA);
+	}
+}
+
+object Sub(object args)
+{
+	int arg_count = 0;
+	bool have_floating = false;
+	RETURN_IF_ERROR(check_args(args, &arg_count, &have_floating));
+
+	if (arg_count == 0) {
+		eprintf("Sub (-) requires at least one argument.");
+		return of_error_kind(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
+				     NO_META_DATA);
+	}
+
+	if (arg_count == 1) {
+		args = cons(zero(), args, NO_META_DATA);
+	}
+
+	if (have_floating) {
+		floating acc = TO_NUMBER(car(args));
+		for (args = cdr(args); args != EMPTY_LIST; args = cdr(args)) {
+			object arg = car(args);
+			acc -= TO_NUMBER(arg);
+		}
+		return of_floating(acc, NO_META_DATA);
+	} else {
+		integer acc = TO_NUMBER(car(args));
+		for (args = cdr(args); args != EMPTY_LIST; args = cdr(args)) {
+			acc -= to_integer(car(args));
 		}
 		return of_integer(acc, NO_META_DATA);
 	}
