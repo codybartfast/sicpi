@@ -207,6 +207,8 @@ inline enum error_kind to_error_kind(object obj)
 char *error_kind_name(enum error_kind error_kind)
 {
 	switch (error_kind) {
+	case ERROR_DIVISION_BY_ZERO:
+		return "<DIVISION-BY-ZERO-ERROR>";
 	case ERROR_INCORRECT_NUMBER_OF_ARGUMENTS:
 		return "<INCORRECT-NUMBER-OF-ARGUMENTS-ERROR>";
 	case ERROR_LEXER:

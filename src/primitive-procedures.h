@@ -5,5 +5,7 @@
 
 object Add(object args);
 object Sub(object args);
+object Mul(object args);
+object Div(object args);
 
 #endif

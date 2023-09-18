@@ -145,7 +145,10 @@ object make_primitive_procedures_list(void)
 {
 	meta_data NMD = NO_META_DATA;
 	return listv(list2(of_name("+", NMD), of_func(Add, NMD)),
-		     list2(of_name("-", NMD), of_func(Sub, NMD)), EMPTY_LIST);
+		     list2(of_name("-", NMD), of_func(Sub, NMD)),
+		     list2(of_name("*", NMD), of_func(Mul, NMD)),
+		     list2(of_name("/", NMD), of_func(Div, NMD)),
+		     EMPTY_LIST); // this comment just to keep separte line
 }
 
 object _primitive_procedures = NULL;

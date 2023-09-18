@@ -23,9 +23,9 @@ enum value_kind {
 	VK_GOTO_LABEL //////////// 8
 };
 
-
 enum error_kind {
 	ERROR_UNSPECIFIED = 0,
+	ERROR_DIVISION_BY_ZERO,
 	ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
 	ERROR_LEXER,
 	ERROR_PARSER,
