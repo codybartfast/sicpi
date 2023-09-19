@@ -14,6 +14,7 @@ enum label {
 	LABEL_EV_APPL_ACCUMULATE_ARG,
 	LABEL_EV_APPL_DID_OPERATOR,
 	LABEL_EV_DEFINITION_1,
+	LABEL_EV_SEQUENCE_CONTINUE,
 	LABEL_EVAL_DISPATCH,
 	LABEL_RETURN_CALLER
 };
@@ -42,6 +43,10 @@ const object EV_APPL_DID_OPERATOR = &_EV_APPL_DID_OPERATOR;
 
 static struct object _EV_DEFINITION_1 = GOTO_LABEL(LABEL_EV_DEFINITION_1);
 const object EV_DEFINITION_1 = &_EV_DEFINITION_1;
+
+static struct object _EV_SEQUENCE_CONTINUE =
+	GOTO_LABEL(LABEL_EV_SEQUENCE_CONTINUE);
+const object EV_SEQUENCE_CONTINUE = &_EV_SEQUENCE_CONTINUE;
 
 static struct object _EVAL_DISPATCH = GOTO_LABEL(LABEL_EVAL_DISPATCH);
 const object EVAL_DISPATCH = &_EVAL_DISPATCH;
@@ -96,20 +101,28 @@ static bool is_last_operand(object ops)
 
 static object eval(core core)
 {
-
 eval_dispatch:
 	object disp_expr = core->expr;
-	if (is_self_evaluating(disp_expr))
+	RETURN_IF_ERROR(disp_expr);
+	
+	if (is_self_evaluating(disp_expr)) {
 		goto ev_self_eval;
-	if (is_variable(disp_expr))
+	}
+	if (is_variable(disp_expr)) {
 		goto ev_variable;
+	}
 	if (is_pair(disp_expr)) {
 		object head = car(disp_expr);
 		if (is_symbol(head)) {
-			if (head == QUOTE)
+			if (head == QUOTE) {
 				goto ev_quoted;
-			if (head == DEFINE)
+			}
+			if (head == DEFINE) {
 				goto ev_definition;
+			}
+			if (head == BEGIN) {
+				goto ev_begin;
+			}
 		}
 		goto ev_application;
 	}
@@ -200,6 +213,36 @@ primitive_apply:
 	goto goto_cont;
 
 	//
+	// §5.4.2 Sequence Evaluation and Tail Recursion
+	// 	https://www.sicp-book.com/book-Z-H-34.html#%_sec_5.4.2
+	//
+
+ev_begin:
+	core->unev = begin_actions(core->expr);
+	save(core, core->cont);
+	goto ev_sequence;
+
+ev_sequence:
+	core->expr = first_exp(core->unev);
+	if (is_last_exp(core->unev)) {
+		goto ev_sequence_last_exp;
+	}
+	save(core, core->unev);
+	save(core, core->env);
+	core->cont = EV_SEQUENCE_CONTINUE;
+	goto eval_dispatch;
+
+ev_sequence_continue:
+	core->env = restore(core);
+	core->unev = restore(core);
+	core->unev = rest_exps(core->unev);
+	goto ev_sequence;
+
+ev_sequence_last_exp:
+	core->cont = restore(core);
+	goto eval_dispatch;
+
+	//
 	// §5.4.3 Conditionals, Assignments, and Definitions
 	// 	https://www.sicp-book.com/book-Z-H-34.html#%_sec_5.4.3
 	//
@@ -218,8 +261,6 @@ ev_definition_1:
 	core->env = restore(core);
 	core->unev = restore(core);
 	define_variable(core->unev, core->val, core->env);
-	//   (perform
-	//    (op define-variable!) (reg unev) (reg val) (reg env))
 	core->val = OK;
 	goto goto_cont;
 
@@ -239,12 +280,14 @@ goto_cont:
 		goto ev_appl_accumulate_arg;
 	case LABEL_EV_APPL_ACCUM_LAST_ARG:
 		goto ev_appl_accum_last_arg;
-	case LABEL_EVAL_DISPATCH:
-		goto eval_dispatch;
 	case LABEL_EV_APPL_DID_OPERATOR:
 		goto ev_appl_did_operator;
 	case LABEL_EV_DEFINITION_1:
 		goto ev_definition_1;
+	case LABEL_EV_SEQUENCE_CONTINUE:
+		goto ev_sequence_continue;
+	case LABEL_EVAL_DISPATCH:
+		goto eval_dispatch;
 	case LABEL_RETURN_CALLER:
 		goto return_caller;
 	default:

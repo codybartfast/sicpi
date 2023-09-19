@@ -40,6 +40,8 @@ static char *value_kind_name(enum value_kind value_kind)
 		return "Symbol";
 	case VK_PAIR:
 		return "Pair";
+	case VK_PRIMITIVE_PROCEDURE:
+		return "Primitive Procedure";
 	case VK_GOTO_LABEL:
 		return "Goto Label";
 	default:
@@ -165,6 +167,8 @@ char *to_text(object obj)
 		char *rslt = sb_copy(sb);
 		sb_free(sb);
 		return rslt;
+	case VK_PRIMITIVE_PROCEDURE:
+		return strdupx("<PRIMITIVE-PROCEDURE>", "object:to_text");
 	default:
 		inyim("'to_text' got unexpected value_kind: %s.",
 		      object_value_kind_name(obj));
@@ -445,6 +449,9 @@ inline char const *to_name(object obj)
 // =============================================================================
 //
 
+static struct object _BEGIN = SYMBOL("begin");
+const object BEGIN = &_BEGIN;
+
 static struct object _DEFINE = SYMBOL("define");
 const object DEFINE = &_DEFINE;
 
@@ -466,6 +473,7 @@ void init_keywords(void)
 {
 	symbols = obarray_new(0);
 
+	obarray_add_symbol(symbols, BEGIN);
 	obarray_add_symbol(symbols, DEFINE);
 	obarray_add_symbol(symbols, DOT);
 	obarray_add_symbol(symbols, QUASIQUOTE);

@@ -27,6 +27,11 @@ object lookup_variable_value(const object var, object env);
 object definition_variable(object exp);
 object definition_value(object exp);
 
+object begin_actions(object exp);
+bool is_last_exp(object seq);
+object first_exp(object seq);
+object rest_exps(object seq);
+
 object operator(const object exp);
 object operands(const object exp);
 bool is_no_operands(const object exp);
@@ -43,6 +48,7 @@ void define_variable(object var, object val, object env);
 // §4.1.4 Running the Evaluator as a Program
 //
 
+object setup_environment(void);
 object the_global_environment(void);
 object apply_primitive_procedure(object proc, object args);
 

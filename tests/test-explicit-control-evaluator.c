@@ -81,7 +81,7 @@ void test_eceval_section_1_1_1(void)
 void test_eceval_define(void)
 {
 	object expr;
-	object env = the_global_environment();
+	object env = setup_environment();
 
 	expr = to_expr("(define e (+ 1 1.71828))");
 	ec_eval(expr, env);
@@ -90,12 +90,20 @@ void test_eceval_define(void)
 					 of_name("e", NO_META_DATA), env)));
 }
 
-void test_eceval_section_1_1_2(void)
+void test_eceval_sequence(void)
 {
-	// object expr;
+	object expr;
 
-	// expr = to_expr("(define size 2) size");
-	// TEST_ASSERT_EQUAL_STRING("2", to_text(EC_Eval(expr)));
+	expr = to_expr("(begin"
+		       "    (define a 1)"
+		       "    (define b 1.5)"
+		       "    (define c 0.21)"
+		       "    (define d 0.00828)"
+		       "    (define e (+ a b c d))"
+		       "    e"
+		       ")");
+
+	TEST_ASSERT_EQUAL_DOUBLE(2.71828, to_floating(EC_Eval(expr)));
 }
 
 int test_explicit_control_evaluator(void)
@@ -105,7 +113,7 @@ int test_explicit_control_evaluator(void)
 	RUN_TEST(test_eceval_quoted);
 	RUN_TEST(test_eceval_section_1_1_1);
 	RUN_TEST(test_eceval_define);
-	RUN_TEST(test_eceval_section_1_1_2);
+	RUN_TEST(test_eceval_sequence);
 
 	return 0;
 }

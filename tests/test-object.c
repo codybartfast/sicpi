@@ -136,6 +136,7 @@ void obj_symbol(void)
 	TEST_ASSERT_EQUAL(meta_data, object_meta_data(obj));
 	TEST_ASSERT_EQUAL_STRING(id, to_name(obj));
 
+	TEST_ASSERT_EQUAL(BEGIN, of_name("begin", NO_META_DATA));
 	TEST_ASSERT_EQUAL(DEFINE, of_name("define", NO_META_DATA));
 	TEST_ASSERT_EQUAL(DOT, of_name(".", NO_META_DATA));
 	TEST_ASSERT_EQUAL(QUASIQUOTE, of_name("quasiquote", NO_META_DATA));

@@ -23,7 +23,7 @@ inline object text_of_quotation(const object exp)
 	return cadr(exp);
 }
 
-object definition_variable(object exp)
+inline object definition_variable(object exp)
 {
 	return is_symbol(cadr(exp)) ? cadr(exp) : caadr(exp);
 }
@@ -37,6 +37,30 @@ object definition_value(object exp)
 		exit(1);
 	}
 }
+
+// Todo: begin? et all
+
+inline object begin_actions(object exp)
+{
+	return cdr(exp);
+}
+
+inline bool is_last_exp(object seq)
+{
+	return is_null(cdr(seq));
+}
+
+inline object first_exp(object seq)
+{
+	return car(seq);
+}
+
+inline object rest_exps(object seq)
+{
+	return cdr(seq);
+}
+
+//
 
 inline object operator(const object exp)
 {
