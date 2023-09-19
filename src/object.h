@@ -99,17 +99,20 @@ char *error_kind_name(enum error_kind error_kind);
 // =============================================================================
 //
 
-extern const object FALSE;
-bool is_false(object obj);
-
-extern const object TRUE;
-bool is_true(object obj);
-
 extern const object EMPTY_LIST;
 bool is_null(const object obj);
 
 extern const object EOS;
 bool is_eos(object obj);
+
+extern const object FALSE;
+bool is_false(object obj);
+
+extern const object OK;
+bool is_ok(object obj);
+
+extern const object TRUE;
+bool is_true(object obj);
 
 //
 // Numbers
@@ -169,6 +172,7 @@ char const *to_name(const object obj);
 // =============================================================================
 //
 
+extern const object DEFINE;
 extern const object DOT;
 extern const object QUASIQUOTE;
 extern const object QUOTE;

@@ -8,8 +8,8 @@ void has_one_type(object obj)
 	int common_count = is_error(obj) + is_number(obj) + is_pair(obj) +
 			   is_string(obj) + is_symbol(obj);
 
-	int singleton_count =
-		is_false(obj) + is_true(obj) + is_null(obj) + is_eos(obj);
+	int singleton_count = is_eos(obj) + is_false(obj) + is_null(obj) +
+			      is_ok(obj) + is_true(obj);
 
 	TEST_ASSERT_EQUAL(1, common_count + singleton_count);
 }
@@ -34,19 +34,25 @@ void obj_error(void)
 
 void obj_singletons(void)
 {
+	TEST_ASSERT_TRUE(is_null(EMPTY_LIST));
+	has_one_type(EMPTY_LIST);
+	TEST_ASSERT_EQUAL_STRING("'()", to_text(EMPTY_LIST));
+
+	TEST_ASSERT_TRUE(is_eos(EOS));
+	has_one_type(EOS);
+	TEST_ASSERT_EQUAL_STRING("<END-OF-SOURCE>", to_text(EOS));
+
 	TEST_ASSERT_TRUE(is_false(FALSE));
 	has_one_type(FALSE);
 	TEST_ASSERT_EQUAL_STRING("false", to_text(FALSE));
 
+	TEST_ASSERT_TRUE(is_ok(OK));
+	has_one_type(OK);
+	TEST_ASSERT_EQUAL_STRING("ok", to_text(OK));
+
 	TEST_ASSERT_TRUE(is_true(TRUE));
 	has_one_type(TRUE);
 	TEST_ASSERT_EQUAL_STRING("true", to_text(TRUE));
-
-	TEST_ASSERT_TRUE(is_eos(EOS));
-	has_one_type(EOS);
-
-	TEST_ASSERT_TRUE(is_null(EMPTY_LIST));
-	has_one_type(EMPTY_LIST);
 }
 
 void obj_integer(void)
@@ -130,6 +136,7 @@ void obj_symbol(void)
 	TEST_ASSERT_EQUAL(meta_data, object_meta_data(obj));
 	TEST_ASSERT_EQUAL_STRING(id, to_name(obj));
 
+	TEST_ASSERT_EQUAL(DEFINE, of_name("define", NO_META_DATA));
 	TEST_ASSERT_EQUAL(DOT, of_name(".", NO_META_DATA));
 	TEST_ASSERT_EQUAL(QUASIQUOTE, of_name("quasiquote", NO_META_DATA));
 	TEST_ASSERT_EQUAL(QUOTE, of_name("quote", NO_META_DATA));

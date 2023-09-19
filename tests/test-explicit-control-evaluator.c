@@ -2,6 +2,7 @@
 #include "../unity/src/unity.h"
 #include "../src/explicit-control-evaluator.h"
 
+#include "../src/metacircular-procedures.h"
 #include "../src/run.c"
 
 object to_expr(char *source)
@@ -77,8 +78,16 @@ void test_eceval_section_1_1_1(void)
 	TEST_ASSERT_EQUAL(57, to_integer(EC_Eval(expr)));
 }
 
-void test_eceval_define(void){
+void test_eceval_define(void)
+{
+	object expr;
+	object env = the_global_environment();
 
+	expr = to_expr("(define e (+ 1 1.71828))");
+	ec_eval(expr, env);
+	TEST_ASSERT_EQUAL_DOUBLE(2.71828,
+				 to_floating(lookup_variable_value(
+					 of_name("e", NO_META_DATA), env)));
 }
 
 void test_eceval_section_1_1_2(void)

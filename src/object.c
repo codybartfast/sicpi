@@ -243,20 +243,6 @@ char *error_kind_name(enum error_kind error_kind)
 		}                                                              \
 	}
 
-static struct object _FALSE = SINGLETON("false");
-const object FALSE = &_FALSE;
-inline bool is_false(object obj)
-{
-	return obj == FALSE;
-}
-
-static struct object _TRUE = SINGLETON("true");
-const object TRUE = &_TRUE;
-inline bool is_true(object obj)
-{
-	return obj == TRUE;
-}
-
 static struct object _EMPTY_LIST = SINGLETON("'()");
 const object EMPTY_LIST = &_EMPTY_LIST;
 inline bool is_null(const object obj)
@@ -269,6 +255,27 @@ const object EOS = &_EOS;
 inline bool is_eos(object obj)
 {
 	return obj == EOS;
+}
+
+static struct object _FALSE = SINGLETON("false");
+const object FALSE = &_FALSE;
+inline bool is_false(object obj)
+{
+	return obj == FALSE;
+}
+
+static struct object _OK = SINGLETON("ok");
+const object OK = &_OK;
+inline bool is_ok(object obj)
+{
+	return obj == OK;
+}
+
+static struct object _TRUE = SINGLETON("true");
+const object TRUE = &_TRUE;
+inline bool is_true(object obj)
+{
+	return obj == TRUE;
 }
 
 //
@@ -438,6 +445,9 @@ inline char const *to_name(object obj)
 // =============================================================================
 //
 
+static struct object _DEFINE = SYMBOL("define");
+const object DEFINE = &_DEFINE;
+
 static struct object _DOT = SYMBOL(".");
 const object DOT = &_DOT;
 
@@ -456,6 +466,7 @@ void init_keywords(void)
 {
 	symbols = obarray_new(0);
 
+	obarray_add_symbol(symbols, DEFINE);
 	obarray_add_symbol(symbols, DOT);
 	obarray_add_symbol(symbols, QUASIQUOTE);
 	obarray_add_symbol(symbols, QUOTE);

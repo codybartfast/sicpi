@@ -23,6 +23,21 @@ inline object text_of_quotation(const object exp)
 	return cadr(exp);
 }
 
+object definition_variable(object exp)
+{
+	return is_symbol(cadr(exp)) ? cadr(exp) : caadr(exp);
+}
+
+object definition_value(object exp)
+{
+	if (is_symbol(cadr(exp))) {
+		return caddr(exp);
+	} else {
+		inyim("make-lambda not implemented");
+		exit(1);
+	}
+}
+
 inline object operator(const object exp)
 {
 	return car(exp);

@@ -13,6 +13,7 @@ enum label {
 	LABEL_EV_APPL_ACCUM_LAST_ARG,
 	LABEL_EV_APPL_ACCUMULATE_ARG,
 	LABEL_EV_APPL_DID_OPERATOR,
+	LABEL_EV_DEFINITION_1,
 	LABEL_EVAL_DISPATCH,
 	LABEL_RETURN_CALLER
 };
@@ -38,6 +39,9 @@ const object EV_APPL_ACCUMULATE_ARG = &_EV_APPL_ACCUMULATE_ARG;
 static struct object _EV_APPL_DID_OPERATOR =
 	GOTO_LABEL(LABEL_EV_APPL_DID_OPERATOR);
 const object EV_APPL_DID_OPERATOR = &_EV_APPL_DID_OPERATOR;
+
+static struct object _EV_DEFINITION_1 = GOTO_LABEL(LABEL_EV_DEFINITION_1);
+const object EV_DEFINITION_1 = &_EV_DEFINITION_1;
 
 static struct object _EVAL_DISPATCH = GOTO_LABEL(LABEL_EVAL_DISPATCH);
 const object EVAL_DISPATCH = &_EVAL_DISPATCH;
@@ -103,9 +107,10 @@ eval_dispatch:
 	if (is_pair(disp_expr)) {
 		object head = car(disp_expr);
 		if (is_symbol(head)) {
-			if (head == QUOTE) {
+			if (head == QUOTE)
 				goto ev_quoted;
-			}
+			if (head == DEFINE)
+				goto ev_definition;
 		}
 		goto ev_application;
 	}
@@ -200,6 +205,31 @@ primitive_apply:
 	goto goto_label;
 
 	//
+	// §5.4.3 Conditionals, Assignments, and Definitions
+	// 	https://www.sicp-book.com/book-Z-H-34.html#%_sec_5.4.3
+	//
+
+ev_definition:
+	core->unev = definition_variable(core->expr);
+	save(core, core->unev);
+	core->expr = definition_value(core->expr);
+	save(core, core->env);
+	save(core, core->cont);
+	core->cont = EV_DEFINITION_1;
+	goto eval_dispatch;
+
+ev_definition_1:
+	core->cont = restore(core);
+	core->env = restore(core);
+	core->unev = restore(core);
+	define_variable(core->unev, core->val, core->env);
+	//   (perform
+	//    (op define-variable!) (reg unev) (reg val) (reg env))
+	core->val = OK;
+	label = to_label(core->cont);
+	goto goto_label;
+
+	//
 	// Extras
 	//
 	// As we're not running a REPL we can't goto 'read-eval-print-loop' when
@@ -209,6 +239,7 @@ primitive_apply:
 return_caller:
 	return core->val;
 
+// todo: have goto_cont?
 goto_label:
 	switch (label) {
 	case LABEL_EV_APPL_ACCUMULATE_ARG:
@@ -219,6 +250,8 @@ goto_label:
 		goto eval_dispatch;
 	case LABEL_EV_APPL_DID_OPERATOR:
 		goto ev_appl_did_operator;
+	case LABEL_EV_DEFINITION_1:
+		goto ev_definition_1;
 	case LABEL_RETURN_CALLER:
 		goto return_caller;
 	default:
@@ -227,7 +260,8 @@ goto_label:
 	}
 }
 
-object ec_eval(object expr, object env){
+object ec_eval(object expr, object env)
+{
 	struct core _core;
 	core core = &_core;
 	core_init(core);
