@@ -29,6 +29,10 @@ static void print_notices(void)
 	puts(notices_string);
 }
 
+static void run_fun_test(void){
+	puts("Watch this space.");
+}
+
 static void load_run(source src)
 {
 	object program = load(src);
@@ -76,6 +80,9 @@ int main(int argc, char *argv[])
 				break;
 			case 'n':
 				print_notices();
+				break;
+			case 't':
+				run_fun_test();
 				break;
 			case 'v':
 				print_version();

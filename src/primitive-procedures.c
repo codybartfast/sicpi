@@ -131,7 +131,7 @@ object Div(object args)
 	floating rslt = TO_NUMBER(car(args));
 	for (args = cdr(args); args != EMPTY_LIST; args = cdr(args)) {
 		floating denominator = TO_NUMBER(car(args));
-		if (denominator == 0.0f) {
+		if (denominator == (floating)0.0f) {
 			return of_error_kind(ERROR_DIVISION_BY_ZERO,
 					     NO_META_DATA);
 		}
