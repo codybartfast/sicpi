@@ -17,7 +17,7 @@ void test_object(void);
 void test_parser(void);
 void test_list(void);
 void test_primitive_procedures(void);
-void test_eceval(void);
+void test_explicit_control_evaluator(void);
 
 int main(void)
 {
@@ -31,9 +31,9 @@ int main(void)
 	test_object();
 	test_parser();
 	test_list();
-
-	test_eceval();
 	test_primitive_procedures();
+
+	test_explicit_control_evaluator();
 
 	return UNITY_END();
 }

@@ -77,12 +77,26 @@ void test_eceval_section_1_1_1(void)
 	TEST_ASSERT_EQUAL(57, to_integer(EC_Eval(expr)));
 }
 
-int test_eceval(void)
+void test_eceval_define(void){
+
+}
+
+void test_eceval_section_1_1_2(void)
+{
+	// object expr;
+
+	// expr = to_expr("(define size 2) size");
+	// TEST_ASSERT_EQUAL_STRING("2", to_text(EC_Eval(expr)));
+}
+
+int test_explicit_control_evaluator(void)
 {
 	RUN_TEST(test_eceval_self_evaluating);
 	RUN_TEST(test_eceval_variable);
 	RUN_TEST(test_eceval_quoted);
 	RUN_TEST(test_eceval_section_1_1_1);
+	RUN_TEST(test_eceval_define);
+	RUN_TEST(test_eceval_section_1_1_2);
 
 	return 0;
 }

@@ -227,14 +227,18 @@ goto_label:
 	}
 }
 
-object EC_Eval(object expr)
-{
+object ec_eval(object expr, object env){
 	struct core _core;
 	core core = &_core;
 	core_init(core);
 
 	core->expr = expr;
-	core->env = the_global_environment();
+	core->env = env;
 	core->cont = RETURN_CALLER;
 	return eval(core);
+}
+
+object EC_Eval(object expr)
+{
+	return ec_eval(expr, the_global_environment());
 }
