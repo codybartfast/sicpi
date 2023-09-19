@@ -96,7 +96,6 @@ static bool is_last_operand(object ops)
 
 static object eval(core core)
 {
-	enum label label;
 
 eval_dispatch:
 	object disp_expr = core->expr;
@@ -122,19 +121,16 @@ eval_dispatch:
 
 ev_self_eval:
 	core->val = core->expr;
-	label = to_label(core->cont);
-	goto goto_label;
+	goto goto_cont;
 
 ev_variable:
 	core->val = lookup_variable_value(core->expr, core->env);
 	RETURN_IF_ERROR(core->val);
-	label = to_label(core->cont);
-	goto goto_label;
+	goto goto_cont;
 
 ev_quoted:
 	core->val = text_of_quotation(core->expr);
-	label = to_label(core->cont);
-	goto goto_label;
+	goto goto_cont;
 
 	//
 	// Evaluating procedure applications
@@ -201,8 +197,7 @@ apply_dispatch:
 primitive_apply:
 	core->val = apply_primitive_procedure(core->proc, core->argl);
 	core->cont = restore(core);
-	label = to_label(core->cont);
-	goto goto_label;
+	goto goto_cont;
 
 	//
 	// §5.4.3 Conditionals, Assignments, and Definitions
@@ -226,8 +221,7 @@ ev_definition_1:
 	//   (perform
 	//    (op define-variable!) (reg unev) (reg val) (reg env))
 	core->val = OK;
-	label = to_label(core->cont);
-	goto goto_label;
+	goto goto_cont;
 
 	//
 	// Extras
@@ -239,9 +233,8 @@ ev_definition_1:
 return_caller:
 	return core->val;
 
-// todo: have goto_cont?
-goto_label:
-	switch (label) {
+goto_cont:
+	switch (to_label(core->cont)) {
 	case LABEL_EV_APPL_ACCUMULATE_ARG:
 		goto ev_appl_accumulate_arg;
 	case LABEL_EV_APPL_ACCUM_LAST_ARG:
@@ -255,7 +248,8 @@ goto_label:
 	case LABEL_RETURN_CALLER:
 		goto return_caller;
 	default:
-		inyim("Unexpected label in ec eval: '%d'", label);
+		inyim("Unexpected label in ec eval: '%d'",
+		      to_label(core->cont));
 		exit(1); // keep compiler happy
 	}
 }
