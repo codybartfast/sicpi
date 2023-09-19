@@ -29,14 +29,14 @@ static void print_notices(void)
 	puts(notices_string);
 }
 
-static void run_fun_test(void){
+static void run_fun_test(void)
+{
 	puts("Watch this space.");
 }
 
-static void load_run(source src)
+static void execute(source src)
 {
-	object program = load(src);
-	object rslt = run(program);
+	object rslt = load_run(src);
 	printf("result: %s\n", to_text(rslt));
 	exit(EXIT_SUCCESS);
 }
@@ -44,7 +44,7 @@ static void load_run(source src)
 static void eval_stdin(void)
 {
 	source src = source_stream(stdin, "STDIN");
-	load_run(src);
+	execute(src);
 }
 
 static void eval_file(char *file)
@@ -53,7 +53,7 @@ static void eval_file(char *file)
 	if (!src) {
 		exit(EXIT_FAILURE);
 	}
-	load_run(src);
+	execute(src);
 }
 
 static void eval_argument(int argc, char *argv[])
@@ -64,7 +64,7 @@ static void eval_argument(int argc, char *argv[])
 	}
 	char *expression = argv[2];
 	source src = source_string(expression, "command-line-argument");
-	load_run(src);
+	execute(src);
 }
 
 int main(int argc, char *argv[])

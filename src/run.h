@@ -8,4 +8,6 @@ object load(source src);
 
 object run(object program);
 
+object load_run(source src);
+
 #endif

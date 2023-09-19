@@ -1,4 +1,5 @@
 #include "sicp-error.h"
+#include "explicit-control-evaluator.h"
 #include "lexer.h"
 #include "parser.h"
 #include "run.h"
@@ -16,12 +17,19 @@ object load(source src)
 	if (is_error(program)) {
 		eprintfx(to_text(program));
 	}
-	
+
 	lexer_free(lxr);
 	return program;
 }
 
 object run(object program)
 {
-	return of_string(to_text(program), NO_META_DATA);
+	return EC_Eval(program);
+}
+
+object load_run(source src)
+{
+	object expr = load(src);
+	object program = cons(BEGIN, expr, NO_META_DATA);
+	return run(program);
 }
