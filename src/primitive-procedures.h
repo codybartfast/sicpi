@@ -3,6 +3,13 @@
 
 #include "object.h"
 
+object Display(object args);
+object Newline(object args);
+
+//
+// ARITHMETIC
+//
+
 object Add(object args);
 object Sub(object args);
 object Mul(object args);

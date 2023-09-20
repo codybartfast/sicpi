@@ -2,6 +2,47 @@
 
 #include "sicp-error.h"
 
+#include <stdio.h>
+
+object Display(object args)
+{
+	char *NAME = "display";
+	if (!is_pair(args)) {
+		eprintf("'%s' expected 1 argument but got 0 arguments.", NAME);
+		return (of_error_kind(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
+				      NO_META_DATA));
+	}
+	object arg1 = car(args);
+	args = cdr(args);
+
+	if (!is_null(args)) {
+		eprintf("'%s' only expected 1 arguments but got 2 or more.",
+			NAME);
+		return (of_error_kind(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
+				      NO_META_DATA));
+	}
+
+	printf("%s", to_text(arg1));
+	return ok();
+}
+
+object Newline(object args)
+{
+	char *NAME = "newline";
+	if (!is_null(args)) {
+		eprintf("'%s' expected 0 arguments but got 1 or more.", NAME);
+		return (of_error_kind(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
+				      NO_META_DATA));
+	}
+
+	printf("\n");
+	return ok();
+}
+
+//
+// ARITHMETIC
+//
+
 #define TO_NUMBER(OBJ)                                                         \
 	(object_value_kind(OBJ) == VK_INTEGER ? to_integer(OBJ) :              \
 						to_floating(OBJ))

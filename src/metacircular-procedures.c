@@ -183,11 +183,14 @@ void define_variable(object var, object val, object env)
 object make_primitive_procedures_list(void)
 {
 	meta_data NMD = NO_META_DATA;
-	return listv(list2(of_name("+", NMD), of_func(Add, NMD)),
-		     list2(of_name("-", NMD), of_func(Sub, NMD)),
-		     list2(of_name("*", NMD), of_func(Mul, NMD)),
-		     list2(of_name("/", NMD), of_func(Div, NMD)),
-		     EMPTY_LIST); // this comment just to keep separte line
+	return listv( // this comment just keep separate line
+		list2(of_name("+", NMD), of_func(Add, NMD)),
+		list2(of_name("-", NMD), of_func(Sub, NMD)),
+		list2(of_name("*", NMD), of_func(Mul, NMD)),
+		list2(of_name("/", NMD), of_func(Div, NMD)),
+		list2(of_name("display", NMD), of_func(Display, NMD)),
+		list2(of_name("newline", NMD), of_func(Newline, NMD)),
+		EMPTY_LIST); // this comment just to keep separate line
 }
 
 object _primitive_procedures = NULL;

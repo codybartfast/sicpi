@@ -133,6 +133,8 @@ eval_dispatch:
 	// Evaluating simple expressions
 	//
 
+	// todo: error checks?
+
 ev_self_eval:
 	core->val = core->expr;
 	goto goto_cont;
@@ -217,6 +219,8 @@ primitive_apply:
 	// §5.4.2 Sequence Evaluation and Tail Recursion
 	// 	https://www.sicp-book.com/book-Z-H-34.html#%_sec_5.4.2
 	//
+
+	// todo: error checks?
 
 ev_begin:
 	core->unev = begin_actions(core->expr);
