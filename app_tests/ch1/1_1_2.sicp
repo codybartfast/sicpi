@@ -1,0 +1,13 @@
+; section 1.1.2, page 7
+
+(define size 2)
+
+; ; section 1.1.2, page 8
+
+(displayn size)
+(displayn (* 5 size))
+(define pi 3.14159)
+(define radius 10)
+(displayn (* pi (* radius radius)))
+(define circumference (* 2 pi radius))
+(displayn circumference)

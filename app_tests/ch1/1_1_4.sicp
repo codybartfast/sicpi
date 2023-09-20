@@ -1,0 +1,52 @@
+; ;section 1.1.4, page 12
+; (newline)
+
+; (define (square x) (* x x))
+
+; ; section 1.1.4, page 13
+
+; (displayn (square 21))
+; (displayn (square (+ 2 5)))
+; (displayn (square (square 3)))
+; (define (sum-of-squares x y)
+;   (+ (square x) (square y)))
+; (displayn (sum-of-squares 3 4))
+; (define (f a)
+;   (sum-of-squares (+ a 1) (* a 2)))
+; (displayn (f 5))
+
+; ; section 1.1.6, page 17
+
+; (define (abs x)
+;   (cond ((> x 0) x)
+;         ((= x 0) 0)
+;         ((< x 0) (- x))))
+; (abs -1) (abs -0) (abs 1)       ; non-text
+
+; ; section 1.1.6, page 18
+
+; (define (abs x)
+;   (cond ((< x 0) (- x))
+;         (else x)))
+; (abs -2) (abs 0) (abs 2)        ; non-text
+
+; (define (abs x)
+;   (if (< x 0)
+;       (- x)
+;       x))
+; (abs -3) (abs 0) (abs 3)        ; non-text
+
+
+; ; section 1.1.6, page 19
+
+; (define x 7)                    ; non-text
+; (and (> x 5) (< x 10))
+
+; ; section 1.1.6, page 20
+
+; (define (>= x y)
+;   (or (> x y) (= x y)))
+; (>= 1 2) (>= 2 2) (>= 2 1)      ; non-text
+; (define (>= x y)
+;   (not (< x y)))
+; (>= 1 2) (>= 2 2) (>= 2 1)      ; non-text
