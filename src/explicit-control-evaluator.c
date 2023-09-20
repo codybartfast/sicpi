@@ -57,6 +57,7 @@ const object RETURN_CALLER = &_RETURN_CALLER;
 //
 // §5.1.4  Using a Stack to Implement Recursion
 // 	https://www.sicp-book.com/book-Z-H-31.html#%_sec_5.1.4
+//
 
 static inline void save(core core, object obj)
 {
@@ -104,7 +105,7 @@ static object eval(core core)
 eval_dispatch:
 	object disp_expr = core->expr;
 	RETURN_IF_ERROR(disp_expr);
-	
+
 	if (is_self_evaluating(disp_expr)) {
 		goto ev_self_eval;
 	}
@@ -261,7 +262,7 @@ ev_definition_1:
 	core->env = restore(core);
 	core->unev = restore(core);
 	define_variable(core->unev, core->val, core->env);
-	core->val = OK;
+	core->val = ok();
 	goto goto_cont;
 
 	//

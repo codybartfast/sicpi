@@ -109,6 +109,14 @@ meta_data object_meta_data(object obj)
 	return obj->meta_data;
 }
 
+// Both SICP and R4RS have ok as a regular symbol.
+object _ok = NULL;
+object ok(void)
+{
+	return _ok ? _ok : (_ok = of_name("ok", NO_META_DATA));
+}
+
+
 #define TO_TEXT_BUFFER_LEN 1024
 static char to_text_buffer[TO_TEXT_BUFFER_LEN];
 // Returns a new string for the external representaion of an object.
@@ -266,13 +274,6 @@ const object FALSE = &_FALSE;
 inline bool is_false(object obj)
 {
 	return obj == FALSE;
-}
-
-static struct object _OK = SINGLETON("ok");
-const object OK = &_OK;
-inline bool is_ok(object obj)
-{
-	return obj == OK;
 }
 
 static struct object _TRUE = SINGLETON("true");

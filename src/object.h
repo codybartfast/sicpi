@@ -62,6 +62,13 @@ typedef struct object {
 } *object;
 
 //
+// Construction
+// =============================================================================
+//
+
+void object_free(object obj);
+
+//
 // Helpers
 // =============================================================================
 //
@@ -73,8 +80,8 @@ int8_t object_value_kind(object obj);
 // =============================================================================
 //
 
-void object_free(object obj);
 meta_data object_meta_data(const object obj);
+object ok(void);
 char *to_text(object obj);
 
 //
@@ -107,9 +114,6 @@ bool is_eos(object obj);
 
 extern const object FALSE;
 bool is_false(object obj);
-
-extern const object OK;
-bool is_ok(object obj);
 
 extern const object TRUE;
 bool is_true(object obj);
