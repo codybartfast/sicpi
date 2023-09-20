@@ -39,7 +39,7 @@ object Newline(object args)
 	return ok();
 }
 
-object DisplayN(object args)
+object Print(object args)
 {
 	Display(args);
 	return Newline(EMPTY_LIST);

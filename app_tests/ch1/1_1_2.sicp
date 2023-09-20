@@ -4,10 +4,10 @@
 
 ; ; section 1.1.2, page 8
 
-(displayn size)
-(displayn (* 5 size))
+(print size)
+(print (* 5 size))
 (define pi 3.14159)
 (define radius 10)
-(displayn (* pi (* radius radius)))
+(print (* pi (* radius radius)))
 (define circumference (* 2 pi radius))
-(displayn circumference)
+(print circumference)

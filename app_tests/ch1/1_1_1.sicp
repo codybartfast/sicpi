@@ -1,23 +1,23 @@
 ; section 1.1.1, page 5
 
-(displayn 486)
+(print 486)
 
 ; section 1.1.1, page 6
 (newline)
 
-(displayn (+ 137 349))
-(displayn (- 1000 334))
-(displayn(* 5 99))
-(displayn(/ 10 5))
-(displayn(+ 2.7 10))
-(displayn(+ 21 35 12 7))
-(displayn(* 25 4 12))
-(displayn(+ (* 3 5) (- 10 6)))
+(print (+ 137 349))
+(print (- 1000 334))
+(print (* 5 99))
+(print (/ 10 5))
+(print (+ 2.7 10))
+(print (+ 21 35 12 7))
+(print (* 25 4 12))
+(print (+ (* 3 5) (- 10 6)))
 
 ; ; section 1.1.1, page 7
 (newline)
 
-(displayn
+(print
   (+ (* 3
        (+ (* 2 4)
          (+ 3 5)))

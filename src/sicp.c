@@ -39,7 +39,7 @@ static void run_fun_test(void)
 static void execute(source src)
 {
 	object rslt = load_run(src);
-	DisplayN(list1(rslt));
+	Print(list1(rslt));
 	exit(EXIT_SUCCESS);
 }
 
