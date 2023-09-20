@@ -5,6 +5,7 @@
 
 object Display(object args);
 object Newline(object args);
+object DisplayN(object args);
 
 //
 // ARITHMETIC

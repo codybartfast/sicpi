@@ -7,4 +7,7 @@
     },
     "files.insertFinalNewline": true,
     "files.eol": "\n",
+    "files.associations": {
+        "*.sicp": "scheme",
+    },
 }

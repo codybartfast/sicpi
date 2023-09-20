@@ -39,6 +39,12 @@ object Newline(object args)
 	return ok();
 }
 
+object DisplayN(object args)
+{
+	Display(args);
+	return Newline(EMPTY_LIST);
+}
+
 //
 // ARITHMETIC
 //

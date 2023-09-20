@@ -1,3 +1,5 @@
+#include "list.h"
+#include "primitive-procedures.h"
 #include "object.h"
 #include "notices.h"
 #include "run.h"
@@ -37,7 +39,7 @@ static void run_fun_test(void)
 static void execute(source src)
 {
 	object rslt = load_run(src);
-	printf("result: %s\n", to_text(rslt));
+	DisplayN(list1(rslt));
 	exit(EXIT_SUCCESS);
 }
 
