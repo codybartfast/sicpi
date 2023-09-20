@@ -18,9 +18,24 @@ inline bool is_variable(const object exp)
 	return is_symbol(exp);
 }
 
+static inline bool is_tagged_list(object exp, object tag)
+{
+	return is_pair(exp) && (car(exp) == tag);
+}
+
+inline bool is_quoted(const object exp)
+{
+	return is_tagged_list(exp, QUOTE);
+}
+
 inline object text_of_quotation(const object exp)
 {
 	return cadr(exp);
+}
+
+inline bool is_definition(const object exp)
+{
+	return is_tagged_list(exp, DEFINE);
 }
 
 inline object definition_variable(object exp)
@@ -38,7 +53,10 @@ object definition_value(object exp)
 	}
 }
 
-// Todo: begin? et all
+inline bool is_begin(const object exp)
+{
+	return is_tagged_list(exp, BEGIN);
+}
 
 inline object begin_actions(object exp)
 {
@@ -61,6 +79,11 @@ inline object rest_exps(object seq)
 }
 
 //
+
+inline bool is_application(const object exp)
+{
+	return is_pair(exp);
+}
 
 inline object operator(const object exp)
 {

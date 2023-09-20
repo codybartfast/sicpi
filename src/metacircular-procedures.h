@@ -20,18 +20,23 @@
 
 bool is_self_evaluating(const object exp);
 bool is_variable(const object exp);
+
+bool is_quoted(const object exp);
 object text_of_quotation(const object exp);
 
 object lookup_variable_value(const object var, object env);
 
+bool is_definition(const object exp);
 object definition_variable(object exp);
 object definition_value(object exp);
 
+bool is_begin(const object exp);
 object begin_actions(object exp);
 bool is_last_exp(object seq);
 object first_exp(object seq);
 object rest_exps(object seq);
 
+bool is_application(const object exp);
 object operator(const object exp);
 object operands(const object exp);
 bool is_no_operands(const object exp);
