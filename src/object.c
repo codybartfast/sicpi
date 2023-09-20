@@ -116,7 +116,6 @@ object ok(void)
 	return _ok ? _ok : (_ok = of_name("ok", NO_META_DATA));
 }
 
-
 #define TO_TEXT_BUFFER_LEN 1024
 static char to_text_buffer[TO_TEXT_BUFFER_LEN];
 // Returns a new string for the external representaion of an object.
@@ -221,6 +220,8 @@ char *error_kind_name(enum error_kind error_kind)
 	switch (error_kind) {
 	case ERROR_DIVISION_BY_ZERO:
 		return "<DIVISION-BY-ZERO-ERROR>";
+	case ERROR_EMPTY_PROGRAM:
+		return "<EMPTY-PROGRAM>";
 	case ERROR_INCORRECT_NUMBER_OF_ARGUMENTS:
 		return "<INCORRECT-NUMBER-OF-ARGUMENTS-ERROR>";
 	case ERROR_LEXER:

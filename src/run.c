@@ -24,12 +24,17 @@ object load(source src)
 
 object run(object program)
 {
+	if (!is_pair(program) || is_null(cdr(program))) {
+		eprintf("Cannot run an empty program.");
+		return of_error_kind(ERROR_EMPTY_PROGRAM, NO_META_DATA);
+	}
 	return EC_Eval(program);
 }
 
 object load_run(source src)
 {
 	object expr = load(src);
+
 	object program = cons(BEGIN, expr, NO_META_DATA);
 	return run(program);
 }
