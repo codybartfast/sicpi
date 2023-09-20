@@ -1,25 +1,9 @@
 #include "primitive-procedures.h"
 
+#include "args.h"
 #include "sicp-error.h"
 
 #include <stdio.h>
-
-#define ARGS_1(NAME)                                                           \
-	if (!is_pair(args)) {                                                  \
-		eprintf("'%s' expected 1 argument but got 0 arguments.",       \
-			NAME);                                                 \
-		return (of_error_kind(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,     \
-				      NO_META_DATA));                          \
-	}                                                                      \
-	object arg1 = car(args);                                               \
-	args = cdr(args);                                                      \
-                                                                               \
-	if (!is_null(args)) {                                                  \
-		eprintf("'%s' only expected 1 arguments but got 2 or more.",   \
-			NAME);                                                 \
-		return (of_error_kind(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,     \
-				      NO_META_DATA));                          \
-	}
 
 object Display(object args)
 {
