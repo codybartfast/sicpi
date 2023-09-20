@@ -162,6 +162,7 @@ ev_application:
 	goto eval_dispatch;
 
 ev_appl_did_operator:
+	RETURN_IF_ERROR(core->val);
 	core->unev = restore(core);
 	core->env = restore(core);
 	core->argl = EMPTY_LIST;
@@ -183,6 +184,7 @@ ev_appl_operand_loop:
 	goto eval_dispatch;
 
 ev_appl_accumulate_arg:
+	RETURN_IF_ERROR(core->val);
 	core->unev = restore(core);
 	core->env = restore(core);
 	core->argl = restore(core);
@@ -195,6 +197,7 @@ ev_appl_last_arg:
 	goto eval_dispatch;
 
 ev_appl_accum_last_arg:
+	RETURN_IF_ERROR(core->val);
 	core->argl = restore(core);
 	core->argl = adjoin_arg(core->val, core->argl);
 	core->proc = restore(core);
@@ -262,6 +265,7 @@ ev_definition:
 	goto eval_dispatch;
 
 ev_definition_1:
+	RETURN_IF_ERROR(core->val);
 	core->cont = restore(core);
 	core->env = restore(core);
 	core->unev = restore(core);

@@ -90,8 +90,6 @@ void test_pp_mul(void)
 
 void test_pp_div(void)
 {
-	// ToDo: div by zero
-
 	object rslt;
 
 	rslt = Div(EMPTY_LIST);
