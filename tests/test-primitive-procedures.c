@@ -108,6 +108,10 @@ void test_pp_div(void)
 	TEST_ASSERT_TRUE(is_error(rslt));
 	TEST_ASSERT_EQUAL(ERROR_DIVISION_BY_ZERO, to_error_kind(rslt));
 
+	rslt = Div(list2(one, zero));
+	TEST_ASSERT_TRUE(is_error(rslt));
+	TEST_ASSERT_EQUAL(ERROR_DIVISION_BY_ZERO, to_error_kind(rslt));
+
 	// Optional
 	TEST_ASSERT_EQUAL(3, to_integer(Div(list3(one05, five, seven))));
 	TEST_ASSERT_EQUAL(3, to_floating(Div(list3(one05_f, five, seven))));
