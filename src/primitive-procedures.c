@@ -7,15 +7,16 @@
 
 object Display(object args)
 {
-	ARGS_1("display");
+	ARGS_1(args, "display");
 
 	printf("%s", to_text(arg1));
+
 	return ok();
 }
 
 object Newline(object args)
 {
-	ARGS_0("newline");
+	ARGS_0(args, "newline");
 
 	printf("\n");
 	return ok();
@@ -23,9 +24,10 @@ object Newline(object args)
 
 object Print(object args)
 {
-	ARGS_1("print");
+	ARGS_1(args, "print");
 
 	printf("%s\n", to_text(arg1));
+
 	return ok();
 }
 

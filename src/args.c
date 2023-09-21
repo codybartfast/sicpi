@@ -9,18 +9,19 @@ static char *plural_s(int n)
 	return n == 1 ? "" : "s";
 }
 
-object set_args(char *caller, object args, int count, bool at_least, ...)
+object set_args(char *caller, struct object **args_p, int count, bool at_least,
+		...)
 {
 	va_list arg_ptrs;
 	va_start(arg_ptrs, at_least);
 
 	int i;
 	for (i = 0; i < count; i++) {
-		if (is_pair(args)) {
+		if (is_pair(*args_p)) {
 			struct object **arg_p =
 				va_arg(arg_ptrs, struct object **);
-			*arg_p = car(args);
-			args = cdr(args);
+			*arg_p = car(*args_p);
+			*args_p = cdr(*args_p);
 		} else {
 			va_end(arg_ptrs);
 			eprintf("'%s' expected %d argument%s, but was given %d argument%s.",
@@ -31,7 +32,7 @@ object set_args(char *caller, object args, int count, bool at_least, ...)
 			return err;
 		}
 	}
-	if (!at_least && is_pair(args)) {
+	if (!at_least && is_pair(*args_p)) {
 		va_end(arg_ptrs);
 		eprintf("'%s' expected exactly %d argument%s, but was given at least %d argument%s.",
 			caller, count, plural_s(count), count + 1,
