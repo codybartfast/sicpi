@@ -83,20 +83,12 @@ inline object definition_variable(object exp)
 
 object definition_value(object exp)
 {
-	ARGS_AT_LEAST_2("definition_value", exp);
-
-	if (!is_pair(exp)) {
-		eprintf("'definition_value' expected 3 arguments, but was given 2 arguments.");
-		return of_error_kind(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
-				     NO_META_DATA);
-	}
-
-	object arg3 = car(exp);
+	ARGS_AT_LEAST_3("definition_value", exp);
 
 	if (is_symbol(arg2)) {
 		return arg3;
 	} else {
-		return make_lambda(cdr(arg2), exp);
+		return make_lambda(cdr(arg2), cons(arg3, exp, NO_META_DATA));
 	}
 }
 
