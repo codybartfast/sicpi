@@ -14,17 +14,18 @@
 
 #include <stdbool.h>
 
-// todo: check order of .h and .c
-
 //
 // §4.1.2 Representing Expressions
 //
 
 bool is_self_evaluating(const object exp);
+
 bool is_variable(const object exp);
 
 bool is_quoted(const object exp);
 object text_of_quotation(const object exp);
+
+// assign
 
 bool is_definition(const object exp);
 object definition_variable(object exp);
@@ -33,6 +34,8 @@ object definition_value(object exp);
 bool is_lambda(const object exp);
 object lambda_parameters(const object exp);
 object lambda_body(const object exp);
+
+// if
 
 bool is_begin(const object exp);
 object begin_actions(object exp);
@@ -46,6 +49,8 @@ object operands(const object exp);
 bool is_no_operands(const object exp);
 object first_operand(const object ops);
 object rest_operands(const object ops);
+
+// cond
 
 //
 // §4.1.3 Evaluator Data Structures

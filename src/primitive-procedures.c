@@ -103,6 +103,7 @@ object Sub(object args)
 				     NO_META_DATA);
 	}
 
+	// todo: optimise?
 	if (arg_count == 1) {
 		args = cons(zero(), args, NO_META_DATA);
 	}

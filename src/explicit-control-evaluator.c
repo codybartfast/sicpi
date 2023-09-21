@@ -151,14 +151,11 @@ ev_quoted:
 
 ev_lambda:
 	core->unev = lambda_parameters(core->expr);
+	RETURN_IF_ERROR(core->unev);
 	core->expr = lambda_body(core->expr);
+	RETURN_IF_ERROR(core->expr);
 	core->val = make_procedure(core->unev, core->expr, core->env);
-	// todo: error checking
 	goto goto_cont;
-
-	//   (assign val (op make-procedure)
-	//               (reg unev) (reg exp) (reg env))
-	//   (goto (reg continue))
 
 	//
 	// Evaluating procedure applications

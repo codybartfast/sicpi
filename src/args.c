@@ -26,9 +26,9 @@ object set_args(char *caller, struct object **args_p, int count, bool at_least,
 			va_end(arg_ptrs);
 			eprintf("'%s' expected %d argument%s, but was given %d argument%s.",
 				caller, count, plural_s(count), i, plural_s(i));
-			object err = (of_error_kind(
+			object err = of_error_kind(
 				ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
-				NO_META_DATA));
+				NO_META_DATA);
 			return err;
 		}
 	}

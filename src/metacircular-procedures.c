@@ -26,7 +26,7 @@ inline bool is_variable(const object exp)
 	return is_symbol(exp);
 }
 
-static inline bool is_tagged_list(object exp, object tag)
+static inline bool is_tagged_list(const object exp, const object tag)
 {
 	return is_pair(exp) && (car(exp) == tag);
 }
@@ -41,6 +41,8 @@ inline object text_of_quotation(const object exp)
 	return cadr(exp);
 }
 
+// assign
+
 bool is_lambda(const object exp)
 {
 	return is_tagged_list(exp, LAMBDA);
@@ -53,13 +55,14 @@ object lambda_parameters(object exp)
 	return arg2;
 }
 
-object lambda_body(const object exp)
+object lambda_body(object exp)
 {
-	return cddr(exp);
-	// todo: use ARG? (and def_value?)
+	ARGS_AT_LEAST_2("lambda_body", exp);
+
+	return exp;
 }
 
-static object make_lambda(object parameters, object body)
+static object make_lambda(const object parameters, const object body)
 {
 	return cons(LAMBDA, cons(parameters, body, NO_META_DATA), NO_META_DATA);
 }
@@ -80,13 +83,20 @@ inline object definition_variable(object exp)
 
 object definition_value(object exp)
 {
-	object args = exp;
-	ARGS_3("definition_value", args);
+	ARGS_AT_LEAST_2("definition_value", exp);
+
+	if (!is_pair(exp)) {
+		eprintf("'definition_value' expected 3 arguments, but was given 2 arguments.");
+		return of_error_kind(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
+				     NO_META_DATA);
+	}
+
+	object arg3 = car(exp);
 
 	if (is_symbol(arg2)) {
 		return arg3;
 	} else {
-		return make_lambda(cdr(arg2), cddr(exp));
+		return make_lambda(cdr(arg2), exp);
 	}
 }
 
@@ -97,22 +107,22 @@ inline bool is_begin(const object exp)
 	return is_tagged_list(exp, BEGIN);
 }
 
-inline object begin_actions(object exp)
+inline object begin_actions(const object exp)
 {
 	return cdr(exp);
 }
 
-inline bool is_last_exp(object seq)
+inline bool is_last_exp(const object seq)
 {
 	return is_null(cdr(seq));
 }
 
-inline object first_exp(object seq)
+inline object first_exp(const object seq)
 {
 	return car(seq);
 }
 
-inline object rest_exps(object seq)
+inline object rest_exps(const object seq)
 {
 	return cdr(seq);
 }
@@ -162,7 +172,8 @@ bool is_compound_procedure(const object exp)
 	return is_tagged_list(exp, procedure());
 }
 
-object make_procedure(object parameters, object body, object env)
+object make_procedure(const object parameters, const object body,
+		      const object env)
 {
 	return list4(procedure(), parameters, body, env);
 }
@@ -188,15 +199,12 @@ object procedure_environment(object p)
 	return arg4;
 }
 
-// (define (procedure-environment p) (cadddr p))
-
-// todo: static?
-object enclosing_envronment(object env)
+object enclosing_envronment(const object env)
 {
 	return cdr(env);
 }
 
-object first_frame(object env)
+object first_frame(const object env)
 {
 	return car(env);
 }
