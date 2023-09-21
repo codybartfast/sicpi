@@ -16,14 +16,14 @@ object listv(const object head, ...)
 	object end;
 	object item;
 
-	if (head == EMPTY_LIST) {
-		return head;
+	if (head == VA_TERM) {
+		return EMPTY_LIST;
 	}
 	lst = end = cons(head, EMPTY_LIST, NO_META_DATA);
 
 	va_list tail;
 	va_start(tail, head);
-	while ((item = va_arg(tail, struct object *)) != EMPTY_LIST) {
+	while ((item = va_arg(tail, struct object *)) != VA_TERM) {
 		object pair = cons(item, EMPTY_LIST, NO_META_DATA);
 		set_cdr(end, pair);
 		end = pair;
@@ -44,13 +44,13 @@ object list2(const object item1, const object item2)
 
 object list3(const object item1, const object item2, const object item3)
 {
-	return listv(item1, item2, item3, EMPTY_LIST);
+	return listv(item1, item2, item3, VA_TERM);
 }
 
 object list4(const object item1, const object item2, const object item3,
 	     const object item4)
 {
-	return listv(item1, item2, item3, item4, EMPTY_LIST);
+	return listv(item1, item2, item3, item4, VA_TERM);
 }
 
 //

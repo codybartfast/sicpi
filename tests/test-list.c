@@ -26,9 +26,9 @@ static void set_items(void)
 
 void test_listv(void)
 {
-	TEST_ASSERT_EQUAL(EMPTY_LIST, listv(EMPTY_LIST));
+	TEST_ASSERT_EQUAL(EMPTY_LIST, listv(VA_TERM));
 
-	object lst = listv(one, two, three, four, five, EMPTY_LIST);
+	object lst = listv(one, two, three, four, five, VA_TERM);
 	TEST_ASSERT_EQUAL_STRING("(1 2 3 4 5)", to_text(lst));
 	TEST_ASSERT_EQUAL(EMPTY_LIST, end(lst));
 }

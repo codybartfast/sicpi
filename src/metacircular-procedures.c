@@ -295,7 +295,7 @@ object make_primitive_procedures_list(void)
 		list2(of_name("display", NMD), of_func(Display, NMD)),
 		list2(of_name("newline", NMD), of_func(Newline, NMD)),
 		list2(of_name("print", NMD), of_func(Print, NMD)),
-		EMPTY_LIST); // this comment just to keep separate line
+		VA_TERM); // this comment just to keep separate line
 }
 
 object _primitive_procedures = NULL;

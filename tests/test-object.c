@@ -8,8 +8,8 @@ void has_one_type(object obj)
 	int common_count = is_error(obj) + is_number(obj) + is_pair(obj) +
 			   is_string(obj) + is_symbol(obj);
 
-	int singleton_count =
-		is_eos(obj) + is_false(obj) + is_null(obj) + +is_true(obj);
+	int singleton_count = is_eos(obj) + is_false(obj) + is_null(obj) +
+			      +is_true(obj) + is_va_term(obj);
 
 	TEST_ASSERT_EQUAL(1, common_count + singleton_count);
 }
@@ -41,6 +41,10 @@ void obj_singletons(void)
 	TEST_ASSERT_TRUE(is_eos(EOS));
 	has_one_type(EOS);
 	TEST_ASSERT_EQUAL_STRING("<END-OF-SOURCE>", to_text(EOS));
+
+	TEST_ASSERT_TRUE(is_va_term(VA_TERM));
+	has_one_type(VA_TERM);
+	TEST_ASSERT_EQUAL_STRING("<VARIADIC-TERMINATOR>", to_text(VA_TERM));
 
 	TEST_ASSERT_TRUE(is_false(FALSE));
 	has_one_type(FALSE);

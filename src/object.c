@@ -283,6 +283,13 @@ inline bool is_true(object obj)
 	return obj == TRUE;
 }
 
+static struct object _VA_TERM = SINGLETON("<VARIADIC-TERMINATOR>");
+const object VA_TERM = &_VA_TERM;
+inline bool is_va_term(object obj)
+{
+	return obj == VA_TERM;
+}
+
 //
 // Numbers
 // =============================================================================

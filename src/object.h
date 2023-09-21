@@ -119,6 +119,9 @@ bool is_false(object obj);
 extern const object TRUE;
 bool is_true(object obj);
 
+extern const object VA_TERM;
+bool is_va_term(object obj);
+
 //
 // Numbers
 // =============================================================================
