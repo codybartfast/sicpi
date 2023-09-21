@@ -88,6 +88,9 @@ void test_eceval_define(void)
 	TEST_ASSERT_EQUAL_DOUBLE(2.71828,
 				 to_floating(lookup_variable_value(
 					 of_name("e", NO_META_DATA), env)));
+
+	expr = to_expr("(begin (define (add2 x) (+ 2 x)) (add2 2))");
+	TEST_ASSERT_EQUAL_STRING("4", to_text(EC_Eval(expr)));
 }
 
 void test_eceval_sequence(void)

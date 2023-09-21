@@ -14,6 +14,8 @@
 
 #include <stdbool.h>
 
+// todo: check order of .h and .c
+
 //
 // §4.1.2 Representing Expressions
 //
@@ -24,11 +26,13 @@ bool is_variable(const object exp);
 bool is_quoted(const object exp);
 object text_of_quotation(const object exp);
 
-object lookup_variable_value(const object var, object env);
-
 bool is_definition(const object exp);
 object definition_variable(object exp);
 object definition_value(object exp);
+
+bool is_lambda(const object exp);
+object lambda_parameters(const object exp);
+object lambda_body(const object exp);
 
 bool is_begin(const object exp);
 object begin_actions(object exp);
@@ -46,6 +50,16 @@ object rest_operands(const object ops);
 //
 // §4.1.3 Evaluator Data Structures
 //
+
+bool is_compound_procedure(const object exp);
+
+object make_procedure(object parameters, object body, object env);
+object procedure_parameters(object p);
+object procedure_body(object p);
+object procedure_environment(object p);
+
+object extend_environment(object vars, object vals, object base_env);
+object lookup_variable_value(const object var, object env);
 
 void define_variable(object var, object val, object env);
 

@@ -180,6 +180,7 @@ char const *to_name(const object obj);
 extern const object BEGIN;
 extern const object DEFINE;
 extern const object DOT;
+extern const object LAMBDA;
 extern const object QUASIQUOTE;
 extern const object QUOTE;
 extern const object UNQUOTE;

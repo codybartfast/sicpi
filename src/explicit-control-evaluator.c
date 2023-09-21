@@ -121,6 +121,9 @@ eval_dispatch:
 			if (head == DEFINE) {
 				goto ev_definition;
 			}
+			if (head == LAMBDA) {
+				goto ev_lambda;
+			}
 			if (head == BEGIN) {
 				goto ev_begin;
 			}
@@ -145,6 +148,17 @@ ev_variable:
 ev_quoted:
 	core->val = text_of_quotation(core->expr);
 	goto goto_cont;
+
+ev_lambda:
+	core->unev = lambda_parameters(core->expr);
+	core->expr = lambda_body(core->expr);
+	core->val = make_procedure(core->unev, core->expr, core->env);
+	// todo: error checking
+	goto goto_cont;
+
+	//   (assign val (op make-procedure)
+	//               (reg unev) (reg exp) (reg env))
+	//   (goto (reg continue))
 
 	//
 	// Evaluating procedure applications
@@ -209,6 +223,10 @@ apply_dispatch:
 	if (is_primitive_procedure(core->proc)) {
 		goto primitive_apply;
 	}
+	if (is_compound_procedure(core->proc)) {
+		goto compound_apply;
+	}
+
 	return of_error_kind(ERROR_UNKNOWN_PROCEDURE_TYPE, NO_META_DATA);
 
 primitive_apply:
@@ -216,11 +234,17 @@ primitive_apply:
 	core->cont = restore(core);
 	goto goto_cont;
 
+compound_apply:
+	core->unev = procedure_parameters(core->proc);
+	core->env = procedure_environment(core->proc);
+	core->env = extend_environment(core->unev, core->argl, core->env);
+	core->unev = procedure_body(core->proc);
+	goto ev_sequence;
+
 	//
 	// §5.4.2 Sequence Evaluation and Tail Recursion
 	// 	https://www.sicp-book.com/book-Z-H-34.html#%_sec_5.4.2
 	//
-
 
 ev_begin:
 	core->unev = begin_actions(core->expr);

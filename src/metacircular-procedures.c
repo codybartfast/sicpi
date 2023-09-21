@@ -1,8 +1,16 @@
 #include "metacircular-procedures.h"
 
+#include "args.h"
 #include "list.h"
 #include "primitive-procedures.h"
 #include "sicp-error.h"
+
+object _procedure = NULL;
+object procedure(void)
+{
+	return _procedure ? _procedure :
+			    (_procedure = of_name("procedure", NO_META_DATA));
+}
 
 //
 // §4.1.2 Representing Expressions
@@ -33,6 +41,31 @@ inline object text_of_quotation(const object exp)
 	return cadr(exp);
 }
 
+bool is_lambda(const object exp)
+{
+	return is_tagged_list(exp, LAMBDA);
+}
+
+object lambda_parameters(object exp)
+{
+	ARGS_AT_LEAST_2("lambda_parameters", exp);
+
+	return arg2;
+}
+
+object lambda_body(const object exp)
+{
+	return cddr(exp);
+	// todo: use ARG? (and def_value?)
+}
+
+static object make_lambda(object parameters, object body)
+{
+	return cons(LAMBDA, cons(parameters, body, NO_META_DATA), NO_META_DATA);
+}
+
+//
+
 inline bool is_definition(const object exp)
 {
 	return is_tagged_list(exp, DEFINE);
@@ -40,18 +73,24 @@ inline bool is_definition(const object exp)
 
 inline object definition_variable(object exp)
 {
-	return is_symbol(cadr(exp)) ? cadr(exp) : caadr(exp);
+	ARGS_AT_LEAST_2("definition_variable", exp);
+
+	return is_symbol(arg2) ? arg2 : car(arg2);
 }
 
 object definition_value(object exp)
 {
-	if (is_symbol(cadr(exp))) {
-		return caddr(exp);
+	object args = exp;
+	ARGS_3("definition_value", args);
+
+	if (is_symbol(arg2)) {
+		return arg3;
 	} else {
-		inyim("make-lambda not implemented");
-		exit(1);
+		return make_lambda(cdr(arg2), cddr(exp));
 	}
 }
+
+//
 
 inline bool is_begin(const object exp)
 {
@@ -118,6 +157,40 @@ inline object rest_operands(const object ops)
 // Operations on Environments
 //
 
+bool is_compound_procedure(const object exp)
+{
+	return is_tagged_list(exp, procedure());
+}
+
+object make_procedure(object parameters, object body, object env)
+{
+	return list4(procedure(), parameters, body, env);
+}
+
+object procedure_parameters(object p)
+{
+	ARGS_AT_LEAST_2("procedure_parameters", p);
+
+	return arg2;
+}
+
+object procedure_body(object p)
+{
+	ARGS_AT_LEAST_3("procedure_body", p);
+
+	return arg3;
+}
+
+object procedure_environment(object p)
+{
+	ARGS_4("procedure_environment", p);
+
+	return arg4;
+}
+
+// (define (procedure-environment p) (cadddr p))
+
+// todo: static?
 object enclosing_envronment(object env)
 {
 	return cdr(env);

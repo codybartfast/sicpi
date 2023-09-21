@@ -109,7 +109,6 @@ meta_data object_meta_data(object obj)
 	return obj->meta_data;
 }
 
-// Both SICP and R4RS have ok as a regular symbol.
 object _ok = NULL;
 object ok(void)
 {
@@ -460,6 +459,9 @@ const object DEFINE = &_DEFINE;
 static struct object _DOT = SYMBOL(".");
 const object DOT = &_DOT;
 
+static struct object _LAMBDA = SYMBOL("lambda");
+const object LAMBDA = &_LAMBDA;
+
 static struct object _QUASIQUOTE = SYMBOL("quasiquote");
 const object QUASIQUOTE = &_QUASIQUOTE;
 
@@ -478,6 +480,7 @@ void init_keywords(void)
 	obarray_add_symbol(symbols, BEGIN);
 	obarray_add_symbol(symbols, DEFINE);
 	obarray_add_symbol(symbols, DOT);
+	obarray_add_symbol(symbols, LAMBDA);
 	obarray_add_symbol(symbols, QUASIQUOTE);
 	obarray_add_symbol(symbols, QUOTE);
 	obarray_add_symbol(symbols, UNQUOTE);

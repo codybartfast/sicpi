@@ -1,11 +1,11 @@
 ; ;section 1.1.4, page 12
 ; (newline)
 
-; (define (square x) (* x x))
+(define (square x) (* x x))
 
 ; ; section 1.1.4, page 13
 
-; (print (square 21))
+(print (square 21))
 ; (print (square (+ 2 5)))
 ; (print (square (square 3)))
 ; (define (sum-of-squares x y)
