@@ -18,6 +18,7 @@
                 "-o",
                 "${workspaceFolder}/bin/sicp",
 
+                "src/args.c",
                 "src/character-classes.c",
                 "src/explicit-control-evaluator.c",
                 "src/hardware.c",
@@ -88,12 +89,14 @@
                 "${workspaceFolder}/bin/test",
 
                 "unity/src/unity.c",
-                "src/sicp-error.c",
-                "src/sicp-std.c",
                 "tests/test.c",
 
+                "src/args.c",
                 "src/hardware.c",
                 "src/metacircular-procedures.c",
+                "src/sicp-error.c",
+                "src/sicp-std.c",
+
                 "src/explicit-control-evaluator.c",
                 "tests/test-explicit-control-evaluator.c",
 

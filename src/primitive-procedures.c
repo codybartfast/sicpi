@@ -7,19 +7,15 @@
 
 object Display(object args)
 {
-	ARGS_1("display")
+	ARGS_1("display");
+
 	printf("%s", to_text(arg1));
 	return ok();
 }
 
 object Newline(object args)
 {
-	char *NAME = "newline";
-	if (!is_null(args)) {
-		eprintf("'%s' expected 0 arguments but got 1 or more.", NAME);
-		return (of_error_kind(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
-				      NO_META_DATA));
-	}
+	ARGS_0("newline");
 
 	printf("\n");
 	return ok();
@@ -29,10 +25,8 @@ object Print(object args)
 {
 	ARGS_1("print");
 
-	printf("%s", to_text(arg1));
-	printf("\n");
-
-	return Newline(EMPTY_LIST);
+	printf("%s\n", to_text(arg1));
+	return ok();
 }
 
 //
