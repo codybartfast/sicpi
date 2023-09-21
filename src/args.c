@@ -4,7 +4,6 @@
 
 #include <stdarg.h>
 
-
 static char *plural_s(int n)
 {
 	return n == 1 ? "" : "s";

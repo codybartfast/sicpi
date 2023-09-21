@@ -36,5 +36,6 @@ object load_run(source src)
 	object expr = load(src);
 
 	object program = cons(BEGIN, expr, NO_META_DATA);
-	return run(program);
+	object rslt = run(program);
+	return rslt;
 }

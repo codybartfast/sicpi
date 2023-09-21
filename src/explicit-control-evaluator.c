@@ -133,8 +133,6 @@ eval_dispatch:
 	// Evaluating simple expressions
 	//
 
-	// todo: error checks?
-
 ev_self_eval:
 	core->val = core->expr;
 	goto goto_cont;
@@ -223,7 +221,6 @@ primitive_apply:
 	// 	https://www.sicp-book.com/book-Z-H-34.html#%_sec_5.4.2
 	//
 
-	// todo: error checks?
 
 ev_begin:
 	core->unev = begin_actions(core->expr);
@@ -241,6 +238,7 @@ ev_sequence:
 	goto eval_dispatch;
 
 ev_sequence_continue:
+	RETURN_IF_ERROR(core->val);
 	core->env = restore(core);
 	core->unev = restore(core);
 	core->unev = rest_exps(core->unev);

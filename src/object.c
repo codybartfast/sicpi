@@ -60,8 +60,8 @@ static inline void check_value_kind(object obj, enum value_kind expected,
 {
 	enum value_kind actual = object_value_kind(obj);
 	if (actual != expected) {
-		inyim("'%s' given a %s, but expected a %s.", caller,
-		      value_kind_name(actual), value_kind_name(expected));
+		inyim("'%s' expected a %s, but was given a %s.", caller,
+		      value_kind_name(expected), value_kind_name(actual));
 	}
 }
 
@@ -177,7 +177,7 @@ char *to_text(object obj)
 	case VK_PRIMITIVE_PROCEDURE:
 		return strdupx("<PRIMITIVE-PROCEDURE>", "object:to_text");
 	default:
-		inyim("'to_text' got unexpected value_kind: %s.",
+		inyim("'to_text' was given unexpected value_kind: %s.",
 		      object_value_kind_name(obj));
 		exit(1); // keep compiler happy
 	}
