@@ -141,9 +141,11 @@ inline bool is_last_exp(const object seq)
 	return is_null(cdr(seq));
 }
 
-inline object first_exp(const object seq)
+object first_exp(const object seq)
 {
-	return car(seq);
+	return is_pair(seq) ? car(seq) :
+			      of_error_kind(EMPTY_BEGIN_SEQUENCE,
+					    NO_META_DATA);
 }
 
 inline object rest_exps(const object seq)

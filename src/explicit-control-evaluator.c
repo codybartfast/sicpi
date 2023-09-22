@@ -260,6 +260,7 @@ ev_begin:
 
 ev_sequence:
 	core->exp = first_exp(core->unev);
+	RETURN_IF_ERROR(core->exp);
 	if (is_last_exp(core->unev)) {
 		goto ev_sequence_last_exp;
 	}
@@ -279,10 +280,10 @@ ev_sequence_last_exp:
 	core->cont = restore(core);
 	goto eval_dispatch;
 
-//
-// §5.4.3 Conditionals, Assignments, and Definitions
-// 	https://www.sicp-book.com/book-Z-H-34.html#%_sec_5.4.3
-//
+	//
+	// §5.4.3 Conditionals, Assignments, and Definitions
+	// 	https://www.sicp-book.com/book-Z-H-34.html#%_sec_5.4.3
+	//
 
 ev_if:
 	save(core, core->exp);
@@ -301,8 +302,9 @@ ev_if_decide:
 	if (!is_false(core->val)) {
 		goto ev_if_consequent;
 	}
+	goto ev_if_alternative;
 
-	// ev_if_alternative:
+ev_if_alternative:
 	core->exp = if_alternative(core->exp);
 	goto eval_dispatch;
 

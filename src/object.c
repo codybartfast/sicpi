@@ -213,8 +213,8 @@ char *error_kind_name(enum error_kind error_kind)
 	switch (error_kind) {
 	case ERROR_DIVISION_BY_ZERO:
 		return "<DIVISION-BY-ZERO-ERROR>";
-	case ERROR_EMPTY_PROGRAM:
-		return "<EMPTY-PROGRAM>";
+	case EMPTY_BEGIN_SEQUENCE:
+		return "<EMPTY-BEGIN-SEQUENCE-ERROR>";
 	case ERROR_INCORRECT_NUMBER_OF_ARGUMENTS:
 		return "<INCORRECT-NUMBER-OF-ARGUMENTS-ERROR>";
 	case ERROR_LEXER:
