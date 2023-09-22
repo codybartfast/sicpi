@@ -41,5 +41,5 @@ object set_args(char *caller, struct object **args_p, int count, bool at_least,
 				      NO_META_DATA));
 	}
 	va_end(arg_ptrs);
-	return ok();
+	return OK;
 }

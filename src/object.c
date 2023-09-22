@@ -109,12 +109,6 @@ meta_data object_meta_data(object obj)
 	return obj->meta_data;
 }
 
-object _ok = NULL;
-object ok(void)
-{
-	return _ok ? _ok : (_ok = of_name("ok", NO_META_DATA));
-}
-
 #define TO_TEXT_BUFFER_LEN 1024
 static char to_text_buffer[TO_TEXT_BUFFER_LEN];
 // Returns a new string for the external representaion of an object.
@@ -269,18 +263,18 @@ inline bool is_eos(object obj)
 	return obj == EOS;
 }
 
-static struct object _FALSE = SINGLETON("false");
-const object FALSE = &_FALSE;
+static struct object _FALSE_VALUE = SINGLETON("false");
+const object FALSE_VALUE = &_FALSE_VALUE;
 inline bool is_false(object obj)
 {
-	return obj == FALSE;
+	return obj == FALSE_VALUE;
 }
 
-static struct object _TRUE = SINGLETON("true");
-const object TRUE = &_TRUE;
+static struct object _TRUE_VALUE = SINGLETON("true");
+const object TRUE_VALUE = &_TRUE_VALUE;
 inline bool is_true(object obj)
 {
-	return obj == TRUE;
+	return obj == TRUE_VALUE;
 }
 
 static struct object _VA_TERM = SINGLETON("<VARIADIC-TERMINATOR>");
@@ -469,6 +463,9 @@ const object DOT = &_DOT;
 static struct object _LAMBDA = SYMBOL("lambda");
 const object LAMBDA = &_LAMBDA;
 
+static struct object _IF = SYMBOL("if");
+const object IF = &_IF;
+
 static struct object _QUASIQUOTE = SYMBOL("quasiquote");
 const object QUASIQUOTE = &_QUASIQUOTE;
 
@@ -478,7 +475,20 @@ const object QUOTE = &_QUOTE;
 static struct object _UNQUOTE = SYMBOL("unquote");
 const object UNQUOTE = &_UNQUOTE;
 
-// Above keywords need to be included in function below
+// Not keyowords:
+// 	These are not keywords but are added here so we can have more concise
+//	code e.g., by using 'OK' instead of 'of_name("ok", NO_META_DATA)'
+
+static struct object _FALSE = SYMBOL("false");
+const object FALSE = &_FALSE;
+
+static struct object _OK = SYMBOL("ok");
+const object OK = &_OK;
+
+static struct object _TRUE = SYMBOL("true");
+const object TRUE = &_TRUE;
+
+// Above symbols need to be included in function below
 
 void init_keywords(void)
 {
@@ -487,10 +497,17 @@ void init_keywords(void)
 	obarray_add_symbol(symbols, BEGIN);
 	obarray_add_symbol(symbols, DEFINE);
 	obarray_add_symbol(symbols, DOT);
+	obarray_add_symbol(symbols, IF);
 	obarray_add_symbol(symbols, LAMBDA);
 	obarray_add_symbol(symbols, QUASIQUOTE);
 	obarray_add_symbol(symbols, QUOTE);
 	obarray_add_symbol(symbols, UNQUOTE);
+
+	// Not Keywords:
+
+	obarray_add_symbol(symbols, FALSE);
+	obarray_add_symbol(symbols, OK);
+	obarray_add_symbol(symbols, TRUE);
 }
 
 //

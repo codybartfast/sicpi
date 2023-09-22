@@ -24,8 +24,8 @@ void test_eceval_self_evaluating(void)
 void test_eceval_variable(void)
 {
 	object expr = to_expr("true");
-	TEST_ASSERT_NOT_EQUAL(TRUE, expr);
-	TEST_ASSERT_EQUAL(TRUE, EC_Eval(expr));
+	TEST_ASSERT_NOT_EQUAL(TRUE_VALUE, expr);
+	TEST_ASSERT_EQUAL(TRUE_VALUE, EC_Eval(expr));
 }
 
 void test_eceval_quoted(void)
@@ -109,6 +109,30 @@ void test_eceval_sequence(void)
 	TEST_ASSERT_EQUAL_DOUBLE(2.71828, to_floating(EC_Eval(expr)));
 }
 
+// todo: replace predicate expressions with eq? when we have it.
+void test_eceval_if(void)
+{
+	object expr;
+
+	expr = to_expr("(if true 'apple)");
+	TEST_ASSERT_EQUAL_STRING("apple", to_text(EC_Eval(expr)));
+
+	expr = to_expr("(if false 'apple 'pear)");
+	TEST_ASSERT_EQUAL_STRING("pear", to_text(EC_Eval(expr)));
+
+	expr = to_expr("(if false 'apple)");
+	TEST_ASSERT_EQUAL_STRING("false", to_text(EC_Eval(expr)));
+
+	expr = to_expr("(if (if true true) 'apple)");
+	TEST_ASSERT_EQUAL_STRING("apple", to_text(EC_Eval(expr)));
+
+	expr = to_expr("(if (if false true) 'apple 'pear)");
+	TEST_ASSERT_EQUAL_STRING("pear", to_text(EC_Eval(expr)));
+
+	expr = to_expr("(if (if false true) 'apple)");
+	TEST_ASSERT_EQUAL_STRING("false", to_text(EC_Eval(expr)));
+}
+
 int test_explicit_control_evaluator(void)
 {
 	RUN_TEST(test_eceval_self_evaluating);
@@ -117,6 +141,7 @@ int test_explicit_control_evaluator(void)
 	RUN_TEST(test_eceval_section_1_1_1);
 	RUN_TEST(test_eceval_define);
 	RUN_TEST(test_eceval_sequence);
+	RUN_TEST(test_eceval_if);
 
 	return 0;
 }

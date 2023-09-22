@@ -46,13 +46,13 @@ void obj_singletons(void)
 	has_one_type(VA_TERM);
 	TEST_ASSERT_EQUAL_STRING("<VARIADIC-TERMINATOR>", to_text(VA_TERM));
 
-	TEST_ASSERT_TRUE(is_false(FALSE));
-	has_one_type(FALSE);
-	TEST_ASSERT_EQUAL_STRING("false", to_text(FALSE));
+	TEST_ASSERT_TRUE(is_false(FALSE_VALUE));
+	has_one_type(FALSE_VALUE);
+	TEST_ASSERT_EQUAL_STRING("false", to_text(FALSE_VALUE));
 
-	TEST_ASSERT_TRUE(is_true(TRUE));
-	has_one_type(TRUE);
-	TEST_ASSERT_EQUAL_STRING("true", to_text(TRUE));
+	TEST_ASSERT_TRUE(is_true(TRUE_VALUE));
+	has_one_type(TRUE_VALUE);
+	TEST_ASSERT_EQUAL_STRING("true", to_text(TRUE_VALUE));
 }
 
 void obj_integer(void)
@@ -139,10 +139,16 @@ void obj_symbol(void)
 	TEST_ASSERT_EQUAL(BEGIN, of_name("begin", NO_META_DATA));
 	TEST_ASSERT_EQUAL(DEFINE, of_name("define", NO_META_DATA));
 	TEST_ASSERT_EQUAL(DOT, of_name(".", NO_META_DATA));
+	TEST_ASSERT_EQUAL(IF, of_name("if", NO_META_DATA));
 	TEST_ASSERT_EQUAL(LAMBDA, of_name("lambda", NO_META_DATA));
 	TEST_ASSERT_EQUAL(QUASIQUOTE, of_name("quasiquote", NO_META_DATA));
 	TEST_ASSERT_EQUAL(QUOTE, of_name("quote", NO_META_DATA));
 	TEST_ASSERT_EQUAL(UNQUOTE, of_name("unquote", NO_META_DATA));
+
+	// Not keywords
+	TEST_ASSERT_EQUAL(FALSE, of_name("false", NO_META_DATA));
+	TEST_ASSERT_EQUAL(OK, of_name("ok", NO_META_DATA));
+	TEST_ASSERT_EQUAL(TRUE, of_name("true", NO_META_DATA));
 }
 
 void obj_to_text(void)

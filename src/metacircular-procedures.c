@@ -94,6 +94,34 @@ object definition_value(object exp)
 
 //
 
+inline bool is_if(const object exp)
+{
+	return is_tagged_list(exp, IF);
+}
+
+object if_predicate(object exp)
+{
+	ARGS_AT_LEAST_2("if_predicate", exp);
+
+	return arg2;
+}
+
+object if_consequent(object exp)
+{
+	ARGS_AT_LEAST_3("if_consequent", exp);
+
+	return arg3;
+}
+
+object if_alternative(object exp)
+{
+	ARGS_AT_LEAST_3("if_alternative", exp);
+
+	return is_pair(exp) ? car(exp) : FALSE;
+}
+
+//
+
 inline bool is_begin(const object exp)
 {
 	return is_tagged_list(exp, BEGIN);
@@ -101,6 +129,7 @@ inline bool is_begin(const object exp)
 
 inline object begin_actions(const object exp)
 {
+	// todo: use ARG?
 	return cdr(exp);
 }
 
@@ -253,6 +282,7 @@ object lookup_variable_value(const object var, object env)
 		}
 		env = cdr(env);
 	}
+	eprintf("Unbound variable '%s'.", to_text(var));
 	return of_error_kind(ERROR_UNBOUND_VARIABLE, object_meta_data(var));
 }
 
@@ -314,8 +344,8 @@ object setup_environment(void)
 	object initial_env = extend_environment(primitive_procedure_names(),
 						primitive_procedure_objects(),
 						the_empty_environment());
-	define_variable(of_name("true", NO_META_DATA), TRUE, initial_env);
-	define_variable(of_name("false", NO_META_DATA), FALSE, initial_env);
+	define_variable(TRUE, TRUE_VALUE, initial_env);
+	define_variable(FALSE, FALSE_VALUE, initial_env);
 	return initial_env;
 }
 

@@ -11,7 +11,7 @@ object Display(object args)
 
 	printf("%s", to_text(arg1));
 
-	return ok();
+	return OK;
 }
 
 object Newline(object args)
@@ -19,7 +19,7 @@ object Newline(object args)
 	ARGS_0("newline", args);
 
 	printf("\n");
-	return ok();
+	return OK;
 }
 
 object Print(object args)
@@ -28,7 +28,7 @@ object Print(object args)
 
 	printf("%s\n", to_text(arg1));
 
-	return ok();
+	return OK;
 }
 
 //

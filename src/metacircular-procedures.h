@@ -35,7 +35,10 @@ bool is_lambda(const object exp);
 object lambda_parameters(const object exp);
 object lambda_body(const object exp);
 
-// if
+bool is_if(const object exp);
+object if_predicate(object exp);
+object if_consequent(object exp);
+object if_alternative(object exp);
 
 bool is_begin(const object exp);
 object begin_actions(object exp);

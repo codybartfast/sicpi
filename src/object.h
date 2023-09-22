@@ -82,7 +82,6 @@ int8_t object_value_kind(object obj);
 //
 
 meta_data object_meta_data(const object obj);
-object ok(void);
 char *to_text(object obj);
 
 //
@@ -113,10 +112,10 @@ bool is_null(const object obj);
 extern const object EOS;
 bool is_eos(object obj);
 
-extern const object FALSE;
+extern const object FALSE_VALUE;
 bool is_false(object obj);
 
-extern const object TRUE;
+extern const object TRUE_VALUE;
 bool is_true(object obj);
 
 extern const object VA_TERM;
@@ -183,10 +182,17 @@ char const *to_name(const object obj);
 extern const object BEGIN;
 extern const object DEFINE;
 extern const object DOT;
+extern const object IF;
 extern const object LAMBDA;
 extern const object QUASIQUOTE;
 extern const object QUOTE;
 extern const object UNQUOTE;
+
+// Not keywords:
+
+extern const object FALSE;
+extern const object OK;
+extern const object TRUE;
 
 //
 // Goto Labels

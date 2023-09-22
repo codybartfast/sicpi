@@ -14,6 +14,7 @@ enum label {
 	LABEL_EV_APPL_ACCUMULATE_ARG,
 	LABEL_EV_APPL_DID_OPERATOR,
 	LABEL_EV_DEFINITION_1,
+	LABEL_EV_IF_DECIDE,
 	LABEL_EV_SEQUENCE_CONTINUE,
 	LABEL_EVAL_DISPATCH,
 	LABEL_RETURN_CALLER
@@ -43,6 +44,9 @@ const object EV_APPL_DID_OPERATOR = &_EV_APPL_DID_OPERATOR;
 
 static struct object _EV_DEFINITION_1 = GOTO_LABEL(LABEL_EV_DEFINITION_1);
 const object EV_DEFINITION_1 = &_EV_DEFINITION_1;
+
+static struct object _EV_IF_DECIDE = GOTO_LABEL(LABEL_EV_IF_DECIDE);
+const object EV_IF_DECIDE = &_EV_IF_DECIDE;
 
 static struct object _EV_SEQUENCE_CONTINUE =
 	GOTO_LABEL(LABEL_EV_SEQUENCE_CONTINUE);
@@ -100,7 +104,7 @@ static bool is_last_operand(object ops)
 // 	https://www.sicp-book.com/book-Z-H-34.html#%_sec_5.4
 //
 
-static object eval(core core)
+static object eval(const core core)
 {
 eval_dispatch:
 	object disp_expr = core->expr;
@@ -121,6 +125,9 @@ eval_dispatch:
 			if (head == DEFINE) {
 				goto ev_definition;
 			}
+			if (head == IF) {
+				goto ev_if;
+			}
 			if (head == LAMBDA) {
 				goto ev_lambda;
 			}
@@ -130,6 +137,7 @@ eval_dispatch:
 		}
 		goto ev_application;
 	}
+	eprintf("Unknown expression type: '%s'.", to_text(disp_expr));
 	return of_error_kind(ERROR_UNKNOWN_EXPRESSION_TYPE, NO_META_DATA);
 
 	//
@@ -269,9 +277,38 @@ ev_sequence_last_exp:
 	core->cont = restore(core);
 	goto eval_dispatch;
 
-	//
-	// §5.4.3 Conditionals, Assignments, and Definitions
-	// 	https://www.sicp-book.com/book-Z-H-34.html#%_sec_5.4.3
+//
+// §5.4.3 Conditionals, Assignments, and Definitions
+// 	https://www.sicp-book.com/book-Z-H-34.html#%_sec_5.4.3
+//
+
+// todo: rename registers?
+ev_if:
+	save(core, core->expr);
+	save(core, core->env);
+	save(core, core->cont);
+	core->cont = EV_IF_DECIDE;
+	core->expr = if_predicate(core->expr);
+	RETURN_IF_ERROR(core->expr);
+	goto eval_dispatch;
+
+ev_if_decide:
+	RETURN_IF_ERROR(core->val);
+	core->cont = restore(core);
+	core->env = restore(core);
+	core->expr = restore(core);
+	if (!is_false(core->val)) {
+		goto ev_if_consequent;
+	}
+
+	// ev_if_alternative:
+	core->expr = if_alternative(core->expr);
+	goto eval_dispatch;
+
+ev_if_consequent:
+	core->expr = if_consequent(core->expr);
+	goto eval_dispatch;
+
 	//
 
 ev_definition:
@@ -289,7 +326,7 @@ ev_definition_1:
 	core->env = restore(core);
 	core->unev = restore(core);
 	define_variable(core->unev, core->val, core->env);
-	core->val = ok();
+	core->val = OK;
 	goto goto_cont;
 
 	//
@@ -312,6 +349,8 @@ goto_cont:
 		goto ev_appl_did_operator;
 	case LABEL_EV_DEFINITION_1:
 		goto ev_definition_1;
+	case LABEL_EV_IF_DECIDE:
+		goto ev_if_decide;
 	case LABEL_EV_SEQUENCE_CONTINUE:
 		goto ev_sequence_continue;
 	case LABEL_EVAL_DISPATCH:
