@@ -155,6 +155,7 @@ ev_variable:
 
 ev_quoted:
 	core->val = text_of_quotation(core->exp);
+	RETURN_IF_ERROR(core->val);
 	goto goto_cont;
 
 ev_lambda:
@@ -253,6 +254,7 @@ compound_apply:
 
 ev_begin:
 	core->unev = begin_actions(core->exp);
+	RETURN_IF_ERROR(core->unev);
 	save(core, core->cont);
 	goto ev_sequence;
 
@@ -282,7 +284,6 @@ ev_sequence_last_exp:
 // 	https://www.sicp-book.com/book-Z-H-34.html#%_sec_5.4.3
 //
 
-// todo: rename registers?
 ev_if:
 	save(core, core->exp);
 	save(core, core->env);

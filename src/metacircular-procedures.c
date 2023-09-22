@@ -36,9 +36,11 @@ inline bool is_quoted(const object exp)
 	return is_tagged_list(exp, QUOTE);
 }
 
-inline object text_of_quotation(const object exp)
+object text_of_quotation(object exp)
 {
-	return cadr(exp);
+	ARGS_2("text_of_quotation", exp);
+
+	return arg2;
 }
 
 // assign
@@ -74,7 +76,7 @@ inline bool is_definition(const object exp)
 	return is_tagged_list(exp, DEFINE);
 }
 
-inline object definition_variable(object exp)
+object definition_variable(object exp)
 {
 	ARGS_AT_LEAST_2("definition_variable", exp);
 
@@ -127,10 +129,11 @@ inline bool is_begin(const object exp)
 	return is_tagged_list(exp, BEGIN);
 }
 
-inline object begin_actions(const object exp)
+object begin_actions(object exp)
 {
-	// todo: use ARG?
-	return cdr(exp);
+	ARGS_AT_LEAST_1("begin_actions", exp);
+
+	return exp;
 }
 
 inline bool is_last_exp(const object seq)
