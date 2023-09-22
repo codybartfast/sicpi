@@ -7,7 +7,7 @@ typedef struct core {
 	// registers
 	// 	https://www.sicp-book.com/book-Z-H-34.html#%_sec_Temp_766
 
-	object expr;
+	object exp;
 	object env;
 	object val;
 	object cont;

@@ -107,7 +107,7 @@ static bool is_last_operand(object ops)
 static object eval(const core core)
 {
 eval_dispatch:
-	object disp_expr = core->expr;
+	object disp_expr = core->exp;
 	RETURN_IF_ERROR(disp_expr);
 
 	if (is_self_evaluating(disp_expr)) {
@@ -145,24 +145,24 @@ eval_dispatch:
 	//
 
 ev_self_eval:
-	core->val = core->expr;
+	core->val = core->exp;
 	goto goto_cont;
 
 ev_variable:
-	core->val = lookup_variable_value(core->expr, core->env);
+	core->val = lookup_variable_value(core->exp, core->env);
 	RETURN_IF_ERROR(core->val);
 	goto goto_cont;
 
 ev_quoted:
-	core->val = text_of_quotation(core->expr);
+	core->val = text_of_quotation(core->exp);
 	goto goto_cont;
 
 ev_lambda:
-	core->unev = lambda_parameters(core->expr);
+	core->unev = lambda_parameters(core->exp);
 	RETURN_IF_ERROR(core->unev);
-	core->expr = lambda_body(core->expr);
-	RETURN_IF_ERROR(core->expr);
-	core->val = make_procedure(core->unev, core->expr, core->env);
+	core->exp = lambda_body(core->exp);
+	RETURN_IF_ERROR(core->exp);
+	core->val = make_procedure(core->unev, core->exp, core->env);
 	goto goto_cont;
 
 	//
@@ -172,9 +172,9 @@ ev_lambda:
 ev_application:
 	save(core, core->cont);
 	save(core, core->env);
-	core->unev = operands(core->expr);
+	core->unev = operands(core->exp);
 	save(core, core->unev);
-	core->expr = operator(core->expr);
+	core->exp = operator(core->exp);
 	core->cont = EV_APPL_DID_OPERATOR;
 	goto eval_dispatch;
 
@@ -191,7 +191,7 @@ ev_appl_did_operator:
 
 ev_appl_operand_loop:
 	save(core, core->argl);
-	core->expr = first_operand(core->unev);
+	core->exp = first_operand(core->unev);
 	if (is_last_operand(core->unev)) {
 		goto ev_appl_last_arg;
 	}
@@ -252,12 +252,12 @@ compound_apply:
 	//
 
 ev_begin:
-	core->unev = begin_actions(core->expr);
+	core->unev = begin_actions(core->exp);
 	save(core, core->cont);
 	goto ev_sequence;
 
 ev_sequence:
-	core->expr = first_exp(core->unev);
+	core->exp = first_exp(core->unev);
 	if (is_last_exp(core->unev)) {
 		goto ev_sequence_last_exp;
 	}
@@ -284,37 +284,37 @@ ev_sequence_last_exp:
 
 // todo: rename registers?
 ev_if:
-	save(core, core->expr);
+	save(core, core->exp);
 	save(core, core->env);
 	save(core, core->cont);
 	core->cont = EV_IF_DECIDE;
-	core->expr = if_predicate(core->expr);
-	RETURN_IF_ERROR(core->expr);
+	core->exp = if_predicate(core->exp);
+	RETURN_IF_ERROR(core->exp);
 	goto eval_dispatch;
 
 ev_if_decide:
 	RETURN_IF_ERROR(core->val);
 	core->cont = restore(core);
 	core->env = restore(core);
-	core->expr = restore(core);
+	core->exp = restore(core);
 	if (!is_false(core->val)) {
 		goto ev_if_consequent;
 	}
 
 	// ev_if_alternative:
-	core->expr = if_alternative(core->expr);
+	core->exp = if_alternative(core->exp);
 	goto eval_dispatch;
 
 ev_if_consequent:
-	core->expr = if_consequent(core->expr);
+	core->exp = if_consequent(core->exp);
 	goto eval_dispatch;
 
 	//
 
 ev_definition:
-	core->unev = definition_variable(core->expr);
+	core->unev = definition_variable(core->exp);
 	save(core, core->unev);
-	core->expr = definition_value(core->expr);
+	core->exp = definition_value(core->exp);
 	save(core, core->env);
 	save(core, core->cont);
 	core->cont = EV_DEFINITION_1;
@@ -370,7 +370,7 @@ object ec_eval(object expr, object env)
 	core core = &_core;
 	core_init(core);
 
-	core->expr = expr;
+	core->exp = expr;
 	core->env = env;
 	core->cont = RETURN_CALLER;
 	return eval(core);
