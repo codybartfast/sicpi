@@ -32,7 +32,7 @@ object load_run(source src)
 	object expr = load(src);
 
 	if (expr == EMPTY_LIST) {
-		return OK;
+		return VOID_VALUE;
 	}
 
 	object program = cons(BEGIN, expr, NO_META_DATA);

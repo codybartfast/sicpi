@@ -9,7 +9,7 @@ void has_one_type(object obj)
 			   is_string(obj) + is_symbol(obj);
 
 	int singleton_count = is_eos(obj) + is_false(obj) + is_null(obj) +
-			      +is_true(obj) + is_va_term(obj);
+			      +is_true(obj) + is_void(obj) + is_va_term(obj);
 
 	TEST_ASSERT_EQUAL(1, common_count + singleton_count);
 }
@@ -46,6 +46,7 @@ void obj_singletons(void)
 	has_one_type(VA_TERM);
 	TEST_ASSERT_EQUAL_STRING("<VARIADIC-TERMINATOR>", to_text(VA_TERM));
 
+	// todo: rename to #f
 	TEST_ASSERT_TRUE(is_false(FALSE_VALUE));
 	has_one_type(FALSE_VALUE);
 	TEST_ASSERT_EQUAL_STRING("false", to_text(FALSE_VALUE));
@@ -53,6 +54,10 @@ void obj_singletons(void)
 	TEST_ASSERT_TRUE(is_true(TRUE_VALUE));
 	has_one_type(TRUE_VALUE);
 	TEST_ASSERT_EQUAL_STRING("true", to_text(TRUE_VALUE));
+
+	TEST_ASSERT_TRUE(is_void(VOID_VALUE));
+	has_one_type(VOID_VALUE);
+	TEST_ASSERT_EQUAL_STRING("#void", to_text(VOID_VALUE));
 }
 
 void obj_integer(void)
@@ -136,9 +141,11 @@ void obj_symbol(void)
 	TEST_ASSERT_EQUAL(meta_data, object_meta_data(obj));
 	TEST_ASSERT_EQUAL_STRING(id, to_name(obj));
 
+	TEST_ASSERT_EQUAL(COND, of_name("cond", NO_META_DATA));
 	TEST_ASSERT_EQUAL(BEGIN, of_name("begin", NO_META_DATA));
 	TEST_ASSERT_EQUAL(DEFINE, of_name("define", NO_META_DATA));
 	TEST_ASSERT_EQUAL(DOT, of_name(".", NO_META_DATA));
+	TEST_ASSERT_EQUAL(ELSE, of_name("else", NO_META_DATA));
 	TEST_ASSERT_EQUAL(IF, of_name("if", NO_META_DATA));
 	TEST_ASSERT_EQUAL(LAMBDA, of_name("lambda", NO_META_DATA));
 	TEST_ASSERT_EQUAL(QUASIQUOTE, of_name("quasiquote", NO_META_DATA));

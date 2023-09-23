@@ -215,6 +215,8 @@ char *error_kind_name(enum error_kind error_kind)
 		return "<DIVISION-BY-ZERO-ERROR>";
 	case EMPTY_BEGIN_SEQUENCE:
 		return "<EMPTY-BEGIN-SEQUENCE-ERROR>";
+	case ERROR_ELSE_IS_NOT_LAST_CLAUSE:
+		return "<ELSE-IS-NOT-LAST-CLAUSE-ERROR>";
 	case ERROR_INCORRECT_NUMBER_OF_ARGUMENTS:
 		return "<INCORRECT-NUMBER-OF-ARGUMENTS-ERROR>";
 	case ERROR_LEXER:
@@ -282,6 +284,13 @@ const object VA_TERM = &_VA_TERM;
 inline bool is_va_term(object obj)
 {
 	return obj == VA_TERM;
+}
+
+static struct object _VOID_VALUE = SINGLETON("#void");
+const object VOID_VALUE = &_VOID_VALUE;
+inline bool is_void(object obj)
+{
+	return obj == VOID_VALUE;
 }
 
 //
@@ -454,11 +463,17 @@ inline char const *to_name(object obj)
 static struct object _BEGIN = SYMBOL("begin");
 const object BEGIN = &_BEGIN;
 
+static struct object _COND = SYMBOL("cond");
+const object COND = &_COND;
+
 static struct object _DEFINE = SYMBOL("define");
 const object DEFINE = &_DEFINE;
 
 static struct object _DOT = SYMBOL(".");
 const object DOT = &_DOT;
+
+static struct object _ELSE = SYMBOL("else");
+const object ELSE = &_ELSE;
 
 static struct object _LAMBDA = SYMBOL("lambda");
 const object LAMBDA = &_LAMBDA;
@@ -495,8 +510,10 @@ void init_keywords(void)
 	symbols = obarray_new(0);
 
 	obarray_add_symbol(symbols, BEGIN);
+	obarray_add_symbol(symbols, COND);
 	obarray_add_symbol(symbols, DEFINE);
 	obarray_add_symbol(symbols, DOT);
+	obarray_add_symbol(symbols, ELSE);
 	obarray_add_symbol(symbols, IF);
 	obarray_add_symbol(symbols, LAMBDA);
 	obarray_add_symbol(symbols, QUASIQUOTE);

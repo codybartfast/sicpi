@@ -49,7 +49,7 @@
 #define ARGS_AT_LEAST_3(CALLER, ARGS) SET_ARGS_3(CALLER, ARGS, true)
 
 #define ARGS_4(CALLER, ARGS) SET_ARGS_4(CALLER, ARGS, false)
-#define ARGS_AT_LEAST_4(CALLER, ARGS) SET_ARGS_4 (CALLER, ARGS, true)
+#define ARGS_AT_LEAST_4(CALLER, ARGS) SET_ARGS_4(CALLER, ARGS, true)
 
 object set_args(char *caller, struct object **args_p, int count, bool at_least,
 		...);

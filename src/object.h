@@ -27,6 +27,7 @@ enum error_kind {
 	ERROR_UNSPECIFIED = 0,
 	ERROR_DIVISION_BY_ZERO,
 	EMPTY_BEGIN_SEQUENCE,
+	ERROR_ELSE_IS_NOT_LAST_CLAUSE,
 	ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
 	ERROR_LEXER,
 	ERROR_PARSER,
@@ -121,6 +122,9 @@ bool is_true(object obj);
 extern const object VA_TERM;
 bool is_va_term(object obj);
 
+extern const object VOID_VALUE;
+bool is_void(object obj);
+
 //
 // Numbers
 // =============================================================================
@@ -180,8 +184,10 @@ char const *to_name(const object obj);
 //
 
 extern const object BEGIN;
+extern const object COND;
 extern const object DEFINE;
 extern const object DOT;
+extern const object ELSE;
 extern const object IF;
 extern const object LAMBDA;
 extern const object QUASIQUOTE;

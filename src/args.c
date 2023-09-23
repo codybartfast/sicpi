@@ -9,6 +9,7 @@ static char *plural_s(int n)
 	return n == 1 ? "" : "s";
 }
 
+// TODO: zero base?
 object set_args(char *caller, struct object **args_p, int count, bool at_least,
 		...)
 {

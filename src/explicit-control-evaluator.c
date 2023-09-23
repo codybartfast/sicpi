@@ -128,6 +128,9 @@ eval_dispatch:
 			if (head == IF) {
 				goto ev_if;
 			}
+			if (head == COND) {
+				goto ev_cond;
+			}
 			if (head == LAMBDA) {
 				goto ev_lambda;
 			}
@@ -310,6 +313,12 @@ ev_if_alternative:
 
 ev_if_consequent:
 	core->exp = if_consequent(core->exp);
+	goto eval_dispatch;
+
+	//
+
+ev_cond:
+	core->exp = cond_to_if(core->exp);
 	goto eval_dispatch;
 
 	//

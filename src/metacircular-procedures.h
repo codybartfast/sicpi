@@ -40,6 +40,9 @@ object if_predicate(object exp);
 object if_consequent(object exp);
 object if_alternative(object exp);
 
+object make_begin(object exp);
+object cond_to_if(object exp);
+
 bool is_begin(const object exp);
 object begin_actions(object exp);
 bool is_last_exp(object seq);

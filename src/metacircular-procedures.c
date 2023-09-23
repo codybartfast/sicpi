@@ -122,6 +122,89 @@ object if_alternative(object exp)
 	return is_pair(exp) ? car(exp) : FALSE;
 }
 
+// Cond
+// todo cond test
+
+object make_if(object predicate, object consequent, object alternative)
+{
+	return list4(IF, predicate, consequent, alternative);
+}
+
+object make_begin(const object exp)
+{
+	return cons(BEGIN, exp, NO_META_DATA);
+}
+
+object sequence_to_exp(const object seq)
+{
+	if (is_null(seq)) {
+		// Book says return seq which is the empty list ()
+		// but this gets creates an error when evaluated. We can't
+		// return OK either, but could return a symbol 'ok if we
+		// define it as a variable with value OK.
+		// Other alternatives could be:
+		// 	false
+		//      (quote empty_list)
+		return list1(of_name("void", NO_META_DATA));
+	}
+	if (is_last_exp(seq)) {
+		return first_exp(seq);
+	}
+	return make_begin(seq);
+}
+
+object cond_predicate(object clause)
+{
+	return car(clause);
+}
+
+object cond_actions(object clause)
+{
+	return cdr(clause);
+}
+
+bool is_cond_else_clause(object clause)
+{
+	return is_eq(cond_predicate(clause), ELSE);
+}
+
+object expand_clauses(object clauses)
+{
+	if (is_null(clauses)) {
+		return FALSE;
+	}
+
+	object first = car(clauses);
+	object rest = cdr(clauses);
+
+	// todo: guard first not list
+
+	if (is_cond_else_clause(first)) {
+		if (is_null(rest)) {
+			return sequence_to_exp(cond_actions(first));
+		} else {
+			eprintf("'else' is not last cond clause %s.",
+				to_text(clauses));
+			return of_error_kind(ERROR_ELSE_IS_NOT_LAST_CLAUSE,
+					     NO_META_DATA);
+		}
+	}
+	return make_if(cond_predicate(first),
+		       sequence_to_exp(cond_actions(first)),
+		       expand_clauses(rest));
+}
+
+object cond_clauses(object exp)
+{
+	// Guard: should only be able to get here if tagged with 'cond'
+	return cdr(exp);
+}
+
+object cond_to_if(object exp)
+{
+	return expand_clauses(cond_clauses(exp));
+}
+
 //
 
 inline bool is_begin(const object exp)
@@ -144,8 +227,7 @@ inline bool is_last_exp(const object seq)
 object first_exp(const object seq)
 {
 	return is_pair(seq) ? car(seq) :
-			      of_error_kind(EMPTY_BEGIN_SEQUENCE,
-					    NO_META_DATA);
+			      of_error_kind(EMPTY_BEGIN_SEQUENCE, NO_META_DATA);
 }
 
 inline object rest_exps(const object seq)
@@ -322,6 +404,7 @@ object make_primitive_procedures_list(void)
 		list2(of_name("display", NMD), of_func(Display, NMD)),
 		list2(of_name("newline", NMD), of_func(Newline, NMD)),
 		list2(of_name("print", NMD), of_func(Print, NMD)),
+		list2(of_name("void", NMD), of_func(Void, NMD)),
 		VA_TERM); // this comment just to keep separate line
 }
 

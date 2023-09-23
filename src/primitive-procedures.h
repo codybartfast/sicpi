@@ -6,6 +6,7 @@
 object Display(object args);
 object Newline(object args);
 object Print(object args);
+object Void(object args);
 
 //
 // ARITHMETIC

@@ -31,6 +31,12 @@ object Print(object args)
 	return OK;
 }
 
+object Void(object args){
+	ARGS_0("void", args);
+
+	return VOID_VALUE;
+}
+
 //
 // ARITHMETIC
 //
@@ -103,7 +109,6 @@ object Sub(object args)
 				     NO_META_DATA);
 	}
 
-	// todo: optimise?
 	if (arg_count == 1) {
 		args = cons(zero(), args, NO_META_DATA);
 	}
