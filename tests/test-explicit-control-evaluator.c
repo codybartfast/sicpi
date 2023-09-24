@@ -159,6 +159,39 @@ void test_eceval_conditionals(void)
 	TEST_ASSERT_EQUAL_STRING("apple", to_text(EC_Eval(expr)));
 }
 
+void test_eceval_primitive_procedures(void)
+{
+	// We're not checking the implementation of these functions (that's
+	// elsewhere), just that they're defined.
+
+	object expr;
+
+	// Arithmetic
+
+	expr = to_expr("(+ 2 2)");
+	TEST_ASSERT_EQUAL_STRING("4", to_text(EC_Eval(expr)));
+
+	expr = to_expr("(- 4 2)");
+	TEST_ASSERT_EQUAL_STRING("2", to_text(EC_Eval(expr)));
+
+	expr = to_expr("(* 4 2)");
+	TEST_ASSERT_EQUAL_STRING("8", to_text(EC_Eval(expr)));
+
+	expr = to_expr("(/ 9 2)");
+	TEST_ASSERT_EQUAL_STRING("4.5", to_text(EC_Eval(expr)));
+
+	// Comparison
+
+	expr = to_expr("(> 3 2)");
+	TEST_ASSERT_EQUAL_STRING("true", to_text(EC_Eval(expr)));
+
+	expr = to_expr("(< 3 2)");
+	TEST_ASSERT_EQUAL_STRING("false", to_text(EC_Eval(expr)));
+
+	expr = to_expr("(= 2 3)");
+	TEST_ASSERT_EQUAL_STRING("false", to_text(EC_Eval(expr)));
+}
+
 int test_explicit_control_evaluator(void)
 {
 	RUN_TEST(test_eceval_self_evaluating);
@@ -168,6 +201,7 @@ int test_explicit_control_evaluator(void)
 	RUN_TEST(test_eceval_define);
 	RUN_TEST(test_eceval_sequence);
 	RUN_TEST(test_eceval_conditionals);
+	RUN_TEST(test_eceval_primitive_procedures);
 
 	return 0;
 }

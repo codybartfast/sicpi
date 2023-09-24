@@ -23,5 +23,6 @@ object Div(object args);
 
 object Greater_Than(object args);
 object Less_Than(object args);
+object Equal(object args);
 
 #endif

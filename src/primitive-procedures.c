@@ -187,7 +187,11 @@ object Div(object args)
 // Comparison
 //
 
-enum comparison_kind { COMPARE_GREATER_THAN = 1, COMPARE_LESS_THAN };
+enum comparison_kind {
+	COMPARE_GREATER_THAN = 1,
+	COMPARE_LESS_THAN,
+	COMPARE_EQUAL
+};
 
 static object compare(object args, enum comparison_kind kind, char *name,
 		      char *symbol)
@@ -216,6 +220,9 @@ static object compare(object args, enum comparison_kind kind, char *name,
 			case COMPARE_LESS_THAN:
 				this_result = prev < n;
 				break;
+			case COMPARE_EQUAL:
+				this_result = prev == n;
+				break;
 			default:
 				inyim("'compare' given unexpected kind: '%d'",
 				      kind);
@@ -235,6 +242,9 @@ static object compare(object args, enum comparison_kind kind, char *name,
 			case COMPARE_LESS_THAN:
 				this_result = prev < n;
 				break;
+			case COMPARE_EQUAL:
+				this_result = prev == n;
+				break;
 			default:
 				inyim("'compare' given unexpected kind: '%d'",
 				      kind);
@@ -246,12 +256,17 @@ static object compare(object args, enum comparison_kind kind, char *name,
 	return rslt ? TRUE_VALUE : FALSE_VALUE;
 }
 
-object Greater_Than(object args)
+inline object Greater_Than(object args)
 {
 	return compare(args, COMPARE_GREATER_THAN, "Greater Than", ">");
 }
 
-object Less_Than(object args)
+inline object Less_Than(object args)
 {
 	return compare(args, COMPARE_LESS_THAN, "Less Than", "<");
+}
+
+inline object Equal(object args)
+{
+	return compare(args, COMPARE_EQUAL, "Equal", "=");
 }

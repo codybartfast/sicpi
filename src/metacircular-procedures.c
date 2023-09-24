@@ -403,6 +403,8 @@ object make_primitive_procedures_list(void)
 		list2(of_name("/", NMD), of_func(Div, NMD)),
 
 		list2(of_name(">", NMD), of_func(Greater_Than, NMD)),
+		list2(of_name("<", NMD), of_func(Less_Than, NMD)),
+		list2(of_name("=", NMD), of_func(Equal, NMD)),
 
 		list2(of_name("display", NMD), of_func(Display, NMD)),
 		list2(of_name("newline", NMD), of_func(Newline, NMD)),

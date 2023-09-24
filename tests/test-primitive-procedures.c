@@ -141,11 +141,21 @@ void test_pp_comparison(void)
 	TEST_ASSERT_FALSE(to_bool(Less_Than(list2(two, two))));
 	TEST_ASSERT_FALSE(to_bool(Less_Than(list4(one, two, five, three))));
 	TEST_ASSERT_FALSE(to_bool(Less_Than(list4(one, two, three, three_f))));
+
+	// Equal
+	TEST_ASSERT_FALSE(to_bool(Equal(list4(two, two, two, one))));
+	TEST_ASSERT_TRUE(to_bool(Equal(list4(two, two, two, two))));
+	TEST_ASSERT_FALSE(to_bool(Equal(list4(two, two, two, three))));
+
+	TEST_ASSERT_FALSE(to_bool(Equal(list4(two_f, two, two, one))));
+	TEST_ASSERT_TRUE(to_bool(Equal(list4(two_f, two, two, two))));
+	TEST_ASSERT_FALSE(to_bool(Equal(list4(two_f, two, two, three))));
 }
 
 int test_primitive_procedures(void)
 {
 	set_items();
+
 	RUN_TEST(test_pp_add);
 	RUN_TEST(test_pp_sub);
 	RUN_TEST(test_pp_mul);
