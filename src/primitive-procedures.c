@@ -31,7 +31,8 @@ object Print(object args)
 	return OK;
 }
 
-object Void(object args){
+object Void(object args)
+{
 	ARGS_0("void", args);
 
 	return VOID_VALUE;
@@ -83,17 +84,17 @@ object Add(object args)
 	RETURN_IF_ERROR(check_args(args, &arg_count, &have_floating));
 
 	if (have_floating) {
-		floating rslt = 0;
+		floating prev = 0;
 		for (; args != EMPTY_LIST; args = cdr(args)) {
-			rslt += TO_NUMBER(car(args));
+			prev += TO_NUMBER(car(args));
 		}
-		return of_floating(rslt, NO_META_DATA);
+		return of_floating(prev, NO_META_DATA);
 	} else {
-		integer rslt = 0;
+		integer prev = 0;
 		for (; args != EMPTY_LIST; args = cdr(args)) {
-			rslt += to_integer(car(args));
+			prev += to_integer(car(args));
 		}
-		return of_integer(rslt, NO_META_DATA);
+		return of_integer(prev, NO_META_DATA);
 	}
 }
 
@@ -114,18 +115,18 @@ object Sub(object args)
 	}
 
 	if (have_floating) {
-		floating rslt = TO_NUMBER(car(args));
+		floating prev = TO_NUMBER(car(args));
 		for (args = cdr(args); args != EMPTY_LIST; args = cdr(args)) {
 			object arg = car(args);
-			rslt -= TO_NUMBER(arg);
+			prev -= TO_NUMBER(arg);
 		}
-		return of_floating(rslt, NO_META_DATA);
+		return of_floating(prev, NO_META_DATA);
 	} else {
-		integer rslt = TO_NUMBER(car(args));
+		integer prev = TO_NUMBER(car(args));
 		for (args = cdr(args); args != EMPTY_LIST; args = cdr(args)) {
-			rslt -= to_integer(car(args));
+			prev -= to_integer(car(args));
 		}
-		return of_integer(rslt, NO_META_DATA);
+		return of_integer(prev, NO_META_DATA);
 	}
 }
 
@@ -136,18 +137,18 @@ object Mul(object args)
 	RETURN_IF_ERROR(check_args(args, &arg_count, &have_floating));
 
 	if (have_floating) {
-		floating rslt = 1;
+		floating prev = 1;
 		for (; args != EMPTY_LIST; args = cdr(args)) {
 			object arg = car(args);
-			rslt *= TO_NUMBER(arg);
+			prev *= TO_NUMBER(arg);
 		}
-		return of_floating(rslt, NO_META_DATA);
+		return of_floating(prev, NO_META_DATA);
 	} else {
-		integer rslt = 1;
+		integer prev = 1;
 		for (; args != EMPTY_LIST; args = cdr(args)) {
-			rslt *= to_integer(car(args));
+			prev *= to_integer(car(args));
 		}
-		return of_integer(rslt, NO_META_DATA);
+		return of_integer(prev, NO_META_DATA);
 	}
 }
 
@@ -167,17 +168,84 @@ object Div(object args)
 		args = cons(one(), args, NO_META_DATA);
 	}
 
-	floating rslt = TO_NUMBER(car(args));
+	floating prev = TO_NUMBER(car(args));
 	for (args = cdr(args); args != EMPTY_LIST; args = cdr(args)) {
 		floating denominator = TO_NUMBER(car(args));
 		if (denominator == (floating)0.0f) {
 			return of_error_kind(ERROR_DIVISION_BY_ZERO,
 					     NO_META_DATA);
 		}
-		rslt /= denominator;
+		prev /= denominator;
 	}
 	bool use_int =
-		!have_floating && ((rslt - (integer)rslt) < floating_epsilon);
-	return use_int ? of_integer(rslt, NO_META_DATA) :
-			 of_floating(rslt, NO_META_DATA);
+		!have_floating && ((prev - (integer)prev) < floating_epsilon);
+	return use_int ? of_integer(prev, NO_META_DATA) :
+			 of_floating(prev, NO_META_DATA);
 }
+
+//
+// Comparison
+//
+
+object Greater_Than(object args)
+{
+	int arg_count = 0;
+	bool have_floating = false;
+	RETURN_IF_ERROR(check_args(args, &arg_count, &have_floating));
+
+	if (arg_count < 0) {
+		eprintf("Greater Than (>) requires at least two arguments.");
+		return of_error_kind(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
+				     NO_META_DATA);
+	}
+
+	bool rslt = true;
+	if (have_floating) {
+		floating prev = TO_NUMBER(car(args));
+		for (args = cdr(args); args != EMPTY_LIST; args = cdr(args)) {
+			floating n = TO_NUMBER(car(args));
+			rslt = rslt && (prev > n);
+			prev = n;
+		}
+	} else {
+		integer prev = TO_NUMBER(car(args));
+		for (args = cdr(args); args != EMPTY_LIST; args = cdr(args)) {
+			integer n = TO_NUMBER(car(args));
+			rslt = rslt && (prev > n);
+			prev = n;
+		}
+	}
+	return rslt ? TRUE_VALUE : FALSE_VALUE;
+}
+
+object Less_Than(object args)
+{
+	int arg_count = 0;
+	bool have_floating = false;
+	RETURN_IF_ERROR(check_args(args, &arg_count, &have_floating));
+
+	if (arg_count < 0) {
+		eprintf("Less Than (<) requires at least two arguments.");
+		return of_error_kind(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
+				     NO_META_DATA);
+	}
+
+	bool rslt = true;
+	if (have_floating) {
+		floating prev = TO_NUMBER(car(args));
+		for (args = cdr(args); args != EMPTY_LIST; args = cdr(args)) {
+			floating n = TO_NUMBER(car(args));
+			rslt = rslt && (prev < n);
+			prev = n;
+		}
+	} else {
+		integer prev = TO_NUMBER(car(args));
+		for (args = cdr(args); args != EMPTY_LIST; args = cdr(args)) {
+			integer n = TO_NUMBER(car(args));
+			rslt = rslt && (prev < n);
+			prev = n;
+		}
+	}
+	return rslt ? TRUE_VALUE : FALSE_VALUE;
+}
+

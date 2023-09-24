@@ -17,4 +17,11 @@ object Sub(object args);
 object Mul(object args);
 object Div(object args);
 
+//
+// Comparison
+//
+
+object Greater_Than(object args);
+object Less_Than(object args);
+
 #endif

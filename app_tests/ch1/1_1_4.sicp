@@ -15,20 +15,24 @@
   (sum-of-squares (+ a 1) (* a 2)))
 (print (f 5))
 
+(newline)
+
 ; section 1.1.6, page 17
 
 (define (abs x)
   (cond ((> x 0) x)
         ((= x 0) 0)
         ((< x 0) (- x))))
-(abs -1) (abs -0) (abs 1)       ; non-text
+(print (abs -1)) (print (abs -0)) (print (abs 1))       ; non-text
 
-; ; section 1.1.6, page 18
+(newline)
 
-; (define (abs x)
-;   (cond ((< x 0) (- x))
-;         (else x)))
-; (abs -2) (abs 0) (abs 2)        ; non-text
+; section 1.1.6, page 18
+
+(define (abs x)
+  (cond ((< x 0) (- x))
+        (else x)))
+(print (abs -2)) (print (abs 0)) (print (abs 2))        ; non-text
 
 ; (define (abs x)
 ;   (if (< x 0)

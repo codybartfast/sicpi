@@ -118,6 +118,7 @@ bool is_false(object obj);
 
 extern const object TRUE_VALUE;
 bool is_true(object obj);
+bool to_bool(object obj);
 
 extern const object VA_TERM;
 bool is_va_term(object obj);

@@ -118,6 +118,28 @@ void test_pp_div(void)
 	TEST_ASSERT_EQUAL(3, to_floating(Div(list3(one05, five_f, seven))));
 }
 
+void test_pp_comparison(void)
+{
+	// Greater Than
+	TEST_ASSERT_TRUE(to_bool(Greater_Than(list2(two, one))));
+	TEST_ASSERT_TRUE(to_bool(Greater_Than(list4(five, three, two, one))));
+	TEST_ASSERT_TRUE(to_bool(Greater_Than(list4(five, three_f, two, one))));
+
+	TEST_ASSERT_FALSE(to_bool(Greater_Than(list2(two, two))));
+	TEST_ASSERT_FALSE(to_bool(Greater_Than(list4(five, three, one, two))));
+	TEST_ASSERT_FALSE(
+		to_bool(Greater_Than(list4(five, three, one, one_f))));
+
+	// Less Than
+	TEST_ASSERT_TRUE(to_bool(Less_Than(list4(one, two, three, five))));
+	TEST_ASSERT_TRUE(to_bool(Less_Than(list2(one, two))));
+	TEST_ASSERT_TRUE(to_bool(Less_Than(list4(one, two, three_f, five))));
+
+	TEST_ASSERT_FALSE(to_bool(Less_Than(list2(two, two))));
+	TEST_ASSERT_FALSE(to_bool(Less_Than(list4(one, two, five, three))));
+	TEST_ASSERT_FALSE(to_bool(Less_Than(list4(one, two, three, three_f))));
+}
+
 int test_primitive_procedures(void)
 {
 	set_items();
@@ -125,6 +147,7 @@ int test_primitive_procedures(void)
 	RUN_TEST(test_pp_sub);
 	RUN_TEST(test_pp_mul);
 	RUN_TEST(test_pp_div);
+	RUN_TEST(test_pp_comparison);
 
 	return 0;
 }

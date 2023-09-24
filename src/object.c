@@ -278,6 +278,18 @@ inline bool is_true(object obj)
 {
 	return obj == TRUE_VALUE;
 }
+inline bool to_bool(object obj)
+{
+	if (obj == TRUE_VALUE) {
+		return true;
+	} else if (obj == FALSE_VALUE) {
+		return false;
+	} else {
+		inyim("'to_bool' expected #f or #t but was given a %s.",
+		      value_kind_name(object_value_kind(obj)));
+		exit(1);
+	}
+}
 
 static struct object _VA_TERM = SINGLETON("<VARIADIC-TERMINATOR>");
 const object VA_TERM = &_VA_TERM;
