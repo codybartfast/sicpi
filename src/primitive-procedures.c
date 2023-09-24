@@ -31,6 +31,15 @@ object Print(object args)
 	return OK;
 }
 
+object Print_Lines(object args)
+{
+	for (; args != EMPTY_LIST; args = cdr(args)) {
+		printf("%s\n", to_text(car(args)));
+	}
+
+	return OK;
+}
+
 object Void(object args)
 {
 	ARGS_0("void", args);

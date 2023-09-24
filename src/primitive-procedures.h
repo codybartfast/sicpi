@@ -7,6 +7,7 @@
 object Display(object args);
 object Newline(object args);
 object Print(object args);
+object Print_Lines(object args);
 object Void(object args);
 
 //
