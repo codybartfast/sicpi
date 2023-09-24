@@ -319,6 +319,7 @@ ev_if_consequent:
 
 ev_cond:
 	core->exp = cond_to_if(core->exp);
+	RETURN_IF_ERROR(core->exp);
 	goto eval_dispatch;
 
 	//

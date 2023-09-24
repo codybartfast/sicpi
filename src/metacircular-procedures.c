@@ -123,7 +123,6 @@ object if_alternative(object exp)
 }
 
 // Cond
-// todo cond test
 
 object make_if(object predicate, object consequent, object alternative)
 {
@@ -177,7 +176,11 @@ object expand_clauses(object clauses)
 	object first = car(clauses);
 	object rest = cdr(clauses);
 
-	// todo: guard first not list
+	if (!is_pair(first) && !is_null(first)) {
+		eprintf("'cond' clause is not valid: %s", to_text(first));
+		return of_error_kind(ERROR_COND_CLAUSE_IS_NOT_VALID,
+				     NO_META_DATA);
+	}
 
 	if (is_cond_else_clause(first)) {
 		if (is_null(rest)) {
@@ -196,7 +199,8 @@ object expand_clauses(object clauses)
 
 object cond_clauses(object exp)
 {
-	// Guard: should only be able to get here if tagged with 'cond'
+	// Should need to check is a pair because only be able to get here if
+	// given a list tagged with 'cond'.
 	return cdr(exp);
 }
 
@@ -226,8 +230,9 @@ inline bool is_last_exp(const object seq)
 
 object first_exp(const object seq)
 {
-	return is_pair(seq) ? car(seq) :
-			      of_error_kind(EMPTY_BEGIN_SEQUENCE, NO_META_DATA);
+	return is_pair(seq) ?
+		       car(seq) :
+		       of_error_kind(ERROR_EMPTY_BEGIN_SEQUENCE, NO_META_DATA);
 }
 
 inline object rest_exps(const object seq)
