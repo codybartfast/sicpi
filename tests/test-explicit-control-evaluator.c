@@ -109,7 +109,6 @@ void test_eceval_sequence(void)
 	TEST_ASSERT_EQUAL_DOUBLE(2.71828, to_floating(EC_Eval(expr)));
 }
 
-// todo: replace predicate expressions with eq? when we have it.
 void test_eceval_conditionals(void)
 {
 	object expr;
@@ -123,13 +122,13 @@ void test_eceval_conditionals(void)
 	expr = to_expr("(if false 'apple)");
 	TEST_ASSERT_EQUAL_STRING("#f", to_text(EC_Eval(expr)));
 
-	expr = to_expr("(if (if true true) 'apple)");
+	expr = to_expr("(if (< 2 3) 'apple)");
 	TEST_ASSERT_EQUAL_STRING("apple", to_text(EC_Eval(expr)));
 
-	expr = to_expr("(if (if false true) 'apple 'pear)");
+	expr = to_expr("(if (= 4 5) 'apple 'pear)");
 	TEST_ASSERT_EQUAL_STRING("pear", to_text(EC_Eval(expr)));
 
-	expr = to_expr("(if (if false true) 'apple)");
+	expr = to_expr("(if (> 4 5) 'apple)");
 	TEST_ASSERT_EQUAL_STRING("#f", to_text(EC_Eval(expr)));
 
 	// cond
@@ -146,7 +145,7 @@ void test_eceval_conditionals(void)
 	expr = to_expr("(cond (false))");
 	TEST_ASSERT_EQUAL_STRING("#f", to_text(EC_Eval(expr)));
 
-	expr = to_expr("(cond (false 'apple) (false 'banana) (else 'end))");
+	expr = to_expr("(cond ((= 4 5) 'apple) (false 'banana) (else 'end))");
 	TEST_ASSERT_EQUAL_STRING("end", to_text(EC_Eval(expr)));
 
 	expr = to_expr("(cond (true 'apple) (false 'banana) (else 'end))");
