@@ -411,6 +411,10 @@ object make_primitive_procedures_list(void)
 		list2(of_name("<", NMD), of_func(Less_Than, NMD)),
 		list2(of_name("=", NMD), of_func(Equal, NMD)),
 
+		list2(of_name("and", NMD), of_func(And, NMD)),
+		list2(of_name("or", NMD), of_func(Or, NMD)),
+		list2(of_name("not", NMD), of_func(Not, NMD)),
+
 		list2(of_name("display", NMD), of_func(Display, NMD)),
 		list2(of_name("newline", NMD), of_func(Newline, NMD)),
 		list2(of_name("print", NMD), of_func(Print, NMD)),

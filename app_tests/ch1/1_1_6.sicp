@@ -1,0 +1,38 @@
+; section 1.1.6, page 17
+
+(define (abs x)
+  (cond ((> x 0) x)
+        ((= x 0) 0)
+        ((< x 0) (- x))))
+(print (abs -1)) (print (abs -0)) (print (abs 1))       ; non-text
+
+(newline)
+
+; section 1.1.6, page 18
+
+(define (abs x)
+  (cond ((< x 0) (- x))
+        (else x)))
+(print (abs -2)) (print (abs 0)) (print (abs 2))        ; non-text
+
+(define (abs x)
+  (if (< x 0)
+      (- x)
+      x))
+(print (abs -3)) (print (abs 0)) (print (abs 3))        ; non-text
+
+
+; section 1.1.6, page 19
+
+(define x 7)                    ; non-text
+(and (> x 5) (< x 10))
+
+; section 1.1.6, page 20
+
+(define (>= x y)
+  (or (> x y) (= x y)))
+(print (>= 1 2)) (print (>= 2 2)) (print (>= 2 1))      ; non-text
+
+(define (>= x y)
+  (not (< x y)))
+(print (>= 1 2)) (print (>= 2 2)) (print (>= 2 1))      ; non-text

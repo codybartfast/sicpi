@@ -189,6 +189,17 @@ void test_eceval_primitive_procedures(void)
 
 	expr = to_expr("(= 2 3)");
 	TEST_ASSERT_EQUAL_STRING("#f", to_text(EC_Eval(expr)));
+
+	// Logic
+
+	expr = to_expr("(and true false)");
+	TEST_ASSERT_EQUAL_STRING("#f", to_text(EC_Eval(expr)));
+
+	expr = to_expr("(or true false)");
+	TEST_ASSERT_EQUAL_STRING("#t", to_text(EC_Eval(expr)));
+
+	expr = to_expr("(not false)");
+	TEST_ASSERT_EQUAL_STRING("#t", to_text(EC_Eval(expr)));
 }
 
 int test_explicit_control_evaluator(void)

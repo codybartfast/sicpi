@@ -270,3 +270,60 @@ inline object Equal(object args)
 {
 	return compare(args, COMPARE_EQUAL, "Equal", "=");
 }
+
+//
+// Logic
+//
+
+object And(object args)
+{
+	int arg_count = length(args);
+	if (arg_count < 2) {
+		eprintf("'and' requires at least 2 arguments");
+		return of_error_kind(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
+				     NO_META_DATA);
+	}
+
+	bool rslt = true;
+
+	for (; args != EMPTY_LIST; args = cdr(args)) {
+		rslt = rslt && !is_false(car(args));
+	}
+
+	return rslt ? TRUE_VALUE : FALSE_VALUE;
+}
+
+object Or(object args)
+{
+	int arg_count = length(args);
+	if (arg_count < 2) {
+		eprintf("'or' requires at least 2 arguments");
+		return of_error_kind(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
+				     NO_META_DATA);
+	}
+
+	bool rslt = false;
+
+	for (; args != EMPTY_LIST; args = cdr(args)) {
+		rslt = rslt || !is_false(car(args));
+	}
+
+	return rslt ? TRUE_VALUE : FALSE_VALUE;
+}
+
+object Not(object args)
+{
+	if (!is_pair(args)) {
+		eprintf("'not' requires 1 argument, but got none");
+		return of_error_kind(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
+				     NO_META_DATA);
+	}
+
+	if (cdr(args) != EMPTY_LIST) {
+		eprintf("'not' requires 1 argument, but got at least 2");
+		return of_error_kind(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
+				     NO_META_DATA);
+	}
+
+	return car(args) == FALSE_VALUE ? TRUE_VALUE : FALSE_VALUE;
+}

@@ -152,6 +152,49 @@ void test_pp_comparison(void)
 	TEST_ASSERT_FALSE(to_bool(Equal(list4(two_f, two, two, three))));
 }
 
+void test_pp_logic(void)
+{
+	// and
+	TEST_ASSERT_EQUAL(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
+			  to_error_kind(And(list1(one))));
+
+	TEST_ASSERT_TRUE(to_bool(And(list2(TRUE_VALUE, TRUE_VALUE))));
+	TEST_ASSERT_TRUE(to_bool(
+		And(list4(TRUE_VALUE, TRUE_VALUE, TRUE_VALUE, TRUE_VALUE))));
+
+	TEST_ASSERT_FALSE(to_bool(And(list2(TRUE_VALUE, FALSE_VALUE))));
+	TEST_ASSERT_FALSE(to_bool(And(list2(FALSE_VALUE, TRUE_VALUE))));
+	TEST_ASSERT_FALSE(to_bool(And(list2(FALSE_VALUE, FALSE_VALUE))));
+	TEST_ASSERT_FALSE(to_bool(
+		And(list4(TRUE_VALUE, TRUE_VALUE, FALSE_VALUE, TRUE_VALUE))));
+
+	// or
+	TEST_ASSERT_EQUAL(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
+			  to_error_kind(Or(list1(one))));
+
+	TEST_ASSERT_TRUE(to_bool(Or(list2(FALSE_VALUE, TRUE_VALUE))));
+	TEST_ASSERT_TRUE(to_bool(Or(list2(TRUE_VALUE, FALSE_VALUE))));
+	TEST_ASSERT_TRUE(to_bool(Or(list2(TRUE_VALUE, TRUE_VALUE))));
+
+	TEST_ASSERT_TRUE(to_bool(
+		Or(list4(FALSE_VALUE, FALSE_VALUE, TRUE_VALUE, FALSE_VALUE))));
+
+	TEST_ASSERT_FALSE(to_bool(Or(list2(FALSE_VALUE, FALSE_VALUE))));
+	TEST_ASSERT_FALSE(to_bool(
+		Or(list4(FALSE_VALUE, FALSE_VALUE, FALSE_VALUE, FALSE_VALUE))));
+
+	// or
+	TEST_ASSERT_EQUAL(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
+			  to_error_kind(Not(list2(TRUE_VALUE, TRUE_VALUE))));
+
+	TEST_ASSERT_EQUAL(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
+			  to_error_kind(Not(EMPTY_LIST)));
+
+	TEST_ASSERT_TRUE(to_bool(Not(list1(FALSE_VALUE))));
+
+	TEST_ASSERT_FALSE(to_bool(Not(list1(TRUE_VALUE))));
+}
+
 int test_primitive_procedures(void)
 {
 	set_items();
@@ -161,6 +204,7 @@ int test_primitive_procedures(void)
 	RUN_TEST(test_pp_mul);
 	RUN_TEST(test_pp_div);
 	RUN_TEST(test_pp_comparison);
+	RUN_TEST(test_pp_logic);
 
 	return 0;
 }

@@ -1,6 +1,7 @@
 #ifndef H_PRIMITIVE_PROCEDURES
 #define H_PRIMITIVE_PROCEDURES
 
+#include "list.h"
 #include "object.h"
 
 object Display(object args);
@@ -24,5 +25,13 @@ object Div(object args);
 object Greater_Than(object args);
 object Less_Than(object args);
 object Equal(object args);
+
+//
+// Logic
+//
+
+object And(object args);
+object Or(object args);
+object Not(object args);
 
 #endif
