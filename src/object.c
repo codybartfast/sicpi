@@ -267,14 +267,14 @@ inline bool is_eos(object obj)
 	return obj == EOS;
 }
 
-static struct object _FALSE_VALUE = SINGLETON("false");
+static struct object _FALSE_VALUE = SINGLETON("#f");
 const object FALSE_VALUE = &_FALSE_VALUE;
 inline bool is_false(object obj)
 {
 	return obj == FALSE_VALUE;
 }
 
-static struct object _TRUE_VALUE = SINGLETON("true");
+static struct object _TRUE_VALUE = SINGLETON("#t");
 const object TRUE_VALUE = &_TRUE_VALUE;
 inline bool is_true(object obj)
 {

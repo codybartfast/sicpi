@@ -121,7 +121,7 @@ void test_eceval_conditionals(void)
 	TEST_ASSERT_EQUAL_STRING("pear", to_text(EC_Eval(expr)));
 
 	expr = to_expr("(if false 'apple)");
-	TEST_ASSERT_EQUAL_STRING("false", to_text(EC_Eval(expr)));
+	TEST_ASSERT_EQUAL_STRING("#f", to_text(EC_Eval(expr)));
 
 	expr = to_expr("(if (if true true) 'apple)");
 	TEST_ASSERT_EQUAL_STRING("apple", to_text(EC_Eval(expr)));
@@ -130,12 +130,12 @@ void test_eceval_conditionals(void)
 	TEST_ASSERT_EQUAL_STRING("pear", to_text(EC_Eval(expr)));
 
 	expr = to_expr("(if (if false true) 'apple)");
-	TEST_ASSERT_EQUAL_STRING("false", to_text(EC_Eval(expr)));
+	TEST_ASSERT_EQUAL_STRING("#f", to_text(EC_Eval(expr)));
 
 	// cond
 
 	expr = to_expr("(cond)");
-	TEST_ASSERT_EQUAL_STRING("false", to_text(EC_Eval(expr)));
+	TEST_ASSERT_EQUAL_STRING("#f", to_text(EC_Eval(expr)));
 
 	expr = to_expr("(cond (else))");
 	TEST_ASSERT_EQUAL_STRING("#void", to_text(EC_Eval(expr)));
@@ -144,7 +144,7 @@ void test_eceval_conditionals(void)
 	TEST_ASSERT_EQUAL_STRING("#void", to_text(EC_Eval(expr)));
 
 	expr = to_expr("(cond (false))");
-	TEST_ASSERT_EQUAL_STRING("false", to_text(EC_Eval(expr)));
+	TEST_ASSERT_EQUAL_STRING("#f", to_text(EC_Eval(expr)));
 
 	expr = to_expr("(cond (false 'apple) (false 'banana) (else 'end))");
 	TEST_ASSERT_EQUAL_STRING("end", to_text(EC_Eval(expr)));
@@ -183,13 +183,13 @@ void test_eceval_primitive_procedures(void)
 	// Comparison
 
 	expr = to_expr("(> 3 2)");
-	TEST_ASSERT_EQUAL_STRING("true", to_text(EC_Eval(expr)));
+	TEST_ASSERT_EQUAL_STRING("#t", to_text(EC_Eval(expr)));
 
 	expr = to_expr("(< 3 2)");
-	TEST_ASSERT_EQUAL_STRING("false", to_text(EC_Eval(expr)));
+	TEST_ASSERT_EQUAL_STRING("#f", to_text(EC_Eval(expr)));
 
 	expr = to_expr("(= 2 3)");
-	TEST_ASSERT_EQUAL_STRING("false", to_text(EC_Eval(expr)));
+	TEST_ASSERT_EQUAL_STRING("#f", to_text(EC_Eval(expr)));
 }
 
 int test_explicit_control_evaluator(void)

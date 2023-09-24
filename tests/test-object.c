@@ -46,14 +46,13 @@ void obj_singletons(void)
 	has_one_type(VA_TERM);
 	TEST_ASSERT_EQUAL_STRING("<VARIADIC-TERMINATOR>", to_text(VA_TERM));
 
-	// todo: rename to #f
 	TEST_ASSERT_TRUE(is_false(FALSE_VALUE));
 	has_one_type(FALSE_VALUE);
-	TEST_ASSERT_EQUAL_STRING("false", to_text(FALSE_VALUE));
+	TEST_ASSERT_EQUAL_STRING("#f", to_text(FALSE_VALUE));
 
 	TEST_ASSERT_TRUE(is_true(TRUE_VALUE));
 	has_one_type(TRUE_VALUE);
-	TEST_ASSERT_EQUAL_STRING("true", to_text(TRUE_VALUE));
+	TEST_ASSERT_EQUAL_STRING("#t", to_text(TRUE_VALUE));
 
 	TEST_ASSERT_TRUE(is_void(VOID_VALUE));
 	has_one_type(VOID_VALUE);
