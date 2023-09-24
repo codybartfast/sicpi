@@ -121,6 +121,9 @@ void test_pp_div(void)
 void test_pp_comparison(void)
 {
 	// Greater Than
+	TEST_ASSERT_EQUAL(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
+			  to_error_kind(Greater_Than(list1(one))));
+
 	TEST_ASSERT_TRUE(to_bool(Greater_Than(list2(two, one))));
 	TEST_ASSERT_TRUE(to_bool(Greater_Than(list4(five, three, two, one))));
 	TEST_ASSERT_TRUE(to_bool(Greater_Than(list4(five, three_f, two, one))));

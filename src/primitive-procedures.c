@@ -187,14 +187,18 @@ object Div(object args)
 // Comparison
 //
 
-object Greater_Than(object args)
+enum comparison_kind { COMPARE_GREATER_THAN = 1, COMPARE_LESS_THAN };
+
+static object compare(object args, enum comparison_kind kind, char *name,
+		      char *symbol)
 {
 	int arg_count = 0;
 	bool have_floating = false;
 	RETURN_IF_ERROR(check_args(args, &arg_count, &have_floating));
 
-	if (arg_count < 0) {
-		eprintf("Greater Than (>) requires at least two arguments.");
+	if (arg_count < 2) {
+		eprintf("%s (%s) requires at least two arguments.", name,
+			symbol);
 		return of_error_kind(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
 				     NO_META_DATA);
 	}
@@ -204,48 +208,50 @@ object Greater_Than(object args)
 		floating prev = TO_NUMBER(car(args));
 		for (args = cdr(args); args != EMPTY_LIST; args = cdr(args)) {
 			floating n = TO_NUMBER(car(args));
-			rslt = rslt && (prev > n);
+			bool this_result;
+			switch (kind) {
+			case COMPARE_GREATER_THAN:
+				this_result = prev > n;
+				break;
+			case COMPARE_LESS_THAN:
+				this_result = prev < n;
+				break;
+			default:
+				inyim("'compare' given unexpected kind: '%d'",
+				      kind);
+			}
+			rslt = rslt && this_result;
 			prev = n;
 		}
 	} else {
 		integer prev = TO_NUMBER(car(args));
 		for (args = cdr(args); args != EMPTY_LIST; args = cdr(args)) {
 			integer n = TO_NUMBER(car(args));
-			rslt = rslt && (prev > n);
+			bool this_result;
+			switch (kind) {
+			case COMPARE_GREATER_THAN:
+				this_result = prev > n;
+				break;
+			case COMPARE_LESS_THAN:
+				this_result = prev < n;
+				break;
+			default:
+				inyim("'compare' given unexpected kind: '%d'",
+				      kind);
+			}
+			rslt = rslt && this_result;
 			prev = n;
 		}
 	}
 	return rslt ? TRUE_VALUE : FALSE_VALUE;
+}
+
+object Greater_Than(object args)
+{
+	return compare(args, COMPARE_GREATER_THAN, "Greater Than", ">");
 }
 
 object Less_Than(object args)
 {
-	int arg_count = 0;
-	bool have_floating = false;
-	RETURN_IF_ERROR(check_args(args, &arg_count, &have_floating));
-
-	if (arg_count < 0) {
-		eprintf("Less Than (<) requires at least two arguments.");
-		return of_error_kind(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
-				     NO_META_DATA);
-	}
-
-	bool rslt = true;
-	if (have_floating) {
-		floating prev = TO_NUMBER(car(args));
-		for (args = cdr(args); args != EMPTY_LIST; args = cdr(args)) {
-			floating n = TO_NUMBER(car(args));
-			rslt = rslt && (prev < n);
-			prev = n;
-		}
-	} else {
-		integer prev = TO_NUMBER(car(args));
-		for (args = cdr(args); args != EMPTY_LIST; args = cdr(args)) {
-			integer n = TO_NUMBER(car(args));
-			rslt = rslt && (prev < n);
-			prev = n;
-		}
-	}
-	return rslt ? TRUE_VALUE : FALSE_VALUE;
+	return compare(args, COMPARE_LESS_THAN, "Less Than", "<");
 }
-
