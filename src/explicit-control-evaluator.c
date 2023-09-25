@@ -339,7 +339,7 @@ ev_definition_1:
 	core->env = restore(core);
 	core->unev = restore(core);
 	define_variable(core->unev, core->val, core->env);
-	core->val = OK;
+	core->val = core->unev;
 	goto goto_cont;
 
 	//
