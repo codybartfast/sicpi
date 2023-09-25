@@ -38,8 +38,7 @@ static void run_fun_test(void)
 
 static void execute(source src)
 {
-	object rslt = load_run(src);
-	Print(list1(rslt));
+	load_run(src);
 	exit(EXIT_SUCCESS);
 }
 

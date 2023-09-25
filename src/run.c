@@ -35,7 +35,8 @@ object load_run(source src)
 		return VOID_VALUE;
 	}
 
-	object program = cons(BEGIN, expr, NO_META_DATA);
+	object program =
+		cons(of_name("print-lines", NO_META_DATA), expr, NO_META_DATA);
 	object rslt = run(program);
 	return rslt;
 }
