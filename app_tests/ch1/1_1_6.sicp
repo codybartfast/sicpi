@@ -4,7 +4,7 @@
   (cond ((> x 0) x)
         ((= x 0) 0)
         ((< x 0) (- x))))
-(print (abs -1)) (print (abs -0)) (print (abs 1))       ; non-text
+(abs -1) (abs -0) (abs 1)       ; non-text
 
 (newline)
 
@@ -13,13 +13,13 @@
 (define (abs x)
   (cond ((< x 0) (- x))
         (else x)))
-(print (abs -2)) (print (abs 0)) (print (abs 2))        ; non-text
+(abs -2) (abs 0) (abs 2)        ; non-text
 
 (define (abs x)
   (if (< x 0)
       (- x)
       x))
-(print (abs -3)) (print (abs 0)) (print (abs 3))        ; non-text
+(abs -3) (abs 0) (abs 3)        ; non-text
 
 
 ; section 1.1.6, page 19
@@ -31,8 +31,8 @@
 
 (define (>= x y)
   (or (> x y) (= x y)))
-(print (>= 1 2)) (print (>= 2 2)) (print (>= 2 1))      ; non-text
+(>= 1 2) (>= 2 2) (>= 2 1)      ; non-text
 
 (define (>= x y)
   (not (< x y)))
-(print (>= 1 2)) (print (>= 2 2)) (print (>= 2 1))      ; non-text
+(>= 1 2) (>= 2 2) (>= 2 1)      ; non-text
