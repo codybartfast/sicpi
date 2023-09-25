@@ -36,7 +36,7 @@ void obj_singletons(void)
 {
 	TEST_ASSERT_TRUE(is_null(EMPTY_LIST));
 	has_one_type(EMPTY_LIST);
-	TEST_ASSERT_EQUAL_STRING("'()", to_text(EMPTY_LIST));
+	TEST_ASSERT_EQUAL_STRING("()", to_text(EMPTY_LIST));
 
 	TEST_ASSERT_TRUE(is_eos(EOS));
 	has_one_type(EOS);
@@ -163,7 +163,7 @@ void obj_to_text(void)
 		"<LEXER-ERROR>",
 		to_text(of_error_kind(ERROR_LEXER, NO_META_DATA)));
 
-	TEST_ASSERT_EQUAL_STRING("'()", to_text(EMPTY_LIST));
+	TEST_ASSERT_EQUAL_STRING("()", to_text(EMPTY_LIST));
 	TEST_ASSERT_EQUAL_STRING("<END-OF-SOURCE>", to_text(EOS));
 
 	TEST_ASSERT_EQUAL_STRING("1", to_text(of_integer(1, NO_META_DATA)));

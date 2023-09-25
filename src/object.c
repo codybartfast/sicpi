@@ -253,7 +253,7 @@ char *error_kind_name(enum error_kind error_kind)
 		}                                                              \
 	}
 
-static struct object _EMPTY_LIST = SINGLETON("'()");
+static struct object _EMPTY_LIST = SINGLETON("()");
 const object EMPTY_LIST = &_EMPTY_LIST;
 inline bool is_null(const object obj)
 {
