@@ -3,6 +3,7 @@
 #include "args.h"
 #include "sicp-error.h"
 
+#include <math.h>
 #include <stdio.h>
 
 object Display(object args)
@@ -190,6 +191,25 @@ object Div(object args)
 		!have_floating && ((prev - (integer)prev) < floating_epsilon);
 	return use_int ? of_integer(prev, NO_META_DATA) :
 			 of_floating(prev, NO_META_DATA);
+}
+
+object Abs(object args)
+{
+	int arg_count = 0;
+	bool have_floating = false;
+	RETURN_IF_ERROR(check_args(args, &arg_count, &have_floating));
+
+	if (arg_count != 1) {
+		eprintf("'abs' requires exactly one argument.");
+		return of_error_kind(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
+				     NO_META_DATA);
+	}
+
+	if (have_floating) {
+		return of_floating(fabs(to_floating(car(args))), NO_META_DATA);
+	} else {
+		return of_integer(labs(to_integer(car(args))), NO_META_DATA);
+	}
 }
 
 //

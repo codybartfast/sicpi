@@ -19,6 +19,8 @@ object Sub(object args);
 object Mul(object args);
 object Div(object args);
 
+object Abs(object args);
+
 //
 // Comparison
 //

@@ -406,6 +406,7 @@ object make_primitive_procedures_list(void)
 		list2(of_name("-", NMD), of_func(Sub, NMD)),
 		list2(of_name("*", NMD), of_func(Mul, NMD)),
 		list2(of_name("/", NMD), of_func(Div, NMD)),
+		list2(of_name("abs", NMD), of_func(Abs, NMD)),
 
 		list2(of_name(">", NMD), of_func(Greater_Than, NMD)),
 		list2(of_name("<", NMD), of_func(Less_Than, NMD)),
@@ -421,6 +422,11 @@ object make_primitive_procedures_list(void)
 		list2(of_name("print-lines", NMD), of_func(Print_Lines, NMD)),
 		list2(of_name("void", NMD), of_func(Void, NMD)),
 		VA_TERM); // this comment just to keep separate line
+
+	/*
+	 * Potential convience procedures:
+	 * 	square
+	 */
 }
 
 object _primitive_procedures = NULL;

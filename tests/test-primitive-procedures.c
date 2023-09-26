@@ -118,6 +118,31 @@ void test_pp_div(void)
 	TEST_ASSERT_EQUAL(3, to_floating(Div(list3(one05, five_f, seven))));
 }
 
+void test_pp_abs(void)
+{
+	object rslt;
+
+	rslt = Abs(list1(of_integer(0, NO_META_DATA)));
+	TEST_ASSERT_EQUAL(0, to_integer(rslt));
+	rslt = Abs(list1(of_integer(-0, NO_META_DATA)));
+	TEST_ASSERT_EQUAL(0, to_integer(rslt));
+	rslt = Abs(list1(of_integer(-59, NO_META_DATA)));
+	TEST_ASSERT_EQUAL(59, to_integer(rslt));
+	rslt = Abs(list1(of_integer(-integer_max, NO_META_DATA)));
+	TEST_ASSERT_EQUAL(integer_max, to_integer(rslt));
+
+	rslt = Abs(list1(of_floating(0, NO_META_DATA)));
+	TEST_ASSERT_EQUAL_DOUBLE(0, to_floating(rslt));
+	rslt = Abs(list1(of_floating(-0, NO_META_DATA)));
+	TEST_ASSERT_EQUAL_DOUBLE(0, to_floating(rslt));
+	rslt = Abs(list1(of_floating(-5.9, NO_META_DATA)));
+	TEST_ASSERT_EQUAL_DOUBLE(5.9, to_floating(rslt));
+	rslt = Abs(list1(of_floating(9.5, NO_META_DATA)));
+	TEST_ASSERT_EQUAL_DOUBLE(9.5, to_floating(rslt));
+	rslt = Abs(list1(of_floating(-floating_max, NO_META_DATA)));
+	TEST_ASSERT_EQUAL_DOUBLE(floating_max, to_floating(rslt));
+}
+
 void test_pp_comparison(void)
 {
 	// Greater Than
@@ -203,6 +228,7 @@ int test_primitive_procedures(void)
 	RUN_TEST(test_pp_sub);
 	RUN_TEST(test_pp_mul);
 	RUN_TEST(test_pp_div);
+	RUN_TEST(test_pp_abs);
 	RUN_TEST(test_pp_comparison);
 	RUN_TEST(test_pp_logic);
 
