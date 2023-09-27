@@ -3,6 +3,7 @@
 
 #include "object.h"
 
-object make_primitive_procedures_list(void);
+void set_dialect(object env);
+void set_dialect_if_needed(object env);
 
 #endif

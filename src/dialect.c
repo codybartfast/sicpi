@@ -1,7 +1,20 @@
 #include "dialect.h"
 
+#include "explicit-control-evaluator.h"
 #include "object.h"
+#include "parser.h"
 #include "primitive-procedures.h"
+#include "source.h"
+#include "sicp-error.h"
+
+object eval_string(char *name, char *code, object env)
+{
+	source src = source_string(code, name);
+	object program = parse_source(src);
+	object rslt = ec_eval(program, env);
+	source_close(src);
+	return rslt;
+}
 
 object make_primitive_procedures_list(void)
 {
@@ -26,6 +39,7 @@ object make_primitive_procedures_list(void)
 		list2(of_name("print", NMD), of_func(Print, NMD)),
 		list2(of_name("print-lines", NMD), of_func(Print_Lines, NMD)),
 		list2(of_name("void", NMD), of_func(Void, NMD)),
+
 		VA_TERM); // this comment just to keep separate line
 
 	/*
@@ -34,3 +48,43 @@ object make_primitive_procedures_list(void)
 	 */
 }
 
+static void define_new_variable(object var, object val, object env)
+{
+	object frame = car(env);
+
+	set_car(frame, cons(var, car(frame), NO_META_DATA));
+	set_cdr(frame, cons(val, cdr(frame), NO_META_DATA));
+}
+
+static bool is_dialect_set(object env)
+{
+	return car(car(env)) != EMPTY_LIST;
+}
+
+void _set_dialect(object env)
+{
+	object pp_list = make_primitive_procedures_list();
+	object pp;
+	for (; pp_list != EMPTY_LIST; pp_list = cdr(pp_list)) {
+		pp = car(pp_list);
+		define_new_variable(car(pp), cadr(pp), env);
+	}
+	define_new_variable(TRUE, TRUE_VALUE, env);
+	define_new_variable(FALSE, FALSE_VALUE, env);
+}
+
+void set_dialect(object env)
+{
+	if (is_dialect_set(env)) {
+		inyim("Attempted to set dialect twice!");
+	}
+	_set_dialect(env);
+}
+
+void set_dialect_if_needed(object env)
+{
+	if (is_dialect_set(env)) {
+		return;
+	}
+	_set_dialect(env);
+}

@@ -399,14 +399,9 @@ void define_variable(object var, object val, object env)
 // §4.1.4 Running the Evaluator as a Program
 //	https://www.sicp-book.com/book-Z-H-26.html#%_sec_4.1.4
 
-
-object _primitive_procedures = NULL;
 object primitive_procedures(void)
 {
-	return _primitive_procedures ?
-		       _primitive_procedures :
-		       (_primitive_procedures =
-				make_primitive_procedures_list());
+	return EMPTY_LIST;
 }
 
 object primitive_procedure_names(void)
@@ -419,22 +414,23 @@ object primitive_procedure_objects(void)
 	return map(cadr, primitive_procedures());
 }
 
-object setup_environment(void)
+object setup_environment(bool init)
 {
 	object initial_env = extend_environment(primitive_procedure_names(),
 						primitive_procedure_objects(),
 						the_empty_environment());
-	define_variable(TRUE, TRUE_VALUE, initial_env);
-	define_variable(FALSE, FALSE_VALUE, initial_env);
+	if (init) {
+		set_dialect_if_needed(initial_env);
+	}
 	return initial_env;
 }
 
 static object _the_global_environment = NULL;
-object the_global_environment(void)
+object the_global_environment(bool init)
 {
 	return _the_global_environment ?
 		       _the_global_environment :
-		       (_the_global_environment = setup_environment());
+		       (_the_global_environment = setup_environment(init));
 }
 
 object apply_primitive_procedure(object proc, object args)

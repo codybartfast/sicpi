@@ -78,8 +78,8 @@ void define_variable(object var, object val, object env);
 // §4.1.4 Running the Evaluator as a Program
 //
 
-object setup_environment(void);
-object the_global_environment(void);
+object setup_environment(bool init);
+object the_global_environment(bool init);
 object apply_primitive_procedure(object proc, object args);
 
 #endif

@@ -81,7 +81,7 @@ void test_eceval_section_1_1_1(void)
 void test_eceval_define(void)
 {
 	object expr;
-	object env = setup_environment();
+	object env = setup_environment(true);
 
 	expr = to_expr("(define e (+ 1 1.71828))");
 	ec_eval(expr, env);

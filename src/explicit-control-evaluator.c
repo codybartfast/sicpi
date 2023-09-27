@@ -391,5 +391,5 @@ object ec_eval(object expr, object env)
 
 object EC_Eval(object expr)
 {
-	return ec_eval(expr, the_global_environment());
+	return ec_eval(expr, the_global_environment(true));
 }

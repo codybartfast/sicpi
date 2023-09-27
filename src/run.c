@@ -1,11 +1,14 @@
-#include "sicp-error.h"
 #include "explicit-control-evaluator.h"
+#include "dialect.h"
 #include "lexer.h"
+#include "metacircular-procedures.h"
 #include "parser.h"
 #include "run.h"
+#include "sicp-error.h"
 
 object run(object program)
 {
+	set_dialect(the_global_environment(false));
 	return EC_Eval(program);
 }
 
