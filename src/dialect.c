@@ -41,11 +41,6 @@ object make_primitive_procedures_list(void)
 		list2(of_name("void", NMD), of_func(Void, NMD)),
 
 		VA_TERM); // this comment just to keep separate line
-
-	/*
-	 * Potential convience procedures:
-	 * 	square
-	 */
 }
 
 static void define_new_variable(object var, object val, object env)
@@ -71,6 +66,8 @@ void _set_dialect(object env)
 	}
 	define_new_variable(TRUE, TRUE_VALUE, env);
 	define_new_variable(FALSE, FALSE_VALUE, env);
+
+	eval_string("dialect:square", "(define (square x) (* x x))", env);
 }
 
 void set_dialect(object env)
