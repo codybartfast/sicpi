@@ -7,7 +7,7 @@
 
 object to_expr(char *source)
 {
-	return car(load(source_string(source, 0)));
+	return car(parse_source(source_string(source, 0)));
 }
 
 void test_eceval_self_evaluating(void)

@@ -20,4 +20,7 @@ char *parser_error_message(const parser parser);
 object parse(parser parser);
 object parse_all(parser parser);
 
+#include "source.h"
+object parse_source(source src);
+
 #endif

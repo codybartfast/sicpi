@@ -4,7 +4,26 @@
 #include "parser.h"
 #include "run.h"
 
-object load(source src)
+object run(object program)
+{
+	return EC_Eval(program);
+}
+
+object load_run(source src)
+{
+	object expr = parse_source(src);
+
+	if (expr == EMPTY_LIST) {
+		return VOID_VALUE;
+	}
+
+	object program =
+		cons(of_name("print-lines", NO_META_DATA), expr, NO_META_DATA);
+	object rslt = run(program);
+	return rslt;
+}
+
+object parse_source(source src)
 {
 	struct token_source tkn_src;
 	struct parser parser;
@@ -20,23 +39,4 @@ object load(source src)
 
 	lexer_free(lxr);
 	return program;
-}
-
-object run(object program)
-{
-	return EC_Eval(program);
-}
-
-object load_run(source src)
-{
-	object expr = load(src);
-
-	if (expr == EMPTY_LIST) {
-		return VOID_VALUE;
-	}
-
-	object program =
-		cons(of_name("print-lines", NO_META_DATA), expr, NO_META_DATA);
-	object rslt = run(program);
-	return rslt;
 }
