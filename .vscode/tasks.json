@@ -20,6 +20,7 @@
 
                 "src/args.c",
                 "src/character-classes.c",
+                "src/dialect.c",
                 "src/explicit-control-evaluator.c",
                 "src/hardware.c",
                 "src/lexer.c",
@@ -92,6 +93,7 @@
                 "tests/test.c",
 
                 "src/args.c",
+                "src/dialect.c",
                 "src/hardware.c",
                 "src/metacircular-procedures.c",
                 "src/sicp-error.c",
