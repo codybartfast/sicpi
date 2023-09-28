@@ -1,3 +1,6 @@
 [submodule "unity"]
 	path = unity
 	url = https://github.com/ThrowTheSwitch/Unity
+[submodule "docs/book"]
+	path = docs/book
+	url = https://github.com/codybartfast/sicp-book
