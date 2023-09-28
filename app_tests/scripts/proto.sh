@@ -2,11 +2,15 @@
 
 script_dir=$(dirname -- "0")
 test_dir="$script_dir/.."
-repo_root="$test_dir/.."
-code_dir="$repo_root/code"
-sicp_bin="$repo_root/bin/sicp"
+base_dir="$test_dir/.."
+code_dir="$base_dir/code"
+sicp_bin="$base_dir/bin/sicp"
 
-echo "Using '$(readlink -f -- "$repo_root")' as root directory."
+#############################
+###   Check Environment   ###
+#############################
+
+echo "Using '$(readlink -f -- "$base_dir")' as base directory."
 
 if [[ ! -e "$sicp_bin" ]]; then
 	echo "FATAL: Did not find sicp executable at '$(readlink -f -- "$sicp_bin")' ($sicp_bin)."
@@ -20,7 +24,19 @@ if [[ ! -d "$code_dir" ]]; then
 fi
 echo "Found code directory: '$(readlink -f -- "$code_dir")'."
 
-code_files=$(find "$code_dir" -type f -name "*.sicp" -printf '%p\n')
+#####################
+###   Functions   ###
+#####################
+
+test(){
+	echo "Got: $1"
+}
+
+###############
+###   Run   ###
+###############
+
+code_files=$(find "$code_dir" -type f -name "*.sicp" | sort)
 code_file_count=$(echo "$code_files" | wc -l)
 
 if [[  0 -eq "$code_file_count" ]]; then
@@ -28,3 +44,9 @@ if [[  0 -eq "$code_file_count" ]]; then
 	exit 1
 fi
 echo "Found $code_file_count code files."
+
+echo "$code_files" | while read line ; do
+   test $line
+done
+
+# echo "$code_files"
