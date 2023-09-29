@@ -1,28 +1,32 @@
 #!/usr/bin/env bash
 
-script_dir=$(dirname -- "0")
+#############################
+###   Check Environment   ###
+#############################
+
+script_dir=$(dirname -- "$0")
 test_dir="$script_dir/.."
 base_dir="$test_dir/.."
 code_dir="$base_dir/code"
 sicp_bin="$base_dir/bin/sicp"
 
-#############################
-###   Check Environment   ###
-#############################
+rpath(){
+	readlink -f -- "$1'"
+}
 
-echo "Using '$(readlink -f -- "$base_dir")' as base directory."
+echo "Using '$(rpath "$base_dir")' as base directory."
 
 if [[ ! -e "$sicp_bin" ]]; then
-	echo "FATAL: Did not find sicp executable at '$(readlink -f -- "$sicp_bin")' ($sicp_bin)."
+	echo "FATAL: Did not find sicp executable at '$(rpath "$sicp_bin")' ($sicp_bin)."
 	exit 1
 fi
-echo "Found sicp executable: '$(readlink -f -- "$sicp_bin")'."
+echo "Found sicp executable: '$(rpath "$sicp_bin")'."
 
 if [[ ! -d "$code_dir" ]]; then
-	echo "FATAL: Did not find code directory at '$(readlink -f -- "$code_dir")' ($code_dir)."
+	echo "FATAL: Did not find code directory at '$(rpath "$code_dir")' ($code_dir)."
 	exit 1
 fi
-echo "Found code directory: '$(readlink -f -- "$code_dir")'."
+echo "Found code directory: '$(rpath "$code_dir")'."
 
 #####################
 ###   Functions   ###
@@ -48,5 +52,3 @@ echo "Found $code_file_count code files."
 echo "$code_files" | while read line ; do
    test $line
 done
-
-# echo "$code_files"
