@@ -6,7 +6,6 @@
             "type": "shell",
             "command": "gcc",
             "args": [
-                "-lm",
                 "-std=c2x",
                 "-pedantic",
                 "-pedantic-errors",
@@ -38,6 +37,8 @@
                 "src/string-builder.c",
                 "src/token.c",
                 "src/token-table.c",
+
+                "-lm", // Seems this needs to appear after any source files using maths
             ],
             "options": {
                 "cwd": "${workspaceFolder}"
@@ -74,7 +75,6 @@
             "type": "shell",
             "command": "gcc",
             "args": [
-                "-lm",
                 "-std=c2x",
                 "-pedantic",
                 "-pedantic-errors",
@@ -130,6 +130,8 @@
 
                 "src/token-table.c",
                 "tests/test-token-table.c",
+
+                "-lm",
             ],
             "options": {
                 "cwd": "${workspaceFolder}"

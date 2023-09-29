@@ -25,6 +25,8 @@ object make_primitive_procedures_list(void)
 		list2(of_name("*", NMD), of_func(Mul, NMD)),
 		list2(of_name("/", NMD), of_func(Div, NMD)),
 		list2(of_name("abs", NMD), of_func(Abs, NMD)),
+		list2(of_name("exp", NMD), of_func(Exp, NMD)),
+		list2(of_name("log", NMD), of_func(Log, NMD)),
 
 		list2(of_name(">", NMD), of_func(Greater_Than, NMD)),
 		list2(of_name("<", NMD), of_func(Less_Than, NMD)),

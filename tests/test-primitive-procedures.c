@@ -143,6 +143,30 @@ void test_pp_abs(void)
 	TEST_ASSERT_EQUAL_DOUBLE(floating_max, to_floating(rslt));
 }
 
+void test_pp_exp_log(void)
+{
+	// Exp
+	TEST_ASSERT_EQUAL(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
+			  to_error_kind(Exp(EMPTY_LIST)));
+	TEST_ASSERT_EQUAL(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
+			  to_error_kind(Exp(list2(one, two))));
+
+	TEST_ASSERT_EQUAL_STRING("2.71828182845905", to_text(Exp(list1(one))));
+	TEST_ASSERT_EQUAL_STRING("2.71828182845905",
+				 to_text(Exp(list1(one_f))));
+
+	// Log
+	TEST_ASSERT_EQUAL(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
+			  to_error_kind(Log(EMPTY_LIST)));
+	TEST_ASSERT_EQUAL(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
+			  to_error_kind(Log(list2(one, two))));
+
+	TEST_ASSERT_EQUAL_STRING("4.65396035015752",
+				 to_text(Log(list1(one05))));
+	TEST_ASSERT_EQUAL_STRING("4.65396035015752",
+				 to_text(Log(list1(one05_f))));
+}
+
 void test_pp_comparison(void)
 {
 	// Greater Than
@@ -229,6 +253,7 @@ int test_primitive_procedures(void)
 	RUN_TEST(test_pp_mul);
 	RUN_TEST(test_pp_div);
 	RUN_TEST(test_pp_abs);
+	RUN_TEST(test_pp_exp_log);
 	RUN_TEST(test_pp_comparison);
 	RUN_TEST(test_pp_logic);
 

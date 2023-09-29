@@ -212,6 +212,42 @@ object Abs(object args)
 	}
 }
 
+object Exp(object args)
+{
+	int arg_count = 0;
+	bool have_floating = false;
+	RETURN_IF_ERROR(check_args(args, &arg_count, &have_floating));
+
+	if (arg_count != 1) {
+		eprintf("'exp' requires exactly one argument.");
+		return of_error_kind(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
+				     NO_META_DATA);
+	}
+
+	floating n = have_floating ? to_floating(car(args)) :
+				     (floating)to_integer(car(args));
+
+	return of_floating(exp((n)), NO_META_DATA);
+}
+
+object Log(object args)
+{
+	int arg_count = 0;
+	bool have_floating = false;
+	RETURN_IF_ERROR(check_args(args, &arg_count, &have_floating));
+
+	if (arg_count != 1) {
+		eprintf("'log' requires exactly one argument.");
+		return of_error_kind(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
+				     NO_META_DATA);
+	}
+
+	floating n = have_floating ? to_floating(car(args)) :
+				     (floating)to_integer(car(args));
+
+	return of_floating(log((n)), NO_META_DATA);
+}
+
 //
 // Comparison
 //
