@@ -7,29 +7,7 @@
 #include "parser.h"
 #include "sicp-error.h"
 
-object run(object program)
-{
-	set_dialect(the_global_environment(false));
-
-	object rslt = VOID_VALUE;
-	for (; program != EMPTY_LIST && !is_error(rslt);
-	     program = cdr(program)) {
-		rslt = EC_Eval(car(program));
-		if (rslt != OK) {
-			printf("%s\n", to_text(rslt));
-		}
-	}
-	return rslt;
-}
-
-object load_run(source src)
-{
-	object program = parse_source(src);
-	object rslt = run(program);
-	return rslt;
-}
-
-object parse_source(source src)
+object run(source src)
 {
 	struct token_source tkn_src;
 	struct parser parser;
@@ -38,11 +16,17 @@ object parse_source(source src)
 	lexer_set_token_source(lxr, &tkn_src);
 	parser_init(&parser, &tkn_src);
 
-	object program = parse_all(&parser);
-	if (is_error(program)) {
-		eprintfx(to_text(program));
-	}
+	set_dialect(the_global_environment(false));
 
+	object exp;
+	object rslt = VOID_VALUE;
+	while ((exp = parse(&parser)) != EOS) {
+		RETURN_IF_ERROR(exp);
+		RETURN_IF_ERROR(rslt = EC_Eval(exp));
+		if (rslt != OK) {
+			printf("%s\n", to_text(rslt));
+		}
+	}
 	lexer_free(lxr);
-	return program;
+	return rslt;
 }

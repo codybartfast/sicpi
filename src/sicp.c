@@ -38,7 +38,7 @@ static void run_fun_test(void)
 
 static void execute(source src)
 {
-	load_run(src);
+	run(src);
 	exit(EXIT_SUCCESS);
 }
 
