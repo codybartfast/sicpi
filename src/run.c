@@ -1,27 +1,30 @@
-#include "explicit-control-evaluator.h"
+#include "run.h"
+
 #include "dialect.h"
+#include "explicit-control-evaluator.h"
 #include "lexer.h"
 #include "metacircular-procedures.h"
 #include "parser.h"
-#include "run.h"
 #include "sicp-error.h"
 
 object run(object program)
 {
 	set_dialect(the_global_environment(false));
-	return EC_Eval(program);
+
+	object rslt = VOID_VALUE;
+	for (; program != EMPTY_LIST && !is_error(rslt);
+	     program = cdr(program)) {
+		rslt = EC_Eval(car(program));
+		if (rslt != OK) {
+			printf("%s\n", to_text(rslt));
+		}
+	}
+	return rslt;
 }
 
 object load_run(source src)
 {
-	object expr = parse_source(src);
-
-	if (expr == EMPTY_LIST) {
-		return VOID_VALUE;
-	}
-
-	object program =
-		cons(of_name("print-lines", NO_META_DATA), expr, NO_META_DATA);
+	object program = parse_source(src);
 	object rslt = run(program);
 	return rslt;
 }

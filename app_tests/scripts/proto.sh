@@ -4,17 +4,20 @@
 ###   Check Environment   ###
 #############################
 
-script_dir=$(dirname -- "$0")
-test_dir="$script_dir/.."
-base_dir="$test_dir/.."
-code_dir="$base_dir/code"
-sicp_bin="$base_dir/bin/sicp"
-
 rpath(){
-	readlink -f -- "$1'"
+	# readlink -f -- "$1"
+	realpath --relative-to="." "$1"
 }
 
-echo "Using '$(rpath "$base_dir")' as base directory."
+script_dir=$(rpath "$(dirname -- "$0")")
+
+test_dir=$(rpath "$script_dir/..")
+data_dir=$(rpath "$test_dir/data")
+base_dir=$(rpath "$test_dir/..")
+code_dir=$(rpath "$base_dir/code")
+sicp_bin=$(rpath "$base_dir/bin/sicp")
+
+echo "Using '$base_dir' as base directory."
 
 if [[ ! -e "$sicp_bin" ]]; then
 	echo "FATAL: Did not find sicp executable at '$(rpath "$sicp_bin")' ($sicp_bin)."
@@ -32,8 +35,19 @@ echo "Found code directory: '$(rpath "$code_dir")'."
 ###   Functions   ###
 #####################
 
+make_containing_dir(){
+	mkdir -p "$(dirname -- "$1")"
+}
+
 test(){
-	echo "Got: $1"
+	source="$1"
+	echo "Doing $source"
+	rel_path=$(realpath --relative-to="$code_dir" "$source")
+	actual="$data_dir/$rel_path.actual"
+
+	make_containing_dir "$actual"
+
+	"$sicp_bin" < "$source" > "$actual"
 }
 
 ###############
@@ -49,6 +63,6 @@ if [[  0 -eq "$code_file_count" ]]; then
 fi
 echo "Found $code_file_count code files."
 
-echo "$code_files" | while read line ; do
-   test $line
+echo "$code_files" | while read -r line ; do
+   test "$line"
 done
