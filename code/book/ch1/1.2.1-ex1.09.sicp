@@ -1,0 +1,20 @@
+; exercise 1.9, page 36
+
+(define add +)
+(define sub -)
+(define (inc x) (add x 1))
+(define (dec x) (sub x 1))
+
+(define (+ a b)
+  (if (= a 0)
+      b
+      (inc (+ (dec a) b))))
+
+(+ 4 3)				; non-text
+
+(define (+ a b)
+  (if (= a 0)
+      b
+      (+ (dec a) (inc b))))
+
+(+ 4 3)				; non-text
