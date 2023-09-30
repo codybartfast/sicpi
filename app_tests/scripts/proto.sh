@@ -35,10 +35,9 @@ echo "Found code directory: '$(rpath "$code_dir")'."
 ###   Functions   ###
 #####################
 
-
 test(){
 	source="$1"
-	echo -n "Doing $source"
+	echo -n "$source"
 
 	rel_path=$(realpath --relative-to="$code_dir" "$source")
 
@@ -55,9 +54,30 @@ test(){
 	if cmp -s "$app_output" "$actual" ; then
 		echo " ✓"
 	else
-		echo " x"
+		echo " ..."
+		review </dev/tty;
 	fi
 }
+
+
+review(){
+	# # diff "$app_source" "$source"
+	# diff "$app_output" "$actual"
+	# echo
+	# echo
+	# read -p "Approve, Display, Skip"
+	# echo $REPLY
+	# echo end
+	echo before
+	read -p "Approve, Display, Skip " -r -n 1
+	echo
+	echo after
+	exit 1
+
+	# # echo "================================================================================"
+	echo
+}
+
 
 ###############
 ###   Run   ###
@@ -75,3 +95,4 @@ echo "Found $code_file_count code files."
 echo "$code_files" | while read -r line ; do
    test "$line"
 done
+
