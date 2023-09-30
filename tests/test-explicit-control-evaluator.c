@@ -179,6 +179,9 @@ void test_eceval_primitive_procedures(void)
 	expr = to_expr("(/ 9 2)");
 	TEST_ASSERT_EQUAL_STRING("4.5", to_text(EC_Eval(expr)));
 
+	expr = to_expr("(remainder 105 45)");
+	TEST_ASSERT_EQUAL_STRING("15", to_text(EC_Eval(expr)));
+
 	expr = to_expr("(abs -2)");
 	TEST_ASSERT_EQUAL_STRING("2", to_text(EC_Eval(expr)));
 

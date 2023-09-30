@@ -193,6 +193,27 @@ object Div(object args)
 			 of_floating(prev, NO_META_DATA);
 }
 
+object Remainder(object args)
+{
+	int arg_count = 0;
+	bool have_floating = false;
+	RETURN_IF_ERROR(check_args(args, &arg_count, &have_floating));
+
+	if (arg_count != 2) {
+		eprintf("'remainder' requires exactly two arguments.");
+		return of_error_kind(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
+				     NO_META_DATA);
+	}
+
+	if (have_floating) {
+		eprintf("'remainder' requires integer values.");
+		return of_error_kind(ERROR_UNEXPECTED_TYPE, NO_META_DATA);
+	}
+
+	return of_integer(to_integer(car(args)) % to_integer(cadr(args)),
+			  NO_META_DATA);
+}
+
 object Abs(object args)
 {
 	int arg_count = 0;

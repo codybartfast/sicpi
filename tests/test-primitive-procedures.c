@@ -118,6 +118,30 @@ void test_pp_div(void)
 	TEST_ASSERT_EQUAL(3, to_floating(Div(list3(one05, five_f, seven))));
 }
 
+void test_pp_remainder(void)
+{
+	TEST_ASSERT_EQUAL(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
+			  to_error_kind(Remainder(list1(one))));
+
+	TEST_ASSERT_EQUAL(ERROR_UNEXPECTED_TYPE,
+			  to_error_kind(Remainder(list2(one, two_f))));
+
+	object rslt;
+
+	rslt = Remainder(list2(seven, five));
+	TEST_ASSERT_EQUAL(2, to_integer(rslt));
+
+	rslt = Remainder(list2(of_integer(-7, NO_META_DATA), five));
+	TEST_ASSERT_EQUAL(-2, to_integer(rslt));
+
+	rslt = Remainder(list2(seven, of_integer(-5, NO_META_DATA)));
+	TEST_ASSERT_EQUAL(2, to_integer(rslt));
+
+	rslt = Remainder(list2(of_integer(-7, NO_META_DATA),
+			       of_integer(-5, NO_META_DATA)));
+	TEST_ASSERT_EQUAL(-2, to_integer(rslt));
+}
+
 void test_pp_abs(void)
 {
 	object rslt;
@@ -252,6 +276,7 @@ int test_primitive_procedures(void)
 	RUN_TEST(test_pp_sub);
 	RUN_TEST(test_pp_mul);
 	RUN_TEST(test_pp_div);
+	RUN_TEST(test_pp_remainder);
 	RUN_TEST(test_pp_abs);
 	RUN_TEST(test_pp_exp_log);
 	RUN_TEST(test_pp_comparison);

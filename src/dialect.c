@@ -25,6 +25,7 @@ object make_primitive_procedures_list(void)
 		list2(of_name("-", NMD), of_func(Sub, NMD)),
 		list2(of_name("*", NMD), of_func(Mul, NMD)),
 		list2(of_name("/", NMD), of_func(Div, NMD)),
+		list2(of_name("remainder", NMD), of_func(Remainder, NMD)),
 		list2(of_name("abs", NMD), of_func(Abs, NMD)),
 		list2(of_name("exp", NMD), of_func(Exp, NMD)),
 		list2(of_name("log", NMD), of_func(Log, NMD)),
@@ -70,7 +71,11 @@ void _set_dialect(object env)
 	define_new_variable(TRUE, TRUE_VALUE, env);
 	define_new_variable(FALSE, FALSE_VALUE, env);
 
-	eval_string("dialect:square", "(define (square x) (* x x))", env);
+	eval_string("dialect:even?", "(define (even? n) (= (remainder n 2) 0))",
+		    env);
+	eval_string("dialect:odd?", "(define (odd? n) (= (remainder n 2) 1))",
+		    env);
+	eval_string("dialect:square", "(define (square n) (* n n))", env);
 }
 
 void set_dialect(object env)

@@ -18,6 +18,7 @@ object Add(object args);
 object Sub(object args);
 object Mul(object args);
 object Div(object args);
+object Remainder(object args);
 
 object Abs(object args);
 object Exp(object args);
