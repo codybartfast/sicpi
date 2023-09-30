@@ -5,5 +5,6 @@
 #include "source.h"
 
 object run(source source);
+object parse_source(source src);
 
 #endif

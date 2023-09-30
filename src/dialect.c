@@ -4,6 +4,7 @@
 #include "object.h"
 #include "parser.h"
 #include "primitive-procedures.h"
+#include "run.h"
 #include "source.h"
 #include "sicp-error.h"
 

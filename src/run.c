@@ -22,11 +22,30 @@ object run(source src)
 	object rslt = VOID_VALUE;
 	while ((exp = parse(&parser)) != EOS) {
 		RETURN_IF_ERROR(exp);
-		RETURN_IF_ERROR(rslt = EC_Eval(exp));
+		rslt = EC_Eval(exp);
 		if (rslt != OK) {
 			printf("%s\n", to_text(rslt));
 		}
+		RETURN_IF_ERROR(rslt);
 	}
 	lexer_free(lxr);
 	return rslt;
+}
+
+object parse_source(source src)
+{
+	struct token_source tkn_src;
+	struct parser parser;
+
+	lexer lxr = lexer_new(src);
+	lexer_set_token_source(lxr, &tkn_src);
+	parser_init(&parser, &tkn_src);
+
+	object program = parse_all(&parser);
+	if (is_error(program)) {
+		eprintfx(to_text(program));
+	}
+
+	lexer_free(lxr);
+	return program;
 }
