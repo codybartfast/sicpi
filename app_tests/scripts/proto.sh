@@ -35,19 +35,28 @@ echo "Found code directory: '$(rpath "$code_dir")'."
 ###   Functions   ###
 #####################
 
-make_containing_dir(){
-	mkdir -p "$(dirname -- "$1")"
-}
 
 test(){
 	source="$1"
-	echo "Doing $source"
+	echo -n "Doing $source"
+
 	rel_path=$(realpath --relative-to="$code_dir" "$source")
+
+	app_source="$data_dir/$rel_path"
+	mkdir -p "$(dirname -- "$app_source")"
+	touch "$app_source"
+
+	app_output="$data_dir/$rel_path.approved"
+	touch "$app_output"
+
 	actual="$data_dir/$rel_path.actual"
-
-	make_containing_dir "$actual"
-
 	"$sicp_bin" < "$source" > "$actual"
+
+	if cmp -s "$app_output" "$actual" ; then
+		echo " ✓"
+	else
+		echo " x"
+	fi
 }
 
 ###############
