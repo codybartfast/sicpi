@@ -45,14 +45,14 @@ test(){
 	mkdir -p "$(dirname -- "$app_source")"
 	touch "$app_source"
 
-	app_output="$data_dir/$rel_path.approved"
-	touch "$app_output"
+	expected="$data_dir/$rel_path.approved"
+	touch "$expected"
 
 	actual="$data_dir/$rel_path.actual"
 	"$sicp_bin" < "$source" > "$actual"
 
-	if cmp -s "$app_output" "$actual" ; then
-		echo " ✓"
+	if cmp -s "$expected" "$actual" ; then
+		echo "  ✓"
 	else
 		echo " ..."
 		review </dev/tty;
@@ -61,23 +61,52 @@ test(){
 
 
 review(){
-	# # diff "$app_source" "$source"
-	# diff "$app_output" "$actual"
-	# echo
-	# echo
-	# read -p "Approve, Display, Skip"
-	# echo $REPLY
-	# echo end
-	echo before
-	read -p "Approve, Display, Skip " -r -n 1
 	echo
-	echo after
-	exit 1
+	line "="
+	echo "Changes in '$source'"
+	# line "."
+	echo
+	diff "$app_source" "$source"
 
-	# # echo "================================================================================"
 	echo
+	line "."
+	echo "Changes in output"
+	# line "."
+	echo
+	diff "$expected" "$actual"
+
+	echo
+	line "-"
+	echo "$source"
+	echo
+
+	got_response=0;
+	while [[ "$got_response" == 0 ]] ; do
+		read -p "Approve or Skip? " -r -n 1
+		echo
+		if [[ "$REPLY" == "a" ]] ; then
+			read -p "Definitely? " -r -n 1
+			echo
+			if [[ "$REPLY" == "d" ]] ; then
+				cp $source $app_source
+				cp $actual $expected
+				got_response=1
+			fi
+		elif [[ "$REPLY" == "s" ]] ; then
+			echo "Skipping"
+			got_response=1
+		fi
+	done
+
+	line 'V'
+	echo
+
 }
 
+line(){
+	printf "%0.s$1" {1..80}
+	echo
+}
 
 ###############
 ###   Run   ###
