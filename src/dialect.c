@@ -33,20 +33,24 @@ object make_primitive_procedures_list(void)
 		list2(of_name(">", NMD), of_func(Greater_Than, NMD)),
 		list2(of_name("<", NMD), of_func(Less_Than, NMD)),
 		list2(of_name("=", NMD), of_func(Equal, NMD)),
+		list2(of_name(">=", NMD), of_func(Greater_Than_Equal, NMD)),
+		list2(of_name("<=", NMD), of_func(Less_Than_Equal, NMD)),
 
 		list2(of_name("and", NMD), of_func(And, NMD)),
 		list2(of_name("or", NMD), of_func(Or, NMD)),
 		list2(of_name("not", NMD), of_func(Not, NMD)),
-
-		list2(of_name("set-random-seed", NMD),
-		      of_func(Set_Random_Seed, NMD)),
-		list2(of_name("random", NMD), of_func(Random, NMD)),
 
 		list2(of_name("display", NMD), of_func(Display, NMD)),
 		list2(of_name("newline", NMD), of_func(Newline, NMD)),
 		list2(of_name("print", NMD), of_func(Print, NMD)),
 		list2(of_name("print-lines", NMD), of_func(Print_Lines, NMD)),
 		list2(of_name("void", NMD), of_func(Void, NMD)),
+
+		list2(of_name("set-random-seed", NMD),
+		      of_func(Set_Random_Seed, NMD)),
+		list2(of_name("random", NMD), of_func(Random, NMD)),
+		list2(of_name("runtime", NMD), of_func(Runtime, NMD)),
+		list2(of_name("seconds", NMD), of_func(Seconds, NMD)),
 
 		VA_TERM); // this comment just to keep separate line
 }

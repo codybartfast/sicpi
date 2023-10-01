@@ -8,6 +8,8 @@
 
 #include <stdbool.h>
 
+// todo: time special case (ex1.23/24)
+
 // Integers we can switch on to select goto destination
 enum label {
 	LABEL_EV_APPL_ACCUM_LAST_ARG,

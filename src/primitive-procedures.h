@@ -31,6 +31,8 @@ object Log(object args);
 object Greater_Than(object args);
 object Less_Than(object args);
 object Equal(object args);
+object Greater_Than_Equal(object args);
+object Less_Than_Equal(object args);
 
 //
 // Logic
@@ -43,7 +45,15 @@ object Not(object args);
 //
 // Random
 //
+
 object Set_Random_Seed(object args);
 object Random(object args);
+
+//
+// Time
+//
+
+object Runtime(object args);
+object Seconds(object args);
 
 #endif

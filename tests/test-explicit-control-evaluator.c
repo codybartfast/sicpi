@@ -202,6 +202,12 @@ void test_eceval_primitive_procedures(void)
 	expr = to_expr("(= 2 3)");
 	TEST_ASSERT_EQUAL_STRING("#f", to_text(EC_Eval(expr)));
 
+	expr = to_expr("(>= 3 2)");
+	TEST_ASSERT_EQUAL_STRING("#t", to_text(EC_Eval(expr)));
+
+	expr = to_expr("(<= 3 2)");
+	TEST_ASSERT_EQUAL_STRING("#f", to_text(EC_Eval(expr)));
+
 	// Logic
 
 	expr = to_expr("(and true false)");
@@ -220,6 +226,12 @@ void test_eceval_primitive_procedures(void)
 
 	expr = to_expr("(random 100.0)");
 	TEST_ASSERT_EQUAL_STRING("39.4382841174212", to_text(EC_Eval(expr)));
+
+	expr = to_expr("(runtime)");
+	TEST_ASSERT_FALSE(is_error(EC_Eval(expr)));
+
+	expr = to_expr("(seconds (runtime))");
+	TEST_ASSERT_FALSE(is_error(EC_Eval(expr)));
 }
 
 int test_explicit_control_evaluator(void)

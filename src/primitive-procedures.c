@@ -277,7 +277,9 @@ object Log(object args)
 enum comparison_kind {
 	COMPARE_GREATER_THAN = 1,
 	COMPARE_LESS_THAN,
-	COMPARE_EQUAL
+	COMPARE_EQUAL,
+	COMPARE_GREATER_THAN_OR_EQUAL,
+	COMPARE_LESS_THAN_OR_EQUAL
 };
 
 static object compare(object args, enum comparison_kind kind, char *name,
@@ -310,6 +312,12 @@ static object compare(object args, enum comparison_kind kind, char *name,
 			case COMPARE_EQUAL:
 				this_result = prev == n;
 				break;
+			case COMPARE_GREATER_THAN_OR_EQUAL:
+				this_result = prev >= n;
+				break;
+			case COMPARE_LESS_THAN_OR_EQUAL:
+				this_result = prev <= n;
+				break;
 			default:
 				inyim("'compare' given unexpected kind: '%d'",
 				      kind);
@@ -331,6 +339,12 @@ static object compare(object args, enum comparison_kind kind, char *name,
 				break;
 			case COMPARE_EQUAL:
 				this_result = prev == n;
+				break;
+			case COMPARE_GREATER_THAN_OR_EQUAL:
+				this_result = prev >= n;
+				break;
+			case COMPARE_LESS_THAN_OR_EQUAL:
+				this_result = prev <= n;
 				break;
 			default:
 				inyim("'compare' given unexpected kind: '%d'",
@@ -356,6 +370,18 @@ inline object Less_Than(object args)
 inline object Equal(object args)
 {
 	return compare(args, COMPARE_EQUAL, "Equal", "=");
+}
+
+inline object Greater_Than_Equal(object args)
+{
+	return compare(args, COMPARE_GREATER_THAN_OR_EQUAL,
+		       "Greater Than or Equal", ">=");
+}
+
+inline object Less_Than_Equal(object args)
+{
+	return compare(args, COMPARE_LESS_THAN_OR_EQUAL, "Less Than or Equal",
+		       "<=");
 }
 
 //
@@ -461,7 +487,7 @@ object Random(object args)
 	RETURN_IF_ERROR(check_args(args, &arg_count, &have_floating));
 
 	if (arg_count != 1) {
-		eprintf("'set-random-seed' requires exactly one argument.");
+		eprintf("'random' requires exactly one argument.");
 		return of_error_kind(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
 				     NO_META_DATA);
 	}
@@ -484,4 +510,40 @@ object Random(object args)
 		}
 		return of_integer(rand() % upper, NO_META_DATA);
 	}
+}
+
+//
+// Time
+//
+
+object Runtime(object args)
+{
+	if (args != EMPTY_LIST) {
+		eprintf("'runtime' expects no arguments.");
+		return of_error_kind(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
+				     NO_META_DATA);
+	}
+	return (of_integer(clock(), NO_META_DATA));
+}
+
+object Seconds(object args)
+{
+	int arg_count = 0;
+	bool have_floating = false;
+	RETURN_IF_ERROR(check_args(args, &arg_count, &have_floating));
+
+	if (arg_count != 1) {
+		eprintf("'seconds' requires exactly one argument.");
+		return of_error_kind(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
+				     NO_META_DATA);
+	}
+
+	if (have_floating) {
+		eprintf("'seconds' requires an integer.");
+		return of_error_kind(ERROR_UNEXPECTED_TYPE, NO_META_DATA);
+	}
+
+	return of_floating((floating)to_integer(car(args)) /
+				   (floating)CLOCKS_PER_SEC,
+			   NO_META_DATA);
 }

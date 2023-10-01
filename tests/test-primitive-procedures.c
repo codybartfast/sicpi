@@ -4,6 +4,8 @@
 
 #include "../src/list.h"
 
+#include <time.h>
+
 static object zero;
 static object one;
 static object two;
@@ -223,6 +225,33 @@ void test_pp_comparison(void)
 	TEST_ASSERT_FALSE(to_bool(Equal(list4(two_f, two, two, one))));
 	TEST_ASSERT_TRUE(to_bool(Equal(list4(two_f, two, two, two))));
 	TEST_ASSERT_FALSE(to_bool(Equal(list4(two_f, two, two, three))));
+
+	// Greater Than Or Equal
+
+	TEST_ASSERT_TRUE(to_bool(Greater_Than_Equal(list3(two, one, one))));
+	TEST_ASSERT_TRUE(
+		to_bool(Greater_Than_Equal(list4(five, three, two, one))));
+	TEST_ASSERT_TRUE(
+		to_bool(Greater_Than_Equal(list4(five, three, three_f, one))));
+
+	TEST_ASSERT_FALSE(to_bool(Greater_Than_Equal(list2(one, two))));
+	TEST_ASSERT_FALSE(
+		to_bool(Greater_Than_Equal(list4(five, three, one, two))));
+	TEST_ASSERT_FALSE(
+		to_bool(Greater_Than_Equal(list4(five, three, one, two_f))));
+
+	// Less Than or Equal
+	TEST_ASSERT_TRUE(
+		to_bool(Less_Than_Equal(list4(one, two, three, five))));
+	TEST_ASSERT_TRUE(to_bool(Less_Than_Equal(list2(one, one))));
+	TEST_ASSERT_TRUE(
+		to_bool(Less_Than_Equal(list4(one, three_f, three_f, five))));
+
+	TEST_ASSERT_FALSE(to_bool(Less_Than_Equal(list2(two, one))));
+	TEST_ASSERT_FALSE(
+		to_bool(Less_Than_Equal(list4(one, two, five, three))));
+	TEST_ASSERT_FALSE(
+		to_bool(Less_Than_Equal(list4(one, two, five_f, three_f))));
 }
 
 void test_pp_logic(void)
@@ -297,6 +326,16 @@ void test_pp_random(void)
 				  to_floating(Random(list1(one05_f))));
 }
 
+void test_pp_time(void)
+{
+	TEST_ASSERT_NOT_EQUAL(0, to_integer(Runtime(EMPTY_LIST)));
+
+	TEST_ASSERT_EQUAL_DOUBLE(
+		((floating)1234567890) / ((floating)CLOCKS_PER_SEC),
+		to_floating(
+			Seconds(list1(of_integer(1234567890, NO_META_DATA)))));
+}
+
 int test_primitive_procedures(void)
 {
 	set_items();
@@ -311,6 +350,7 @@ int test_primitive_procedures(void)
 	RUN_TEST(test_pp_comparison);
 	RUN_TEST(test_pp_logic);
 	RUN_TEST(test_pp_random);
+	RUN_TEST(test_pp_time);
 
 	return 0;
 }

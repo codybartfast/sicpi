@@ -4,6 +4,8 @@
 ###   Check Environment   ###
 #############################
 
+# todo: catch stderr
+
 rpath(){
 	# readlink -f -- "$1"
 	realpath --relative-to="." "$1"
