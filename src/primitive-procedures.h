@@ -40,4 +40,10 @@ object And(object args);
 object Or(object args);
 object Not(object args);
 
+//
+// Random
+//
+object Set_Random_Seed(object args);
+object Random(object args);
+
 #endif

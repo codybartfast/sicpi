@@ -31,9 +31,9 @@ int main(void)
 	test_object();
 	test_parser();
 	test_list();
-	test_primitive_procedures();
 
 	test_explicit_control_evaluator();
+	test_primitive_procedures();
 
 	return UNITY_END();
 }

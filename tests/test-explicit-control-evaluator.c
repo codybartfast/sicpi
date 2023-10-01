@@ -212,6 +212,14 @@ void test_eceval_primitive_procedures(void)
 
 	expr = to_expr("(not false)");
 	TEST_ASSERT_EQUAL_STRING("#t", to_text(EC_Eval(expr)));
+
+	// Random
+
+	expr = to_expr("(begin (set-random-seed 0) (random 2000000000))");
+	TEST_ASSERT_EQUAL_STRING("1804289383", to_text(EC_Eval(expr)));
+
+	expr = to_expr("(random 100.0)");
+	TEST_ASSERT_EQUAL_STRING("39.4382841174212", to_text(EC_Eval(expr)));
 }
 
 int test_explicit_control_evaluator(void)

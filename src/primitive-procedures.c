@@ -5,6 +5,7 @@
 
 #include <math.h>
 #include <stdio.h>
+#include <time.h>
 
 object Display(object args)
 {
@@ -412,4 +413,75 @@ object Not(object args)
 	}
 
 	return car(args) == FALSE_VALUE ? TRUE_VALUE : FALSE_VALUE;
+}
+
+//
+// Random
+//
+
+bool have_set_random_seed = false;
+object Set_Random_Seed(object args)
+{
+	int arg_count = 0;
+	bool have_floating = false;
+	RETURN_IF_ERROR(check_args(args, &arg_count, &have_floating));
+
+	if (arg_count != 1) {
+		eprintf("'set-random-seed' requires exactly one argument.");
+		return of_error_kind(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
+				     NO_META_DATA);
+	}
+
+	if (have_floating) {
+		eprintf("'set-random-seed' requires an integer.");
+		return of_error_kind(ERROR_UNEXPECTED_TYPE, NO_META_DATA);
+	}
+
+	integer given_seed = to_integer(car(args));
+
+	unsigned int seed = given_seed;
+	srand(seed);
+	have_set_random_seed = true;
+	return of_integer(seed, NO_META_DATA);
+}
+
+//https://stackoverflow.com/questions/55766058/how-can-i-generate-random-doubles-in-c
+static double random_floating(void)
+{
+	uint64_t r53 = ((uint64_t)(rand()) << 21) ^ (rand() >> 2);
+	double per_SO = r53 / 9007199254740991.0; // 2^53 - 1
+	// This seems to produce numbers in range 0 -> 0.5 so mult by 2
+	return per_SO * 2.0;
+}
+
+object Random(object args)
+{
+	int arg_count = 0;
+	bool have_floating = false;
+	RETURN_IF_ERROR(check_args(args, &arg_count, &have_floating));
+
+	if (arg_count != 1) {
+		eprintf("'set-random-seed' requires exactly one argument.");
+		return of_error_kind(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
+				     NO_META_DATA);
+	}
+
+	if (!have_set_random_seed) {
+		srand((unsigned)time(NULL));
+		have_set_random_seed = true;
+	}
+
+	if (have_floating) {
+		floating upper = to_floating(car(args));
+		double unit = random_floating();
+		return of_floating(unit * upper, NO_META_DATA);
+	} else {
+		integer upper = to_integer(car(args));
+		if (upper < 0 || upper > RAND_MAX) {
+			eprintf("'random' requires a an integer between 0 and %d.",
+				RAND_MAX);
+			return of_error_kind(ERROR_OUT_OF_BOUNDS, NO_META_DATA);
+		}
+		return of_integer(rand() % upper, NO_META_DATA);
+	}
 }

@@ -223,6 +223,8 @@ char *error_kind_name(enum error_kind error_kind)
 		return "<INCORRECT-NUMBER-OF-ARGUMENTS-ERROR>";
 	case ERROR_LEXER:
 		return "<LEXER-ERROR>";
+	case ERROR_OUT_OF_BOUNDS:
+		return "<OUT-OF-BOUNDS-ERROR>";
 	case ERROR_PARSER:
 		return "<PARSER-ERROR>";
 	case ERROR_UNBOUND_VARIABLE:

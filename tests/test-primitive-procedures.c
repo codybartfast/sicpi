@@ -268,6 +268,35 @@ void test_pp_logic(void)
 	TEST_ASSERT_FALSE(to_bool(Not(list1(TRUE_VALUE))));
 }
 
+void test_pp_random(void)
+{
+	object upper = of_integer(RAND_MAX, NO_META_DATA);
+
+	TEST_ASSERT_NOT_EQUAL_MESSAGE(
+		1804289383, to_integer(Random(list1(upper))),
+		"This test will fail every couple of billion runs.");
+
+	Set_Random_Seed(list1(zero));
+	TEST_ASSERT_EQUAL(1804289383, to_integer(Random(list1(upper))));
+	TEST_ASSERT_EQUAL(846930886, to_integer(Random(list1(upper))));
+
+	Set_Random_Seed(list1(zero));
+	TEST_ASSERT_EQUAL(1804289383, to_integer(Random(list1(upper))));
+	TEST_ASSERT_EQUAL(846930886, to_integer(Random(list1(upper))));
+	TEST_ASSERT_EQUAL(1681692777, to_integer(Random(list1(upper))));
+
+	Set_Random_Seed(list1(one05));
+	TEST_ASSERT_EQUAL(1309058823, to_integer(Random(list1(upper))));
+
+	Set_Random_Seed(list1(zero));
+	TEST_ASSERT_DOUBLE_WITHIN(0.0000001, 88.2197054,
+				  to_floating(Random(list1(one05_f))));
+	TEST_ASSERT_DOUBLE_WITHIN(0.0000001, 82.2254214,
+				  to_floating(Random(list1(one05_f))));
+	TEST_ASSERT_DOUBLE_WITHIN(0.0000001, 95.7229734,
+				  to_floating(Random(list1(one05_f))));
+}
+
 int test_primitive_procedures(void)
 {
 	set_items();
@@ -281,6 +310,7 @@ int test_primitive_procedures(void)
 	RUN_TEST(test_pp_exp_log);
 	RUN_TEST(test_pp_comparison);
 	RUN_TEST(test_pp_logic);
+	RUN_TEST(test_pp_random);
 
 	return 0;
 }
