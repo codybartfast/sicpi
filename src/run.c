@@ -31,6 +31,7 @@ object run(source src)
 		RETURN_IF_ERROR(rslt);
 	}
 	lexer_free(lxr);
+	printf("\n");
 	return rslt;
 }
 
