@@ -503,6 +503,9 @@ const object QUASIQUOTE = &_QUASIQUOTE;
 static struct object _QUOTE = SYMBOL("quote");
 const object QUOTE = &_QUOTE;
 
+static struct object _TIME = SYMBOL("time");
+const object TIME = &_TIME;
+
 static struct object _UNQUOTE = SYMBOL("unquote");
 const object UNQUOTE = &_UNQUOTE;
 
@@ -534,6 +537,7 @@ void init_keywords(void)
 	obarray_add_symbol(symbols, LAMBDA);
 	obarray_add_symbol(symbols, QUASIQUOTE);
 	obarray_add_symbol(symbols, QUOTE);
+	obarray_add_symbol(symbols, TIME);
 	obarray_add_symbol(symbols, UNQUOTE);
 
 	// Not Keywords:

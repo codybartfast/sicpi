@@ -4,12 +4,20 @@
 #include "list.h"
 #include "metacircular-procedures.h"
 #include "object.h"
+#include "primitive-procedures.h"
 #include "sicp-error.h"
 
 #include <stdbool.h>
 
-// todo: time special case (ex1.23/24)
-
+static void display_time(object start)
+{
+	object end = Runtime(EMPTY_LIST);
+	object elapsed = Sub(list2(end, start));
+	object secs = Seconds(list1(elapsed));
+	Display(list1(of_string("[time: ", NO_META_DATA)));
+	Display(list1(secs));
+	Display(list1(of_string("s] ", NO_META_DATA)));
+}
 // Integers we can switch on to select goto destination
 enum label {
 	LABEL_EV_APPL_ACCUM_LAST_ARG,
@@ -18,6 +26,7 @@ enum label {
 	LABEL_EV_DEFINITION_1,
 	LABEL_EV_IF_DECIDE,
 	LABEL_EV_SEQUENCE_CONTINUE,
+	LABEL_EV_TIME_DONE,
 	LABEL_EVAL_DISPATCH,
 	LABEL_RETURN_CALLER
 };
@@ -53,6 +62,9 @@ const object EV_IF_DECIDE = &_EV_IF_DECIDE;
 static struct object _EV_SEQUENCE_CONTINUE =
 	GOTO_LABEL(LABEL_EV_SEQUENCE_CONTINUE);
 const object EV_SEQUENCE_CONTINUE = &_EV_SEQUENCE_CONTINUE;
+
+static struct object _EV_TIME_DONE = GOTO_LABEL(LABEL_EV_TIME_DONE);
+const object EV_TIME_DONE = &_EV_TIME_DONE;
 
 static struct object _EVAL_DISPATCH = GOTO_LABEL(LABEL_EVAL_DISPATCH);
 const object EVAL_DISPATCH = &_EVAL_DISPATCH;
@@ -138,6 +150,9 @@ eval_dispatch:
 			}
 			if (head == BEGIN) {
 				goto ev_begin;
+			}
+			if (head == TIME) {
+				goto ev_time;
 			}
 		}
 		goto ev_application;
@@ -351,6 +366,22 @@ ev_definition_1:
 	// finished so we instead return the current value to the calling C
 	// function
 
+ev_time:
+	save(core, core->unev);
+	core->unev = Runtime(EMPTY_LIST);
+	save(core, core->unev);
+	save(core, core->cont);
+	core->cont = EV_TIME_DONE;
+	core->exp = cons(BEGIN, cdr(core->exp), NO_META_DATA);
+	goto eval_dispatch;
+
+ev_time_done:
+	core->cont = restore(core);
+	core->unev = restore(core);
+	display_time(core->unev);
+	core->unev = restore(core);
+	goto goto_cont;
+
 return_caller:
 	return core->val;
 
@@ -368,6 +399,8 @@ goto_cont:
 		goto ev_if_decide;
 	case LABEL_EV_SEQUENCE_CONTINUE:
 		goto ev_sequence_continue;
+	case LABEL_EV_TIME_DONE:
+		goto ev_time_done;
 	case LABEL_EVAL_DISPATCH:
 		goto eval_dispatch;
 	case LABEL_RETURN_CALLER:

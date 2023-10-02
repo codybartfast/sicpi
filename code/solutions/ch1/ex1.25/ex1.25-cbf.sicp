@@ -12,11 +12,7 @@
   (display "    ")
   (display n)
   (display " *** ")
-  (define start (runtime))
-  (prime-repeat repeat)
-  (prime-repeat repeat)
-  (define end (runtime))
-  (display "[ time: ")(display (seconds (- end start)))(display "s ]")
+  (time (prime-repeat repeat))
   (newline))
 
 (define (report-prime prime? n)

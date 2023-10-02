@@ -195,6 +195,7 @@ extern const object IF;
 extern const object LAMBDA;
 extern const object QUASIQUOTE;
 extern const object QUOTE;
+extern const object TIME;
 extern const object UNQUOTE;
 
 // Not keywords:
