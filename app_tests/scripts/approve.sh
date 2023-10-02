@@ -50,6 +50,8 @@ test(){
 	expected="$data_dir/$rel_path.approved"
 	touch "$expected"
 
+	volatile="$data_dir/$rel_path.volatile"
+
 	actual="$data_dir/$rel_path.actual"
 	"$sicp_bin" < "$source" > "$actual" 2>&1
 
@@ -64,7 +66,7 @@ test(){
 
 review(){
 	echo
-	line "="
+	line "V"
 	echo "Changes in '$source'"
 	# line "."
 	echo
@@ -82,25 +84,34 @@ review(){
 	echo "$source"
 	echo
 
+	declare -A option_names=( ["a"]="Approve" ["v"]="mark as Volatile" )
 	got_response=0;
 	while [[ "$got_response" == 0 ]] ; do
-		read -p "Approve or Skip? " -r -n 1
+		read -p "Approve, Skip or mark Volatile? " -r -n 1 choice
 		echo
-		if [[ "$REPLY" == "a" ]] ; then
-			read -p "Definitely? " -r -n 1
+		if [[ "$choice" =~ ^[av]$ ]] ; then
+			read -p "Definitely want to ${option_names[$choice]}? " -r -n 1 definitely
 			echo
-			if [[ "$REPLY" == "d" ]] ; then
+			if [[ "$definitely" == "d" ]] ; then
+				case "$choice" in
+					a)
 				cp $source $app_source
 				cp $actual $expected
 				got_response=1
+					;;
+					v)
+				touch "$volatile"
+				got_response=1
+					;;
+				esac
 			fi
-		elif [[ "$REPLY" == "s" ]] ; then
+		elif [[ "$choice" == "s" ]] ; then
 			echo "Skipping"
 			got_response=1
 		fi
 	done
 
-	line 'V'
+	line '='
 	echo
 
 }
