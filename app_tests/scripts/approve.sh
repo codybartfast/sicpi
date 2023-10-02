@@ -51,7 +51,7 @@ test(){
 	touch "$expected"
 
 	actual="$data_dir/$rel_path.actual"
-	"$sicp_bin" < "$source" > "$actual"
+	"$sicp_bin" < "$source" > "$actual" 2>&1
 
 	if cmp -s "$expected" "$actual" ; then
 		echo "  ✓"
