@@ -116,7 +116,7 @@ object Sub(object args)
 	RETURN_IF_ERROR(check_args(args, &arg_count, &have_floating));
 
 	if (arg_count == 0) {
-		eprintf("Subtraction (-) requires at least one argument.");
+		eprintf("Subtraction (-) expects at least one argument.");
 		return of_error_kind(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
 				     NO_META_DATA);
 	}
@@ -170,7 +170,7 @@ object Div(object args)
 	RETURN_IF_ERROR(check_args(args, &arg_count, &have_floating));
 
 	if (arg_count == 0) {
-		eprintf("Division (/) requires at least one argument.");
+		eprintf("Division (/) expects at least one argument.");
 		return of_error_kind(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
 				     NO_META_DATA);
 	}
@@ -201,13 +201,13 @@ object Remainder(object args)
 	RETURN_IF_ERROR(check_args(args, &arg_count, &have_floating));
 
 	if (arg_count != 2) {
-		eprintf("'remainder' requires exactly two arguments.");
+		eprintf("'remainder' expects exactly two arguments.");
 		return of_error_kind(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
 				     NO_META_DATA);
 	}
 
 	if (have_floating) {
-		eprintf("'remainder' requires integer values.");
+		eprintf("'remainder' expects integer values.");
 		return of_error_kind(ERROR_UNEXPECTED_TYPE, NO_META_DATA);
 	}
 
@@ -222,7 +222,7 @@ object Abs(object args)
 	RETURN_IF_ERROR(check_args(args, &arg_count, &have_floating));
 
 	if (arg_count != 1) {
-		eprintf("'abs' requires exactly one argument.");
+		eprintf("'abs' expects exactly one argument.");
 		return of_error_kind(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
 				     NO_META_DATA);
 	}
@@ -241,7 +241,7 @@ object Exp(object args)
 	RETURN_IF_ERROR(check_args(args, &arg_count, &have_floating));
 
 	if (arg_count != 1) {
-		eprintf("'exp' requires exactly one argument.");
+		eprintf("'exp' expects exactly one argument.");
 		return of_error_kind(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
 				     NO_META_DATA);
 	}
@@ -259,7 +259,7 @@ object Log(object args)
 	RETURN_IF_ERROR(check_args(args, &arg_count, &have_floating));
 
 	if (arg_count != 1) {
-		eprintf("'log' requires exactly one argument.");
+		eprintf("'log' expects exactly one argument.");
 		return of_error_kind(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
 				     NO_META_DATA);
 	}
@@ -290,7 +290,7 @@ static object compare(object args, enum comparison_kind kind, char *name,
 	RETURN_IF_ERROR(check_args(args, &arg_count, &have_floating));
 
 	if (arg_count < 2) {
-		eprintf("%s (%s) requires at least two arguments.", name,
+		eprintf("%s (%s) expects at least two arguments.", name,
 			symbol);
 		return of_error_kind(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
 				     NO_META_DATA);
@@ -392,7 +392,7 @@ object And(object args)
 {
 	int arg_count = length(args);
 	if (arg_count < 2) {
-		eprintf("'and' requires at least 2 arguments");
+		eprintf("'and' expects at least 2 arguments");
 		return of_error_kind(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
 				     NO_META_DATA);
 	}
@@ -410,7 +410,7 @@ object Or(object args)
 {
 	int arg_count = length(args);
 	if (arg_count < 2) {
-		eprintf("'or' requires at least 2 arguments");
+		eprintf("'or' expects at least 2 arguments");
 		return of_error_kind(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
 				     NO_META_DATA);
 	}
@@ -427,13 +427,13 @@ object Or(object args)
 object Not(object args)
 {
 	if (!is_pair(args)) {
-		eprintf("'not' requires 1 argument, but got none");
+		eprintf("'not' expects 1 argument, but got none");
 		return of_error_kind(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
 				     NO_META_DATA);
 	}
 
 	if (cdr(args) != EMPTY_LIST) {
-		eprintf("'not' requires 1 argument, but got at least 2");
+		eprintf("'not' expects 1 argument, but got at least 2");
 		return of_error_kind(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
 				     NO_META_DATA);
 	}
@@ -453,13 +453,13 @@ object Set_Random_Seed(object args)
 	RETURN_IF_ERROR(check_args(args, &arg_count, &have_floating));
 
 	if (arg_count != 1) {
-		eprintf("'set-random-seed' requires exactly one argument.");
+		eprintf("'set-random-seed' expects exactly one argument.");
 		return of_error_kind(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
 				     NO_META_DATA);
 	}
 
 	if (have_floating) {
-		eprintf("'set-random-seed' requires an integer.");
+		eprintf("'set-random-seed' expects an integer.");
 		return of_error_kind(ERROR_UNEXPECTED_TYPE, NO_META_DATA);
 	}
 
@@ -487,7 +487,7 @@ object Random(object args)
 	RETURN_IF_ERROR(check_args(args, &arg_count, &have_floating));
 
 	if (arg_count != 1) {
-		eprintf("'random' requires exactly one argument.");
+		eprintf("'random' expects exactly one argument.");
 		return of_error_kind(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
 				     NO_META_DATA);
 	}
@@ -504,7 +504,7 @@ object Random(object args)
 	} else {
 		integer upper = to_integer(car(args));
 		if (upper < 0 || upper > RAND_MAX) {
-			eprintf("'random' requires a an integer between 0 and %d.",
+			eprintf("'random' expects a an integer between 0 and %d.",
 				RAND_MAX);
 			return of_error_kind(ERROR_OUT_OF_BOUNDS, NO_META_DATA);
 		}
@@ -533,13 +533,13 @@ object Seconds(object args)
 	RETURN_IF_ERROR(check_args(args, &arg_count, &have_floating));
 
 	if (arg_count != 1) {
-		eprintf("'seconds' requires exactly one argument.");
+		eprintf("'seconds' expects exactly one argument.");
 		return of_error_kind(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
 				     NO_META_DATA);
 	}
 
 	if (have_floating) {
-		eprintf("'seconds' requires an integer.");
+		eprintf("'seconds' expects an integer.");
 		return of_error_kind(ERROR_UNEXPECTED_TYPE, NO_META_DATA);
 	}
 
