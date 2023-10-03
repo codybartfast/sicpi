@@ -41,7 +41,7 @@ object text_of_quotation(object exp)
 {
 	ARGS_2("text_of_quotation", exp);
 
-	return arg2;
+	return arg1;
 }
 
 // assign
@@ -55,7 +55,7 @@ object lambda_parameters(object exp)
 {
 	ARGS_AT_LEAST_2("lambda_parameters", exp);
 
-	return arg2;
+	return arg1;
 }
 
 object lambda_body(object exp)
@@ -81,17 +81,17 @@ object definition_variable(object exp)
 {
 	ARGS_AT_LEAST_2("definition_variable", exp);
 
-	return is_symbol(arg2) ? arg2 : car(arg2);
+	return is_symbol(arg1) ? arg1 : car(arg1);
 }
 
 object definition_value(object exp)
 {
 	ARGS_AT_LEAST_3("definition_value", exp);
 
-	if (is_symbol(arg2)) {
-		return arg3;
+	if (is_symbol(arg1)) {
+		return arg2;
 	} else {
-		return make_lambda(cdr(arg2), cons(arg3, exp, NO_META_DATA));
+		return make_lambda(cdr(arg1), cons(arg2, exp, NO_META_DATA));
 	}
 }
 
@@ -106,14 +106,14 @@ object if_predicate(object exp)
 {
 	ARGS_AT_LEAST_2("if_predicate", exp);
 
-	return arg2;
+	return arg1;
 }
 
 object if_consequent(object exp)
 {
 	ARGS_AT_LEAST_3("if_consequent", exp);
 
-	return arg3;
+	return arg2;
 }
 
 object if_alternative(object exp)
@@ -200,7 +200,7 @@ object expand_clauses(object clauses)
 
 object cond_clauses(object exp)
 {
-	// Should need to check is a pair because only be able to get here if
+	// Should not need to check is a pair because only able to get here if
 	// given a list tagged with 'cond'.
 	return cdr(exp);
 }
@@ -296,21 +296,21 @@ object procedure_parameters(object p)
 {
 	ARGS_AT_LEAST_2("procedure_parameters", p);
 
-	return arg2;
+	return arg1;
 }
 
 object procedure_body(object p)
 {
 	ARGS_AT_LEAST_3("procedure_body", p);
 
-	return arg3;
+	return arg2;
 }
 
 object procedure_environment(object p)
 {
 	ARGS_4("procedure_environment", p);
 
-	return arg4;
+	return arg3;
 }
 
 object enclosing_envronment(const object env)

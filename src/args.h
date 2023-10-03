@@ -8,32 +8,32 @@
 	RETURN_IF_ERROR(SET_ARGS_RESULT);
 
 #define SET_ARGS_1(CALLER, ARGS, AT_LEAST)                                     \
-	object arg1;                                                           \
-	object SET_ARGS_RESULT = set_args(CALLER, &ARGS, 1, AT_LEAST, &arg1);  \
+	object arg0;                                                           \
+	object SET_ARGS_RESULT = set_args(CALLER, &ARGS, 1, AT_LEAST, &arg0);  \
 	RETURN_IF_ERROR(SET_ARGS_RESULT);
 
 #define SET_ARGS_2(CALLER, ARGS, AT_LEAST)                                     \
+	object arg0;                                                           \
 	object arg1;                                                           \
-	object arg2;                                                           \
 	object SET_ARGS_RESULT =                                               \
-		set_args(CALLER, &ARGS, 2, AT_LEAST, &arg1, &arg2);            \
+		set_args(CALLER, &ARGS, 2, AT_LEAST, &arg0, &arg1);            \
 	RETURN_IF_ERROR(SET_ARGS_RESULT);
 
 #define SET_ARGS_3(CALLER, ARGS, AT_LEAST)                                     \
+	object arg0;                                                           \
 	object arg1;                                                           \
 	object arg2;                                                           \
-	object arg3;                                                           \
 	object SET_ARGS_RESULT =                                               \
-		set_args(CALLER, &ARGS, 3, AT_LEAST, &arg1, &arg2, &arg3);     \
+		set_args(CALLER, &ARGS, 3, AT_LEAST, &arg0, &arg1, &arg2);     \
 	RETURN_IF_ERROR(SET_ARGS_RESULT);
 
 #define SET_ARGS_4(CALLER, ARGS, AT_LEAST)                                     \
+	object arg0;                                                           \
 	object arg1;                                                           \
 	object arg2;                                                           \
 	object arg3;                                                           \
-	object arg4;                                                           \
-	object SET_ARGS_RESULT = set_args(CALLER, &ARGS, 4, AT_LEAST, &arg1,   \
-					  &arg2, &arg3, &arg4);                \
+	object SET_ARGS_RESULT = set_args(CALLER, &ARGS, 4, AT_LEAST, &arg0,   \
+					  &arg1, &arg2, &arg3);                \
 	RETURN_IF_ERROR(SET_ARGS_RESULT);
 
 #define ARGS_0(CALLER, ARGS) SET_ARGS_0(CALLER, ARGS, false)

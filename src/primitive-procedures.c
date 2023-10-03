@@ -11,7 +11,7 @@ object Display(object args)
 {
 	ARGS_1("display", args);
 
-	printf("%s", to_text(arg1));
+	printf("%s", to_text(arg0));
 
 	return OK;
 }
@@ -28,7 +28,7 @@ object Print(object args)
 {
 	ARGS_1("print", args);
 
-	printf("%s\n", to_text(arg1));
+	printf("%s\n", to_text(arg0));
 
 	return OK;
 }
