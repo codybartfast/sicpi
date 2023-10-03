@@ -39,7 +39,7 @@ echo "Found code directory: '$(rpath "$code_dir")'."
 
 test(){
 	source="$1"
-	echo -n "$source"
+	echo -n "$source ... "
 
 	rel_path=$(realpath --relative-to="$code_dir" "$source")
 
@@ -56,13 +56,22 @@ test(){
 	"$sicp_bin" < "$source" > "$actual" 2>&1
 
 	if cmp -s "$expected" "$actual" ; then
-		echo "  ✓"
+		echo "✓"
+	elif [[ -e $volatile ]] ; then
+		compare_similar "$expected" "$actual"
+		if [[ "$similar" == true ]] ; then
+			echo "~"
+		else
+			review </dev/tty;
+		fi
 	else
-		echo " ..."
 		review </dev/tty;
 	fi
 }
 
+compare_similar(){
+	similar=true;
+}
 
 review(){
 	echo
@@ -137,4 +146,4 @@ echo "Found $code_file_count code files."
 echo "$code_files" | while read -r line ; do
    test "$line"
 done
-
+echo "Done"
