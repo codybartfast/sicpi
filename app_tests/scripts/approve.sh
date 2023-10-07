@@ -38,9 +38,10 @@ echo "Found code directory: '$(rpath "$code_dir")'."
 
 test(){
 	local source="$1"
-	echo -n "$source ... "
+	echo -n "$source "
 
-	local rel_path=$(realpath --relative-to="$code_dir" "$source")
+	local rel_path
+	rel_path=$(realpath --relative-to="$code_dir" "$source")
 
 	local app_source="$data_dir/$rel_path"
 	mkdir -p "$(dirname -- "$app_source")"
@@ -71,9 +72,8 @@ test(){
 }
 
 blur(){
-	local content=$(cat "$1")
     	local pattern='[[:digit:]]\+\(\.[[:digit:]]\+\)\?\(e[-+][[:digit:]]\+\)\?'
-	echo "$content" | sed "s/$pattern/<volatile>/g"
+	sed "s/$pattern/<volatile>/g" < "$1"
 }
 
 review(){
