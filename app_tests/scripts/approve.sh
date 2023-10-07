@@ -41,7 +41,7 @@ test(){
 	source="$1"
 	echo -n "$source ... "
 
-	rel_path=$(realpath --relative-to="$code_dir" "$source")
+	local rel_path=$(realpath --relative-to="$code_dir" "$source")
 
 	app_source="$data_dir/$rel_path"
 	mkdir -p "$(dirname -- "$app_source")"
@@ -58,10 +58,11 @@ test(){
 	if cmp -s "$expected" "$actual" ; then
 		echo "✓"
 	elif [[ -e $volatile ]] ; then
-		compare_similar "$expected" "$actual"
-		if [[ "$similar" == true ]] ; then
+		compare_result=$(compare_similar "$expected" "$actual");
+		if [[ $(compare_similar "$expected" "$actual") == true ]] ; then
 			echo "~"
 		else
+			echo "FALSE path"
 			review </dev/tty;
 		fi
 	else
@@ -70,7 +71,13 @@ test(){
 }
 
 compare_similar(){
-	similar=true;
+	expected_count=$(cat "$expected" | wc -w )
+	actual_count=$(cat "$actual" | wc -w )
+	if [[ "$expected_count" == "$actual_count" ]] ; then
+		echo true
+	else
+		echo false
+	fi
 }
 
 review(){
@@ -104,8 +111,8 @@ review(){
 			if [[ "$definitely" == "d" ]] ; then
 				case "$choice" in
 					a)
-				cp $source $app_source
-				cp $actual $expected
+				cp "$source" "$app_source"
+				cp "$actual" "$expected"
 				got_response=1
 					;;
 					v)
