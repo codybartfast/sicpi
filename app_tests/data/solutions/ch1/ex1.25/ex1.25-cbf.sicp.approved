@@ -1,0 +1,14 @@
+repeat-count
+report-prime-repeat
+report-prime
+report-prime-single
+fast-expt
+expmod-fe
+fermat-test-fe
+fast-prime-fe?
+fast-prime-fe-8?
+    2 *** [time: 0.012762s] 
+    2 *** [time: 0.012064s] 
+    13 *** [time: 0.017355s] 
+    16 *** [time: 0.001544s] 
+

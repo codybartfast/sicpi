@@ -1,0 +1,12 @@
+expmod
+fermat-test-all?
+carmichael?
+find-carmichaels
+Looking for Carmichael numbers up to 3000
+    Carmichael: 561
+    Carmichael: 1105
+    Carmichael: 1729
+    Carmichael: 2465
+    Carmichael: 2821
+Done.
+

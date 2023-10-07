@@ -1,0 +1,14 @@
+smallest-divisor
+find-divisor
+divides?
+prime?
+#f
+#t
+#f
+expmod
+fermat-test
+fast-prime?
+#f
+#t
+#t
+

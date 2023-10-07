@@ -1,0 +1,26 @@
+inc
+timed-prime-test
+start-prime-test
+report-prime
+search-for-primes
+
+First three primes above 1000:
+1009 *** 0.000465
+1013 *** 0.000488
+1019 *** 0.000503
+
+First three primes above 10000:
+10007 *** 0.002132
+10009 *** 0.001622
+10037 *** 0.001507
+
+First three primes above 100000:
+100003 *** 0.005193
+100019 *** 0.00514
+100043 *** 0.004877
+
+First three primes above 1000000:
+1000003 *** 0.015041
+1000033 *** 0.017642
+1000037 *** 0.015678
+
