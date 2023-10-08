@@ -96,6 +96,11 @@ void _set_dialect(object env)
 		    "    (= (remainder b a) 0))"
 		    "  (= n (smallest-divisor n)))",
 		    env);
+	eval_string("dialect:quotient",
+		    "(define (quotient a b)"
+		    "  (/ (- a (remainder a b))"
+		    "     b))",
+		    env);
 }
 
 void set_dialect(object env)

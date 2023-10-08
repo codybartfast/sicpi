@@ -1,0 +1,15 @@
+identity
+inc
+prod-iter
+pi-term
+pi-iter
+Iterative product of terms:
+    The product of numbers from 1 to 6: 720
+    Estimate of π with 100 steps 3.12637939804298
+
+prod-rec
+pi-rec
+Recursive product of terms:
+    The product of numbers from 1 to 6: 720
+    Estimate of π with 100 steps 3.12637939804298
+

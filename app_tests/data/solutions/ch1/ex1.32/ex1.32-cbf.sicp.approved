@@ -1,0 +1,29 @@
+cube
+inc
+pi-term
+acc-iter
+sum-acc-iter
+prod-acc-iter
+simpson-acc-iter
+pi-acc-iter
+
+Implementing product and sum in terms of general accumulators:
+0.25
+0.25
+0.25
+0.25
+Estimate of π with 100 steps (prod-acc-iter): 3.12637939804298
+
+acc-rec
+sum-acc-rec
+prod-acc-rec
+simpson-acc-rec
+pi-acc-rec
+
+Implementing product and sum in terms of general accumulators:
+0.25
+0.25
+0.25
+0.250000000000001
+Estimate of π with 100 steps (prod-acc-rec): 3.12637939804298
+
