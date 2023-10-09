@@ -13,7 +13,7 @@ script_dir=$(rpath "$(dirname -- "$0")")
 test_dir=$(rpath "$script_dir/..")
 data_dir=$(rpath "$test_dir/data")
 base_dir=$(rpath "$test_dir/..")
-code_dir=$(rpath "$base_dir/code")
+code_dir=$(rpath "$base_dir/scheme-code")
 sicp_bin=$(rpath "$base_dir/bin/sicp")
 
 echo "Using '$base_dir' as base directory."
