@@ -23,6 +23,7 @@ object Remainder(object args);
 object Abs(object args);
 object Exp(object args);
 object Log(object args);
+object Sin(object args);
 
 //
 // Comparison

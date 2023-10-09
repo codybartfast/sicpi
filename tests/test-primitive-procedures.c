@@ -191,6 +191,12 @@ void test_pp_exp_log(void)
 				 to_text(Log(list1(one05))));
 	TEST_ASSERT_EQUAL_STRING("4.65396035015752",
 				 to_text(Log(list1(one05_f))));
+
+	// Sin
+	TEST_ASSERT_EQUAL_STRING("0.841470984807897",
+				 to_text(Sin(list1(one))));
+	TEST_ASSERT_EQUAL_STRING("0.909297426825682",
+				 to_text(Sin(list1(two_f))));
 }
 
 void test_pp_comparison(void)

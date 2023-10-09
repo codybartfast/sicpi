@@ -215,6 +215,8 @@ object Remainder(object args)
 			  NO_META_DATA);
 }
 
+// Unary
+
 object Abs(object args)
 {
 	int arg_count = 0;
@@ -234,40 +236,56 @@ object Abs(object args)
 	}
 }
 
-object Exp(object args)
+enum unary_kind {
+	UNARY_EXP = 1,
+	UNARY_LOG,
+	UNARY_SIN,
+};
+
+object unary(object args, enum unary_kind kind, char *name)
 {
 	int arg_count = 0;
 	bool have_floating = false;
 	RETURN_IF_ERROR(check_args(args, &arg_count, &have_floating));
 
 	if (arg_count != 1) {
-		eprintf("'exp' expects exactly one argument.");
+		eprintf("'%s' expects exactly one argument.", name);
 		return of_error_kind(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
 				     NO_META_DATA);
 	}
 
 	floating n = have_floating ? to_floating(car(args)) :
 				     (floating)to_integer(car(args));
+	floating rslt;
+	switch (kind) {
+	case UNARY_EXP:
+		rslt = exp(n);
+		break;
+	case UNARY_LOG:
+		rslt = log(n);
+		break;
+	case UNARY_SIN:
+		rslt = sin(n);
+		break;
+	default:
+		inyim("'unary' given unexpected kind: '%d'", kind);
+	}
+	return of_floating(rslt, NO_META_DATA);
+}
 
-	return of_floating(exp((n)), NO_META_DATA);
+object Exp(object args)
+{
+	return unary(args, UNARY_EXP, "exp");
 }
 
 object Log(object args)
 {
-	int arg_count = 0;
-	bool have_floating = false;
-	RETURN_IF_ERROR(check_args(args, &arg_count, &have_floating));
+	return unary(args, UNARY_LOG, "log");
+}
 
-	if (arg_count != 1) {
-		eprintf("'log' expects exactly one argument.");
-		return of_error_kind(ERROR_INCORRECT_NUMBER_OF_ARGUMENTS,
-				     NO_META_DATA);
-	}
-
-	floating n = have_floating ? to_floating(car(args)) :
-				     (floating)to_integer(car(args));
-
-	return of_floating(log((n)), NO_META_DATA);
+object Sin(object args)
+{
+	return unary(args, UNARY_SIN, "log");
 }
 
 //

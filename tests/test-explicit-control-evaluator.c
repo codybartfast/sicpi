@@ -191,6 +191,9 @@ void test_eceval_primitive_procedures(void)
 	expr = to_expr("(log 7.38905609893065)");
 	TEST_ASSERT_EQUAL_STRING("2", to_text(EC_Eval(expr)));
 
+	expr = to_expr("(sin 2.0)");
+	TEST_ASSERT_EQUAL_STRING("0.909297426825682", to_text(EC_Eval(expr)));
+
 	// Comparison
 
 	expr = to_expr("(> 3 2)");
