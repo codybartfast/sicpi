@@ -84,9 +84,10 @@ void _set_dialect(object env)
 
 	eval_string("dialect:even?", "(define (even? n) (= (remainder n 2) 0))",
 		    env);
+	eval_string("dialect:negative?", "(define (negative? n) (< n 0))", env);
 	eval_string("dialect:odd?", "(define (odd? n) (= (remainder n 2) 1))",
 		    env);
-	eval_string("dialect:square", "(define (square n) (* n n))", env);
+	eval_string("dialect:positive?", "(define (positive? n) (> n 0))", env);
 	eval_string("dialect:prime?",
 		    "(define (prime? n)"
 		    "  (define (smallest-divisor n)"
@@ -104,6 +105,7 @@ void _set_dialect(object env)
 		    "  (/ (- a (remainder a b))"
 		    "     b))",
 		    env);
+	eval_string("dialect:square", "(define (square n) (* n n))", env);
 }
 
 void set_dialect(object env)
