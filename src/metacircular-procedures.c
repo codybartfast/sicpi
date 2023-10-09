@@ -6,12 +6,12 @@
 #include "primitive-procedures.h"
 #include "sicp-error.h"
 
-object _procedure = NULL;
-object procedure(void)
-{
-	return _procedure ? _procedure :
-			    (_procedure = of_name("procedure", NO_META_DATA));
-}
+// object _procedure = NULL;
+// object procedure(void)
+// {
+// 	return _procedure ? _procedure :
+// 			    (_procedure = of_name("procedure", NO_META_DATA));
+// }
 
 //
 // §4.1.2 Representing Expressions
@@ -283,13 +283,13 @@ inline object rest_operands(const object ops)
 
 bool is_compound_procedure(const object exp)
 {
-	return is_tagged_list(exp, procedure());
+	return is_tagged_list(exp, PROCEDURE);
 }
 
 object make_procedure(const object parameters, const object body,
 		      const object env)
 {
-	return list4(procedure(), parameters, body, env);
+	return list4(PROCEDURE, parameters, body, env);
 }
 
 object procedure_parameters(object p)

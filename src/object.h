@@ -202,6 +202,7 @@ extern const object UNQUOTE;
 
 extern const object FALSE;
 extern const object OK;
+extern const object PROCEDURE;
 extern const object TRUE;
 
 //

@@ -144,18 +144,30 @@ char *to_text(object obj)
 	case VK_SYMBOL:
 		return strdupx(to_name(obj), "object:to_text");
 	case VK_PAIR:
-		bool done_first = false;
+
 		string_builder sb = sb_new(0);
 		sb_addc(sb, '(');
 
+		int index = 0;
+		bool have_procedure;
 		while (is_pair(obj)) {
-			if (done_first) {
-				sb_addc(sb, ' ');
+			object item = car(obj);
+			if (index == 0) {
+				have_procedure = item == PROCEDURE;
 			} else {
-				done_first = true;
+				sb_addc(sb, ' ');
+				if (have_procedure && index == 3) {
+					// Procedures refer to an environnment
+					// which will reference procedures
+					// which refer to environments ...
+					item = of_string(
+						"<ENV>",
+						object_meta_data(item));
+				}
 			}
-			sb_adds(sb, to_text(car(obj)));
+			sb_adds(sb, to_text(item));
 			obj = cdr(obj);
+			index++;
 		}
 
 		if (!is_null(obj)) {
@@ -519,6 +531,9 @@ const object FALSE = &_FALSE;
 static struct object _OK = SYMBOL("ok");
 const object OK = &_OK;
 
+static struct object _PROCEDURE = SYMBOL("procedure");
+const object PROCEDURE = &_PROCEDURE;
+
 static struct object _TRUE = SYMBOL("true");
 const object TRUE = &_TRUE;
 
@@ -544,6 +559,7 @@ void init_keywords(void)
 
 	obarray_add_symbol(symbols, FALSE);
 	obarray_add_symbol(symbols, OK);
+	obarray_add_symbol(symbols, PROCEDURE);
 	obarray_add_symbol(symbols, TRUE);
 }
 

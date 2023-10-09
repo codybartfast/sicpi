@@ -155,6 +155,7 @@ void obj_symbol(void)
 	// Not keywords
 	TEST_ASSERT_EQUAL(FALSE, of_name("false", NO_META_DATA));
 	TEST_ASSERT_EQUAL(OK, of_name("ok", NO_META_DATA));
+	TEST_ASSERT_EQUAL(PROCEDURE, of_name("procedure", NO_META_DATA));
 	TEST_ASSERT_EQUAL(TRUE, of_name("true", NO_META_DATA));
 }
 
