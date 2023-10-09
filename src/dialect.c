@@ -12,6 +12,7 @@ object eval_string(char *name, char *code, object env)
 {
 	source src = source_string(code, name);
 	object program = parse_source(src);
+	program = cons(BEGIN, program, NO_META_DATA);
 	object rslt = ec_eval(program, env);
 	source_close(src);
 	return rslt;

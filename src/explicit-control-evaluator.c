@@ -295,6 +295,7 @@ apply_dispatch:
 		goto compound_apply;
 	}
 
+	eprintf("Unkown procedure type: '%s'", to_text(core->proc));
 	return of_error_kind(ERROR_UNKNOWN_PROCEDURE_TYPE, NO_META_DATA);
 
 primitive_apply:
