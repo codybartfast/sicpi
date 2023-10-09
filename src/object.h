@@ -193,6 +193,7 @@ extern const object DOT;
 extern const object ELSE;
 extern const object IF;
 extern const object LAMBDA;
+extern const object LET;
 extern const object QUASIQUOTE;
 extern const object QUOTE;
 extern const object TIME;

@@ -34,6 +34,7 @@ object definition_value(object exp);
 bool is_lambda(const object exp);
 object lambda_parameters(const object exp);
 object lambda_body(const object exp);
+object make_lambda(const object parameters, const object body);
 
 bool is_if(const object exp);
 object if_predicate(object exp);

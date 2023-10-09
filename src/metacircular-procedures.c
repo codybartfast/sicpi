@@ -6,13 +6,6 @@
 #include "primitive-procedures.h"
 #include "sicp-error.h"
 
-// object _procedure = NULL;
-// object procedure(void)
-// {
-// 	return _procedure ? _procedure :
-// 			    (_procedure = of_name("procedure", NO_META_DATA));
-// }
-
 //
 // §4.1.2 Representing Expressions
 // 	https://www.sicp-book.com/book-Z-H-26.html#%_sec_4.1.2
@@ -65,7 +58,7 @@ object lambda_body(object exp)
 	return exp;
 }
 
-static object make_lambda(const object parameters, const object body)
+object make_lambda(const object parameters, const object body)
 {
 	return cons(LAMBDA, cons(parameters, body, NO_META_DATA), NO_META_DATA);
 }

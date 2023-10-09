@@ -18,6 +18,45 @@ static void display_time(object start)
 	Display(list1(secs));
 	Display(list1(of_string("s] ", NO_META_DATA)));
 }
+
+//
+// let
+//
+// Todo: arg checking
+// Todo: move to separate file?
+#include "args.h"
+
+static object make_call(object proc, object args)
+{
+	return cons(proc, args, NO_META_DATA);
+}
+
+static object let_pairs(object exp)
+{
+	return cadr(exp);
+}
+
+static object let_params(object exp)
+{
+	return map(car, let_pairs(exp));
+}
+
+static object let_body(object exp)
+{
+	return cddr(exp);
+}
+
+static object let_values(object exp)
+{
+	return map(cadr, let_pairs(exp));
+}
+
+static object let_to_combination(object exp)
+{
+	return make_call(make_lambda(let_params(exp), let_body(exp)),
+			 let_values(exp));
+}
+
 // Integers we can switch on to select goto destination
 enum label {
 	LABEL_EV_APPL_ACCUM_LAST_ARG,
@@ -147,6 +186,9 @@ eval_dispatch:
 			}
 			if (head == LAMBDA) {
 				goto ev_lambda;
+			}
+			if (head == LET) {
+				goto ev_let;
 			}
 			if (head == BEGIN) {
 				goto ev_begin;
@@ -362,9 +404,10 @@ ev_definition_1:
 	//
 	// Extras
 	//
-	// As we're not running a REPL we can't goto 'read-eval-print-loop' when
-	// finished so we instead return the current value to the calling C
-	// function
+
+ev_let:
+	core->exp = let_to_combination(core->exp);
+	goto ev_application;
 
 ev_time:
 	save(core, core->unev);

@@ -506,6 +506,9 @@ const object ELSE = &_ELSE;
 static struct object _LAMBDA = SYMBOL("lambda");
 const object LAMBDA = &_LAMBDA;
 
+static struct object _LET = SYMBOL("let");
+const object LET = &_LET;
+
 static struct object _IF = SYMBOL("if");
 const object IF = &_IF;
 
@@ -550,6 +553,7 @@ void init_keywords(void)
 	obarray_add_symbol(symbols, ELSE);
 	obarray_add_symbol(symbols, IF);
 	obarray_add_symbol(symbols, LAMBDA);
+	obarray_add_symbol(symbols, LET);
 	obarray_add_symbol(symbols, QUASIQUOTE);
 	obarray_add_symbol(symbols, QUOTE);
 	obarray_add_symbol(symbols, TIME);

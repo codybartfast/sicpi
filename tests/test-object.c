@@ -147,6 +147,7 @@ void obj_symbol(void)
 	TEST_ASSERT_EQUAL(ELSE, of_name("else", NO_META_DATA));
 	TEST_ASSERT_EQUAL(IF, of_name("if", NO_META_DATA));
 	TEST_ASSERT_EQUAL(LAMBDA, of_name("lambda", NO_META_DATA));
+	TEST_ASSERT_EQUAL(LET, of_name("let", NO_META_DATA));
 	TEST_ASSERT_EQUAL(QUASIQUOTE, of_name("quasiquote", NO_META_DATA));
 	TEST_ASSERT_EQUAL(QUOTE, of_name("quote", NO_META_DATA));
 	TEST_ASSERT_EQUAL(TIME, of_name("time", NO_META_DATA));
