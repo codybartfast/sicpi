@@ -239,6 +239,7 @@ object Abs(object args)
 enum unary_kind {
 	UNARY_COS = 1,
 	UNARY_EXP,
+	UNARY_FLOOR,
 	UNARY_LOG,
 	UNARY_SIN,
 };
@@ -265,6 +266,9 @@ object unary(object args, enum unary_kind kind, char *name)
 	case UNARY_EXP:
 		rslt = exp(n);
 		break;
+	case UNARY_FLOOR:
+		rslt = floor(n);
+		break;
 	case UNARY_LOG:
 		rslt = log(n);
 		break;
@@ -285,6 +289,11 @@ object Cos(object args)
 object Exp(object args)
 {
 	return unary(args, UNARY_EXP, "exp");
+}
+
+object Floor(object args)
+{
+	return unary(args, UNARY_FLOOR, "floor");
 }
 
 object Log(object args)

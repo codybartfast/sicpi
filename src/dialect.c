@@ -30,6 +30,7 @@ object make_primitive_procedures_list(void)
 		list2(of_name("abs", NMD), of_func(Abs, NMD)),
 		list2(of_name("cos", NMD), of_func(Cos, NMD)),
 		list2(of_name("exp", NMD), of_func(Exp, NMD)),
+		list2(of_name("floor", NMD), of_func(Floor, NMD)),
 		list2(of_name("log", NMD), of_func(Log, NMD)),
 		list2(of_name("sin", NMD), of_func(Sin, NMD)),
 

@@ -202,6 +202,8 @@ void test_pp_exp_log(void)
 	TEST_ASSERT_EQUAL_STRING("-0.416146836547142",
 				 to_text(Cos(list1(two_f))));
 
+	// Floor
+	TEST_ASSERT_EQUAL_STRING("7", to_text(Floor(list1(seven_1_f))));
 }
 
 void test_pp_comparison(void)
