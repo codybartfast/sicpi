@@ -1,0 +1,26 @@
+sum
+cube
+(procedure (x) ((+ x 4)) <ENV>)
+7
+(procedure (x) ((/ 1 (* x (+ x 2)))) <ENV>)
+0.125
+pi-sum
+3.12159465259101
+integral
+0.249999875000001
+plus4
+7
+plus4
+7
+12
+f
+78
+f
+78
+x
+38
+x
+12
+f
+78
+
