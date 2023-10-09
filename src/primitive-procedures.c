@@ -237,7 +237,8 @@ object Abs(object args)
 }
 
 enum unary_kind {
-	UNARY_EXP = 1,
+	UNARY_COS = 1,
+	UNARY_EXP,
 	UNARY_LOG,
 	UNARY_SIN,
 };
@@ -258,6 +259,9 @@ object unary(object args, enum unary_kind kind, char *name)
 				     (floating)to_integer(car(args));
 	floating rslt;
 	switch (kind) {
+	case UNARY_COS:
+		rslt = cos(n);
+		break;
 	case UNARY_EXP:
 		rslt = exp(n);
 		break;
@@ -273,6 +277,11 @@ object unary(object args, enum unary_kind kind, char *name)
 	return of_floating(rslt, NO_META_DATA);
 }
 
+object Cos(object args)
+{
+	return unary(args, UNARY_COS, "cos");
+}
+
 object Exp(object args)
 {
 	return unary(args, UNARY_EXP, "exp");
@@ -285,7 +294,7 @@ object Log(object args)
 
 object Sin(object args)
 {
-	return unary(args, UNARY_SIN, "log");
+	return unary(args, UNARY_SIN, "sin");
 }
 
 //
