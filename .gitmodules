@@ -4,3 +4,6 @@
 [submodule "docs/book"]
 	path = docs/book
 	url = https://github.com/codybartfast/sicp-book
+[submodule "wasm/emsdk"]
+	path = wasm/emsdk
+	url = https://github.com/emscripten-core/emsdk.git
