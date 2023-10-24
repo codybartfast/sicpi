@@ -7,10 +7,12 @@ emcc=$(rpath "$script_dir/emsdk/upstream/emscripten/emcc")
 src_dir=$(rpath "$script_dir/../src")
 out_dir=$(rpath "$script_dir/out")
 
-mkdir "$out_dir"
+mkdir -p "$out_dir"
 
 $emcc							\
-	-o "$out_dir/sicp.html"			\
+	-o "$out_dir/sicp.html"				\
+	-sALLOW_MEMORY_GROWTH				\
+							\
 	"$src_dir/args.c"				\
 	"$src_dir/character-classes.c"			\
 	"$src_dir/dialect.c"				\

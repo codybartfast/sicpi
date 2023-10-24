@@ -232,7 +232,7 @@ object Abs(object args)
 	if (have_floating) {
 		return of_floating(fabs(to_floating(car(args))), NO_META_DATA);
 	} else {
-		return of_integer(labs(to_integer(car(args))), NO_META_DATA);
+		return of_integer(llabs(to_integer(car(args))), NO_META_DATA);
 	}
 }
 

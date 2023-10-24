@@ -9,11 +9,11 @@ static char *plural_s(int n)
 	return n == 1 ? "" : "s";
 }
 
-object set_args(char *caller, struct object **args_p, int count, bool at_least,
+object set_args(char *caller, struct object **args_p, bool at_least, int count,
 		...)
 {
 	va_list arg_ptrs;
-	va_start(arg_ptrs, at_least);
+	va_start(arg_ptrs, count);
 
 	int i;
 	for (i = 0; i < count; i++) {
