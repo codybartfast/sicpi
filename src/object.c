@@ -115,6 +115,7 @@ static char to_text_buffer[TO_TEXT_BUFFER_LEN];
 char *to_text(object obj)
 {
 	switch (object_value_kind(obj)) {
+		string_builder sb; // Emscripten won't allow declaration to follow label
 	case VK_ERROR:
 		return strdupx(error_kind_name(to_error_kind(obj)),
 			       "object:to_text");
@@ -144,8 +145,7 @@ char *to_text(object obj)
 	case VK_SYMBOL:
 		return strdupx(to_name(obj), "object:to_text");
 	case VK_PAIR:
-
-		string_builder sb = sb_new(0);
+		sb = sb_new(0);
 		sb_addc(sb, '(');
 
 		int index = 0;

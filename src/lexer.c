@@ -214,11 +214,12 @@ static inline char *read_string(lexer lxr)
 {
 	char c;
 	while ((c = readc(lxr)) != SOURCE_EOS) {
+		char next; // Emscripten won't allow declaration to follow label
 		switch (c) {
 		case '"':
 			return check_at_end_of_token(lxr, "string");
 		case '\\':
-			char next = readc(lxr);
+			next = readc(lxr);
 			switch (next) {
 			case '\\':
 			case '"':

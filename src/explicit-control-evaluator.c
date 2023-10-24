@@ -159,8 +159,9 @@ static bool is_last_operand(object ops)
 
 static object eval(const core core)
 {
+	object disp_expr; // Emscripten won't allow declaration to follow label
 eval_dispatch:
-	object disp_expr = core->exp;
+	disp_expr = core->exp;
 	RETURN_IF_ERROR(disp_expr);
 
 	if (is_self_evaluating(disp_expr)) {
