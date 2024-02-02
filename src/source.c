@@ -86,8 +86,8 @@ char readc(source src)
 	switch (src->type) {
 	case TYPE_FILE:
 	case TYPE_STREAM:
-		c = getc(src->underlying.stream);
-		c = c == EOF ? SOURCE_EOS : c;
+		int gc = getc(src->underlying.stream);
+		c = gc == EOF ? SOURCE_EOS : gc;
 		break;
 	case TYPE_STRING:
 		c = *src->underlying.string;
