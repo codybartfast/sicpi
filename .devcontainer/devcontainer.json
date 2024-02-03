@@ -1,0 +1,4 @@
+{
+    "name": "sicp-i",
+    "build": { "dockerfile": "Dockerfile" }
+}
