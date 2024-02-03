@@ -11,8 +11,8 @@ RUN sudo usermod -a -G sudo $user
 USER $user
 RUN echo set nocompatible > ${userHome}/.exrc
 # RUN git clone -b jd-dev --recurse-submodules https://github.com/codybartfast/sicpi.git ${userHome}/sicp
-RUN /bin/bash -c "${userHome}/sicp/wasm/emsdk/emsdk install latest"
-RUN /bin/bash -c "${userHome}/sicp/wasm/emsdk/emsdk activate latest"
+#RUN /bin/bash -c "${userHome}/sicp/wasm/emsdk/emsdk install latest"
+#RUN /bin/bash -c "${userHome}/sicp/wasm/emsdk/emsdk activate latest"
 # personal
 COPY autoexec.bat ${userHome}/bin/autoexec.bat
 RUN echo source ${userHome}/bin/autoexec.bat >> ${userHome}/.bashrc
