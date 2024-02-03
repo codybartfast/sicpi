@@ -3,9 +3,9 @@ ARG user=alyssa
 ARG userHome=/home/$user
 #RUN echo "root:apply" | chpasswd
 RUN apt update
-RUN apt install -y sudo vim git build-essential
-RUN apt install -y python3
-RUN apt install -y procps
+# RUN apt install -y sudo vim git build-essential
+# RUN apt install -y python3
+RUN apt install -y git procps curl
 #RUN useradd -m -s /bin/bash --uid 25441 $user
 #RUN echo "$user:eval" | chpasswd
 #RUN sudo usermod -a -G sudo $user
