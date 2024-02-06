@@ -13,7 +13,7 @@ object run(source src)
 	struct parser parser;
 
 	lexer lxr = lexer_new(src);
-	lexer_set_token_source(lxr, &tkn_src);
+	lexer_set_token_source(&tkn_src, lxr);
 	parser_init(&parser, &tkn_src);
 
 	set_dialect(the_global_environment(false));
@@ -39,7 +39,7 @@ object parse_source(source src)
 	struct parser parser;
 
 	lexer lxr = lexer_new(src);
-	lexer_set_token_source(lxr, &tkn_src);
+	lexer_set_token_source(&tkn_src, lxr);
 	parser_init(&parser, &tkn_src);
 
 	object program = parse_all(&parser);

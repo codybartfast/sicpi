@@ -615,7 +615,7 @@ void lxr_sets_token_source(void)
 {
 	struct token_source tkn_src;
 	lexer lxr = lexer_new(source_string("durian", ""));
-	lexer_set_token_source(lxr, &tkn_src);
+	lexer_set_token_source(&tkn_src, lxr);
 	TEST_ASSERT_EQUAL_PTR(lxr, tkn_src.state);
 	TEST_ASSERT_EQUAL_PTR(lexer_read, tkn_src.read_token);
 

@@ -37,6 +37,7 @@
                 "src/string-builder.c",
                 "src/token.c",
                 "src/token-table.c",
+                "src/token-table-source.c",
 
                 "-lm", // Seems this needs to appear after any source files using maths
             ],
@@ -130,6 +131,8 @@
 
                 "src/token-table.c",
                 "tests/test-token-table.c",
+
+                "src/token-table-source.c",
 
                 "-lm",
             ],

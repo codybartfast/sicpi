@@ -10,7 +10,7 @@
 
 void init(lexer lxr, token_source tkn_src, parser parser)
 {
-	lexer_set_token_source(lxr, tkn_src);
+	lexer_set_token_source(tkn_src, lxr);
 	parser_init(parser, tkn_src);
 }
 
