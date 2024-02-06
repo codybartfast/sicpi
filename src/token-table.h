@@ -11,7 +11,7 @@
 /*
  * This is intended to store references to tokens created by the lexer so they
  * can be referred to by scheme objects using a key.
- * 
+ *
  * If nothing else, this allows control over the amount of space used to refer
  * to the token in the scheme object.
  */
@@ -40,11 +40,12 @@ TOKEN_TABLE_KEY_T token_table_add(token_table tt, token tkn);
 token token_table_get(token_table tt, TOKEN_TABLE_KEY_T key);
 
 /*
- * Not implemented - but if we assume tokens are only referenced by one scheme
- * object then tokens could removed from the table and have their memory freed
- * when a scheme object is garbage collected.
- * 
- * This would also mean their keys could be reused.
+ * Not implemented - Maybe tokens could removed from the table and have their
+ * memory freed when all scheme objects that reference a token are garbage
+ * collected.
+ *
+ * This would also mean their keys could be reused.  But probably need to
+ * compact remaining tokens and update references from objects.
  */
 // void token_table_remove (token_table tt, TOKEN_TABLE_KEY_T key);
 

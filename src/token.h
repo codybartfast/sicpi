@@ -42,7 +42,10 @@ typedef struct token_source {
 	token (*read_token)(void *state);
 } *token_source;
 
+// Todo: use or remove.  Purpose?  (possibly intended to prevent a 'randomly'
+//       instantiated object being passed around)
 void token_source_init(token_source tkn_src);
+
 token token_read(token_source tkn_src);
 
 #endif
