@@ -12,6 +12,7 @@ void test_string_builder(void);
 void test_source(void);
 void test_token_table(void);
 void test_lexer(void);
+void test_table_token_source(void);
 void test_obarray(void);
 void test_object(void);
 void test_parser(void);
@@ -27,13 +28,15 @@ int main(void)
 	test_source();
 	test_token_table();
 	test_lexer();
+
 	test_obarray();
 	test_object();
 	test_parser();
 	test_list();
-
-	test_explicit_control_evaluator();
 	test_primitive_procedures();
+	test_explicit_control_evaluator();
+
+	test_table_token_source();
 
 	return UNITY_END();
 }
