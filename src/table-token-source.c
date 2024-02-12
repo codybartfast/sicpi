@@ -1,6 +1,8 @@
 #include "table-token-source.h"
 #include "sicp-std.h"
 
+token token_table_souce_read_token(void *state);
+
 // Todo: ? unlike basic token_source we're malloc'ing here (otherwise I think
 // caller needs to create a lexer_and_table and a token_source, ugg).  But
 // don't think we should have two different models so need to update
@@ -11,11 +13,6 @@ typedef struct lexer_and_table {
 	struct token_table *table;
 } lexer_and_table;
 
-token token_table_souce_read_token(void *state)
-{
-	struct lexer_and_table *lat = state;
-	return lexer_read(lat->lexer);
-}
 
 token_source table_token_source_new(lexer lxr, token_table table)
 {
@@ -29,4 +26,13 @@ token_source table_token_source_new(lexer lxr, token_table table)
 	tkn_src->state = lat;
 	tkn_src->read_token = token_table_souce_read_token;
 	return tkn_src;
+}
+
+token token_table_souce_read_token(void *state)
+{
+	struct lexer_and_table *lat = state;
+	token tkn = lexer_read(lat->lexer);
+	meta_data md = token_table_add(lat->table, tkn);
+	// token_metadata
+	return tkn;
 }
