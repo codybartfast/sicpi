@@ -3,6 +3,8 @@
 
 #include "string-builder.h"
 
+#include <inttypes.h>
+
 enum token_type {
 	TOKEN_ERROR = -2,
 	TOKEN_EOS = -1,
@@ -23,18 +25,24 @@ typedef struct token {
 	void *meta_data;
 	enum token_type type;
 	char *text;
-	long offset;
-	long x; // zero-based column
-	long y; // zero-based line
+	int64_t offset;
+	int64_t x; // zero-based column
+	int64_t y; // zero-based line
+
+	// I don't like including this here as I would prefer 'token' were
+	// ignorant of the token table, but this seems less ugly than anything
+	// else I can think of (like having the parser populate the token table)
+	int64_t key;
 } *token;
 
 enum token_type token_type(token tkn);
 char *token_text(token tkn);
 // char *token_error_message(token tkn);
-long token_offset(token tkn);
-long token_x(token tkn);
-long token_y(token tkn);
+int64_t token_offset(token tkn);
+int64_t token_x(token tkn);
+int64_t token_y(token tkn);
 void *token_metadata(token tkn);
+uint32_t token_key(token tkn);
 void token_free(token tkn);
 
 typedef struct token_source {

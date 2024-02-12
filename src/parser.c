@@ -31,18 +31,18 @@ inline char *parser_error_message(parser parser)
 	return parser->error_message;
 }
 
-static object lexer_error(parser parser)
+static object lexer_error(parser parser, meta_data meta_data)
 {
 	parser->is_errored = true;
 	parser->error_message = "Lexer error.";
-	return of_error_kind(ERROR_LEXER, NO_META_DATA);
+	return of_error_kind(ERROR_LEXER, meta_data);
 }
 
-static object parser_error(parser parser, char *const error_message)
+static object parser_error(parser parser, char *const error_message, meta_data meta_data)
 {
 	parser->is_errored = true;
 	parser->error_message = error_message;
-	return of_error_kind(ERROR_PARSER, NO_META_DATA);
+	return of_error_kind(ERROR_PARSER, meta_data);
 }
 
 static object number_integer(parser parser, token tkn)
@@ -54,11 +54,12 @@ static object number_integer(parser parser, token tkn)
 	conv_int = strtoll(s, &end, 10);
 	if (end && !*end && errno != ERANGE && integer_min <= conv_int &&
 	    conv_int <= integer_max) {
-		return of_integer(conv_int, NO_META_DATA);
+		return of_integer(conv_int, token_key(tkn));
 	}
 	return parser_error(
 		parser,
-		"Failed to convert string to integer (digit overflow?).");
+		"Failed to convert string to integer (digit overflow?).",
+		token_key(tkn));
 }
 
 static object number_decimal(parser parser, token tkn)
@@ -70,10 +71,11 @@ static object number_decimal(parser parser, token tkn)
 	conv_flt = strtold(s, &end);
 	if (end && !*end && errno != ERANGE && floating_min <= conv_flt &&
 	    conv_flt <= floating_max) {
-		return of_floating(conv_flt, NO_META_DATA);
+		return of_floating(conv_flt, token_key(tkn));
 	}
 	return parser_error(parser,
-			    "Failed to convert string to decimal (overflow?).");
+			    "Failed to convert string to decimal (overflow?).",
+			    token_key(tkn));
 }
 
 static object reverse(object list)
@@ -88,19 +90,19 @@ static object reverse(object list)
 	return rlist;
 }
 
-inline static object dot(parser parser, object lst)
+inline static object dot(parser parser, object lst, token tkn)
 {
 	if (is_null(lst)) {
-		return parser_error(parser, dot_err_msg);
+		return parser_error(parser, dot_err_msg, token_key(tkn));
 	}
 	object tail = parse(parser);
 	if (!is_symbol(tail)) {
-		return parser_error(parser, dot_err_msg);
+		return parser_error(parser, dot_err_msg, token_key(tkn));
 	}
 	if (token_type(token_read(parser->token_source)) != TOKEN_LIST_CLOSE) {
-		return parser_error(parser, dot_err_msg);
+		return parser_error(parser, dot_err_msg, token_key(tkn));
 	}
-	lst = cons(tail, cons(DOT, lst, NO_META_DATA), NO_META_DATA);
+	lst = cons(tail, cons(DOT, lst, token_key(tkn)), NO_META_DATA);
 	return reverse(lst);
 }
 
@@ -116,19 +118,20 @@ static object list(parser parser)
 			return reverse(lst);
 		}
 		if (tkn_typ == TOKEN_DOT) {
-			return dot(parser, lst);
+			return dot(parser, lst, tkn);
 		}
 		obj = parse_token(parser, tkn);
 		if (is_error(obj)) {
 			return obj;
 		}
-		lst = cons(obj, lst, NO_META_DATA);
+		lst = cons(obj, lst, token_key(tkn));
 	}
 	if (token_type(tkn) == TOKEN_EOS) {
 		return parser_error(parser,
-				    "List was not closed before end of file.");
+				    "List was not closed before end of file.",
+				    token_key(tkn));
 	}
-	return lexer_error(parser);
+	return lexer_error(parser, token_key(tkn));
 }
 
 static object abbreviation(parser parser, char *name)
@@ -144,7 +147,7 @@ static object parse_token(parser parser, token tkn)
 {
 	switch (token_type(tkn)) {
 	case TOKEN_IDENTIFIER:
-		return of_name(token_text(tkn), NO_META_DATA);
+		return of_name(token_text(tkn), token_key(tkn));
 	case TOKEN_NUMBER_INTEGER:
 		return number_integer(parser, tkn);
 	case TOKEN_NUMBER_DECIMAL:
@@ -152,11 +155,11 @@ static object parse_token(parser parser, token tkn)
 	case TOKEN_STRING:
 		return of_string(strdupx(token_text(tkn),
 					 "parser:TOKEN_STRING"),
-				 NO_META_DATA);
+				 token_key(tkn));
 	case TOKEN_LIST_OPEN:
 		return list(parser);
 	case TOKEN_LIST_CLOSE:
-		return parser_error(parser, "List close ')' was not expected.");
+		return parser_error(parser, "List close ')' was not expected.", token_key(tkn));
 	case TOKEN_QUASIQUOTE:
 		return abbreviation(parser, "quasiquote");
 	case TOKEN_QUOTE:
@@ -164,11 +167,11 @@ static object parse_token(parser parser, token tkn)
 	case TOKEN_UNQUOTE:
 		return abbreviation(parser, "unquote");
 	case TOKEN_DOT:
-		return parser_error(parser, dot_err_msg);
+		return parser_error(parser, dot_err_msg, token_key(tkn));
 	case TOKEN_EOS:
 		return EOS;
 	case TOKEN_ERROR:
-		return lexer_error(parser);
+		return lexer_error(parser, token_key(tkn));
 	case TOKEN_UNSPECIFIED:
 	default:
 		inyim("Parser given unexpected token type: %d",
@@ -181,7 +184,8 @@ object parse(parser parser)
 {
 	if (parser_is_errored(parser)) {
 		return parser_error(
-			parser, "Attempted to parse after an earlier error.");
+			parser, "Attempted to parse after an earlier error.",
+			NO_META_DATA);
 	}
 
 	token tkn = token_read(parser->token_source);

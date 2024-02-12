@@ -26,17 +26,17 @@ inline char *token_text(token tkn)
 	return tkn->text;
 }
 
-inline long token_offset(token tkn)
+inline int64_t token_offset(token tkn)
 {
 	return tkn->offset;
 }
 
-inline long token_x(token tkn)
+inline int64_t token_x(token tkn)
 {
 	return tkn->x;
 }
 
-inline long token_y(token tkn)
+inline int64_t token_y(token tkn)
 {
 	return tkn->y;
 }
@@ -44,6 +44,11 @@ inline long token_y(token tkn)
 inline void *token_metadata(token tkn)
 {
 	return tkn->meta_data;
+}
+
+inline uint32_t token_key(token tkn)
+{
+	return tkn->key;
 }
 
 void token_source_init(token_source tkn_src)

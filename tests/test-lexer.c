@@ -91,6 +91,8 @@ void expected_token(token tkn, enum token_type type, char *text, long offset,
 	TEST_ASSERT_EQUAL_INT64(offset, token_offset(tkn));
 	TEST_ASSERT_EQUAL_INT64(y, token_y(tkn));
 	TEST_ASSERT_EQUAL_INT64(x, token_x(tkn));
+	TEST_ASSERT_EQUAL_UINT32(0, token_key(tkn));
+
 }
 
 void lxr_sets_token_metadata_to_source(void)

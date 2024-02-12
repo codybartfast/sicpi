@@ -32,7 +32,7 @@ token token_table_souce_read_token(void *state)
 {
 	struct lexer_and_table *lat = state;
 	token tkn = lexer_read(lat->lexer);
-	meta_data md = token_table_add(lat->table, tkn);
-	// token_metadata
+	uint32_t key = token_table_add(lat->table, tkn);
+	tkn->key = key;
 	return tkn;
 }

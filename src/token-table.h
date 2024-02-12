@@ -20,6 +20,7 @@
 
 /*
  * The integer type used for table key/index.
+ * Changes to this may need be reflected in token->key
  */
 #define TOKEN_TABLE_KEY_T uint32_t
 #define TOKEN_TABLE_KEY_MAX UINT32_MAX

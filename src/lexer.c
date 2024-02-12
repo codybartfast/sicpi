@@ -82,6 +82,7 @@ static inline token token_new(lexer lxr)
 	tkn->x = source_x(lxr->source);
 	tkn->y = source_y(lxr->source);
 	tkn->meta_data = lxr->source;
+	tkn->key = 0;
 	return tkn;
 }
 
