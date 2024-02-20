@@ -3,16 +3,23 @@
 
 token token_table_souce_read_token(void *state);
 
-// Todo: ? unlike basic token_source we're malloc'ing here (otherwise I think
-// caller needs to create a lexer_and_table and a token_source, ugg).  But
-// don't think we should have two different models so need to update
-// (or remove) basic
+// Todo: ? rather than 'new' we should probably have an init like
+// token_source_init
+// Todo: Free
+
 
 typedef struct lexer_and_table {
 	struct lexer *lexer;
 	struct token_table *table;
 } lexer_and_table;
 
+void token_table_source_free(token_source tkn_src)
+{
+	if(tkn_src) {
+		free(tkn_src->state);
+		free(tkn_src);
+	}
+}
 
 token_source table_token_source_new(lexer lxr, token_table table)
 {
@@ -36,3 +43,4 @@ token token_table_souce_read_token(void *state)
 	tkn->key = key;
 	return tkn;
 }
+
