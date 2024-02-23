@@ -3,27 +3,14 @@
 
 token token_table_souce_read_token(void *state);
 
-// Todo: ? rather than 'new' we should probably have an init like
-// token_source_init
-// Todo: Free
-
-
 typedef struct lexer_and_table {
 	struct lexer *lexer;
 	struct token_table *table;
 } lexer_and_table;
 
-void token_table_source_free(token_source tkn_src)
-{
-	if(tkn_src) {
-		free(tkn_src->state);
-		free(tkn_src);
-	}
-}
-
 token_source table_token_source_new(lexer lxr, token_table table)
 {
-	// ToDo: check for nulls?
+
 	struct lexer_and_table *lat = mallocx(sizeof(struct lexer_and_table),
 					      "token_table_source_new");
 	token_source tkn_src =
@@ -33,6 +20,14 @@ token_source table_token_source_new(lexer lxr, token_table table)
 	tkn_src->state = lat;
 	tkn_src->read_token = token_table_souce_read_token;
 	return tkn_src;
+}
+
+void token_table_source_free(token_source tkn_src)
+{
+	if(tkn_src) {
+		free(tkn_src->state);
+		free(tkn_src);
+	}
 }
 
 token token_table_souce_read_token(void *state)

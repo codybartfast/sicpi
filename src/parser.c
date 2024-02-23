@@ -124,6 +124,13 @@ static object list(parser parser)
 		if (is_error(obj)) {
 			return obj;
 		}
+		// A little late realised that we can't reliably put token meta
+		// data in symbols because 1) some are created before they're
+		// used 2) they're interned so all instances would have the
+		// token of the first instance (e.g. procedure definition
+		// instead of procedure call).  But we can put the meta data for
+		// the car  into the pair object.
+
 		lst = cons(obj, lst, token_key(tkn));
 	}
 	if (token_type(tkn) == TOKEN_EOS) {

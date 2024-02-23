@@ -5,12 +5,6 @@
 
 #include <string.h>
 
-// A little late realised that we can't reliably put token meta data in symbols
-// because 1) some are created before they're used 2) they're interned so all
-// instances would have the token for the first instance (e.g. procedure
-// definition instead of procedure call).  But we can put the meta data for the
-// car of a pair into the pair object.
-//
 void token_table_source_pair_has_token_of_car(void)
 {
 	char *src_name = "Jacket";
@@ -31,8 +25,6 @@ void token_table_source_pair_has_token_of_car(void)
 		TEST_ASSERT_EQUAL_STRING(obj_txt, tkn_txt);
 	}
 }
-
-// ToDo: how handle no_meta_data?
 
 void test_table_token_source(void)
 {
