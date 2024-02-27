@@ -11,10 +11,8 @@
 
 #define NO_PEEKED -1
 
-enum type { TYPE_FILE = 1, TYPE_STREAM, TYPE_STRING };
-
-source source_part_init(char const *name, enum type type,
-			union underlying underlying)
+source source_part_init(char const *name, enum source_type source_type,
+			union underlying_type underlying_type)
 {
 	if (!name) {
 		name = "";
@@ -23,8 +21,8 @@ source source_part_init(char const *name, enum type type,
 	size_t size = sizeof(struct source);
 	struct source temp = { .name = strdupx(name,
 					       "source init - duplicate name"),
-			       .type = type,
-			       .underlying = underlying };
+			       .type = source_type,
+			       .underlying = underlying_type };
 	source src = malloc(size);
 	if (!src) {
 		alloc_error("source init");
@@ -46,8 +44,9 @@ source source_stream(FILE *const stream, char const *name)
 		eprintf("Source given null stream.");
 		return NULL;
 	}
-	source src = source_part_init(name, TYPE_STREAM,
-				      (union underlying){ .stream = stream });
+	source src =
+		source_part_init(name, SOURCE_TYPE_STREAM,
+				 (union underlying_type){ .stream = stream });
 	return src;
 }
 
@@ -59,8 +58,9 @@ source source_file(const char *filepath)
 		perror("Error");
 		return NULL;
 	}
-	source src = source_part_init(filepath, TYPE_FILE,
-				      (union underlying){ .stream = stream });
+	source src =
+		source_part_init(filepath, SOURCE_TYPE_FILE,
+				 (union underlying_type){ .stream = stream });
 	return src;
 }
 
@@ -70,8 +70,9 @@ source source_string(char const *text, char const *name)
 		eprintf("Source given null string");
 		return NULL;
 	}
-	source src = source_part_init(name, TYPE_STRING,
-				      (union underlying){ .string = text });
+	source src =
+		source_part_init(name, SOURCE_TYPE_STRING,
+				 (union underlying_type){ .string = text });
 	return src;
 }
 
@@ -84,12 +85,12 @@ char readc(source src)
 {
 	char c;
 	switch (src->type) {
-	case TYPE_FILE:
-	case TYPE_STREAM:
+	case SOURCE_TYPE_FILE:
+	case SOURCE_TYPE_STREAM:
 		int gc = getc(src->underlying.stream);
 		c = gc == EOF ? SOURCE_EOS : gc;
 		break;
-	case TYPE_STRING:
+	case SOURCE_TYPE_STRING:
 		c = *src->underlying.string;
 		if (c) {
 			src->underlying.string++;
@@ -158,11 +159,11 @@ void source_close(source src)
 {
 	if (src) {
 		switch (src->type) {
-		case TYPE_FILE:
+		case SOURCE_TYPE_FILE:
 			fclose(src->underlying.stream);
-		case TYPE_STREAM:
+		case SOURCE_TYPE_STREAM:
 			break;
-		case TYPE_STRING:
+		case SOURCE_TYPE_STRING:
 			break;
 		default:
 			inyim("source_close got an unexpected type: '%d'.",

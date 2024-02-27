@@ -11,20 +11,27 @@
  * Provides a source of characters that can orignate from a file, a stream such
  * StdIn or a string.
 */
-union underlying {
+
+enum source_type {
+	SOURCE_TYPE_FILE = 1,
+	SOURCE_TYPE_STREAM,
+	SOURCE_TYPE_STRING
+};
+
+union underlying_type {
 	FILE *const stream;
 	char const *string;
 };
 
 typedef struct source {
-	const int type;
+	const enum source_type type;
 	const char *name;
 	bool new_line;
 	int64_t offset;
 	int64_t x;
 	int64_t y;
 	int peeked;
-	union underlying underlying;
+	union underlying_type underlying;
 } *source;
 
 /*
