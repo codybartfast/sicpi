@@ -6,6 +6,7 @@
 #include <stdio.h>
 
 #define SOURCE_EOS '\0'
+#define NO_PEEKED -1
 
 /*
  * Provides a source of characters that can orignate from a file, a stream such
@@ -18,7 +19,7 @@ enum source_type {
 	SOURCE_TYPE_STRING
 };
 
-union underlying_type {
+union underlying_data {
 	FILE *const stream;
 	char const *string;
 };
@@ -31,7 +32,7 @@ typedef struct source {
 	int64_t x;
 	int64_t y;
 	int peeked;
-	union underlying_type underlying;
+	union underlying_data underlying_data;
 } *source;
 
 /*

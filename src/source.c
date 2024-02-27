@@ -9,10 +9,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define NO_PEEKED -1
-
 source source_part_init(char const *name, enum source_type source_type,
-			union underlying_type underlying_type)
+			union underlying_data underlying_data)
 {
 	if (!name) {
 		name = "";
@@ -22,7 +20,7 @@ source source_part_init(char const *name, enum source_type source_type,
 	struct source temp = { .name = strdupx(name,
 					       "source init - duplicate name"),
 			       .type = source_type,
-			       .underlying = underlying_type };
+			       .underlying_data = underlying_data };
 	source src = malloc(size);
 	if (!src) {
 		alloc_error("source init");
@@ -46,7 +44,7 @@ source source_stream(FILE *const stream, char const *name)
 	}
 	source src =
 		source_part_init(name, SOURCE_TYPE_STREAM,
-				 (union underlying_type){ .stream = stream });
+				 (union underlying_data){ .stream = stream });
 	return src;
 }
 
@@ -60,7 +58,7 @@ source source_file(const char *filepath)
 	}
 	source src =
 		source_part_init(filepath, SOURCE_TYPE_FILE,
-				 (union underlying_type){ .stream = stream });
+				 (union underlying_data){ .stream = stream });
 	return src;
 }
 
@@ -72,7 +70,7 @@ source source_string(char const *text, char const *name)
 	}
 	source src =
 		source_part_init(name, SOURCE_TYPE_STRING,
-				 (union underlying_type){ .string = text });
+				 (union underlying_data){ .string = text });
 	return src;
 }
 
@@ -87,13 +85,13 @@ char readc(source src)
 	switch (src->type) {
 	case SOURCE_TYPE_FILE:
 	case SOURCE_TYPE_STREAM:
-		int gc = getc(src->underlying.stream);
+		int gc = getc(src->underlying_data.stream);
 		c = gc == EOF ? SOURCE_EOS : gc;
 		break;
 	case SOURCE_TYPE_STRING:
-		c = *src->underlying.string;
+		c = *src->underlying_data.string;
 		if (c) {
-			src->underlying.string++;
+			src->underlying_data.string++;
 		}
 		break;
 	default:
@@ -160,7 +158,7 @@ void source_close(source src)
 	if (src) {
 		switch (src->type) {
 		case SOURCE_TYPE_FILE:
-			fclose(src->underlying.stream);
+			fclose(src->underlying_data.stream);
 		case SOURCE_TYPE_STREAM:
 			break;
 		case SOURCE_TYPE_STRING:
