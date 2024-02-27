@@ -352,3 +352,26 @@ void lexer_set_token_source(token_source tkn_src, lexer lxr)
 	tkn_src->read_token = (token(*)(void *state))lexer_read;
 	tkn_src->state = lxr;
 }
+
+
+
+struct source no_meta_data_source = {
+	.type = SOURCE_TYPE_STRING,
+	.name = "No meta data source",
+	.new_line = true,
+	.offset = 0,
+	.x = 0,
+	.y = 0,
+	.peeked = NO_PEEKED,
+	.underlying_data = { .string = "\"No meta data\""},
+};
+
+struct token no_meta_data_token = {
+	.meta_data = &no_meta_data_source,
+	.type = TOKEN_STRING,
+	.text = "No meta data",
+	.offset = 1,
+	.x = 1,
+	.y = 0,
+	.key = 0,
+};
