@@ -31,8 +31,11 @@ typedef struct token_table {
 	token *table_end;
 } *token_table;
 
-/* Create a new token table */
+/* Create a new token table without no_meta_data token */
 token_table token_table_new_empty(size_t initial_capacity);
+
+/* Create a new token table with no_meta_data token */
+token_table token_table_new(size_t initial_capacity);
 
 /* Add a token to the table - returns the key of the token in table. */
 TOKEN_TABLE_KEY_T token_table_add(token_table tt, token tkn);

@@ -1,17 +1,14 @@
 #include "../unity/src/unity.h"
 #include "../src/token-table.h"
 
+#define NMD 0 // No Meta Data
+
 static size_t capacity(token_table tt)
 {
 	return (tt->table_end - tt->table);
 }
 
-// size_t tt_available(token_table tt)
-// {
-// 	return tt->table_end - tt->next;
-// }
-
-void tt_new(void)
+void tt_new_empty(void)
 {
 	size_t initial_capacity = 43;
 	token_table tt = token_table_new_empty(initial_capacity);
@@ -23,10 +20,22 @@ void tt_new(void)
 	token_table_free(tt);
 }
 
-void tt_new_accept_zero(void)
+void tt_new_empty_accept_zero_does_not_add_nometadata_token(void)
 {
 	token_table tt = token_table_new_empty(0);
 	TEST_ASSERT_GREATER_THAN_size_t(0, capacity(tt));
+	token rslt = token_table_get(tt, NMD);
+	TEST_ASSERT_NULL(rslt);
+
+	token_table_free(tt);
+}
+
+void tt_new_accept_zero_adds_nometadta_token(void)
+{
+	token_table tt = token_table_new(0);
+	TEST_ASSERT_GREATER_THAN_size_t(0, capacity(tt));
+	token rslt = token_table_get(tt, NMD);
+	TEST_ASSERT_NOT_NULL(rslt);
 
 	token_table_free(tt);
 }
@@ -62,7 +71,8 @@ void tt_grow(void)
 
 void test_token_table(void)
 {
-	RUN_TEST(tt_new);
-	RUN_TEST(tt_new_accept_zero);
+	RUN_TEST(tt_new_empty);
+	RUN_TEST(tt_new_empty_accept_zero_does_not_add_nometadata_token);
+	RUN_TEST(tt_new_accept_zero_adds_nometadta_token);
 	RUN_TEST(tt_grow);
 }

@@ -366,7 +366,7 @@ struct source no_meta_data_source = {
 	.underlying_data = { .string = "\"No meta data\""},
 };
 
-struct token no_meta_data_token = {
+struct token no_meta_data_token_struct = {
 	.meta_data = &no_meta_data_source,
 	.type = TOKEN_STRING,
 	.text = "No meta data",
@@ -375,3 +375,5 @@ struct token no_meta_data_token = {
 	.y = 0,
 	.key = 0,
 };
+
+token no_meta_data_token = &no_meta_data_token_struct;

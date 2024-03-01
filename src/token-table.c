@@ -27,6 +27,12 @@ token_table token_table_new_empty(size_t initial_capacity)
 	return tt;
 }
 
+token_table token_table_new(size_t initial_capacity){
+	token_table table = token_table_new_empty(initial_capacity);
+	token_table_add(table, no_meta_data_token);
+	return table;
+}
+
 void grow_table(token_table tt)
 {
 	token *new_table;
@@ -74,7 +80,9 @@ void token_table_free(token_table tt)
 {
 	if (tt) {
 		for (token *t = tt->table; t < tt->next; ++t) {
-			free(*t);
+			if(*t != no_meta_data_token){
+				token_free(*t);
+			}
 		}
 		free(tt->table);
 		tt->table = NULL;

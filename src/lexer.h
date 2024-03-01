@@ -21,4 +21,6 @@ void lexer_free_source(lexer lxr);
 void lexer_free(lexer lxr);
 void lexer_set_token_source(token_source tkn_src, const lexer lxr);
 
+extern token no_meta_data_token;
+
 #endif
