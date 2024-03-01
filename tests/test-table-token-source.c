@@ -10,7 +10,7 @@ void token_table_source_pair_has_token_of_car(void)
 	char *src_name = "Jacket";
 	lexer lxr = lexer_new(source_string(
 		"(apple banana cherry durian elderberry)", src_name));
-	token_table table = token_table_new(0);
+	token_table table = token_table_new_empty(0);
 	token_source tts = table_token_source_new(lxr, table);
 	struct parser parser;
 	parser_init(&parser, tts);

@@ -14,7 +14,7 @@ static size_t capacity(token_table tt)
 void tt_new(void)
 {
 	size_t initial_capacity = 43;
-	token_table tt = token_table_new(initial_capacity);
+	token_table tt = token_table_new_empty(initial_capacity);
 	TEST_ASSERT_NOT_NULL(tt);
 	TEST_ASSERT_NOT_NULL(tt->table);
 	TEST_ASSERT_EQUAL_PTR(tt->table, tt->next);
@@ -25,7 +25,7 @@ void tt_new(void)
 
 void tt_new_accept_zero(void)
 {
-	token_table tt = token_table_new(0);
+	token_table tt = token_table_new_empty(0);
 	TEST_ASSERT_GREATER_THAN_size_t(0, capacity(tt));
 
 	token_table_free(tt);
@@ -34,7 +34,7 @@ void tt_new_accept_zero(void)
 void tt_grow(void)
 {
 	TOKEN_TABLE_KEY_T key = -1;
-	token_table tt = token_table_new(1);
+	token_table tt = token_table_new_empty(1);
 	TEST_ASSERT_EQUAL_UINT(1, capacity(tt));
 
 	key = token_table_add(tt, NULL);

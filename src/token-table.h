@@ -32,7 +32,7 @@ typedef struct token_table {
 } *token_table;
 
 /* Create a new token table */
-token_table token_table_new(size_t initial_capacity);
+token_table token_table_new_empty(size_t initial_capacity);
 
 /* Add a token to the table - returns the key of the token in table. */
 TOKEN_TABLE_KEY_T token_table_add(token_table tt, token tkn);

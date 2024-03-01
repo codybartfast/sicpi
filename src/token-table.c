@@ -9,7 +9,7 @@ const size_t growth_factor = 2;
  * so any fixes/mods here might be wanted there too.
  */
 
-token_table token_table_new(size_t initial_capacity)
+token_table token_table_new_empty(size_t initial_capacity)
 {
 	initial_capacity = initial_capacity < 1 ?
 				   TOKEN_TABLE_DEFAULT_INITIAL_CAPACITY :
