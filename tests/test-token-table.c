@@ -36,6 +36,7 @@ void tt_new_accept_zero_adds_nometadta_token(void)
 	TEST_ASSERT_GREATER_THAN_size_t(0, capacity(tt));
 	token rslt = token_table_get(tt, NMD);
 	TEST_ASSERT_NOT_NULL(rslt);
+	TEST_ASSERT_EQUAL_STRING("No meta data", token_text(rslt));
 
 	token_table_free(tt);
 }
